@@ -1,3 +1,11 @@
 from django.shortcuts import render
 
-# Create your views here.
+from authentication.forms import LoginForm
+
+
+def sign_in(request):
+    if request.method == 'GET':
+        form = LoginForm()
+        return render(request, 'users/login.html', {'form': form})
+
+
