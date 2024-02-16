@@ -1,9 +1,11 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
+from django.contrib.auth.forms import UserCreationForm
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 
 from authentication.forms import LoginForm, RegisterForm
+from authentication.models import CustomUser
 
 
 def sign_in(request):
@@ -27,7 +29,16 @@ def sign_in(request):
 
 
 def sign_up(request):
+    print(f'method: {request.method}')
     if request.method == 'POST':
         form = RegisterForm(request.POST)
-        # if form.is_valid():
-        #     user = Custom
+        if form.is_valid():
+            form.save()
+            return HttpResponse(f'Success sign up {form.cleaned_data}')
+        else:
+            return render(request, "users/register.html", {'form': form})
+
+    else:
+        form = RegisterForm()
+        return render(request, "users/register.html", {'form': form})
+
