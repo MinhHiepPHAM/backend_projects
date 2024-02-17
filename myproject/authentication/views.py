@@ -18,7 +18,7 @@ def sign_in(request):
             if user:
                 login(request, user)
                 messages.success(request, f'Hi {user.first_name} {user.last_name}')
-                return redirect('home')
+                return HttpResponse(f'Hi, you are successful to login in your account. Your email is {email}')
             else:
                 return HttpResponse('Email or password is incorrect!')
         else:
