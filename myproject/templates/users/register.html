@@ -7,11 +7,30 @@
       <strong>Error:</strong> {{ form.errors }}
     </div>
 {% else %}
-	<form method="POST" >
+	<form method="POST" action="{% url 'register' %}">
 		{% csrf_token %}
-		{{form.as_p}}
+		<label for="id_email">Email address:</label>
+		<input type="email" name="email" maxlength="254" autofocus="" required="" id="id_email">
+		
+		<label for="id_password1">Password:</label>
+		<input type="password" name="password1" autocomplete="new-password" required="" id="id_password1">
+
+		<div id="password-conditions">
+			<li>Your password can’t be too similar to your other personal information.</li>
+			<li>Your password must contain at least 8 characters.</li>
+			<li>Password can’t be a commonly used password.</li>
+			<li>Your password can’t be entirely numeric.</li>
+        </div>
+
+		<br>
+		<label for="id_password2">Password confirmation:</label>
+		<input type="password" name="password2" autocomplete="new-password" required="" id="id_password2">
+
+		<!--{{form.as_p}} TODO: password live matching-->
+
 		<button type="submit" class="button">Sign Up</button>
 	</form>
+
 {% endif %}
 
 
