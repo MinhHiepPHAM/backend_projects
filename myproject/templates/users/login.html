@@ -2,11 +2,24 @@
 
 {% block content %}
 
-<form method="POST" novalidate>
+{% if form.errors %}
+    <div class="alert alert-danger">
+      <strong>Error:</strong> {{ form.errors }}
+    </div>
+{% else %}
+
+<form method="POST" action="{% url 'login' %}">
 	{% csrf_token %}
+	<!--{{form.as_p}}-->
 	<h2>Login</h2>
-	{{form.as_p}}
+	<label for="id_username">Username or Email address:</label>
+	<input type="text" name="username" maxlength="254" autofocus="" required="" id="id_email">
+		
+	<label for="id_password">Password:</label>
+	<input type="password" name="password" apasswordutocomplete="current-password" required="" id="id_password">
 	<button type="submit" class="button">Login</button>
 </form>
+
+{% endif %}
 
 {% endblock content%}

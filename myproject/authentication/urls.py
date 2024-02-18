@@ -13,8 +13,10 @@ Including another URLconf
 
 from django.urls import path
 from . import views
+from . import forms
 
 urlpatterns = [
-    path('login/', views.sign_in, name='login'),
-    path('signup/', views.sign_up, name='register'),
+    #path('login/', views.sign_in, name='login'),
+    path('login/', views.CustomLoginView.as_view(), name='login'),
+    path('signup/', views.RegisterView.as_view(), name='register'),
 ]
