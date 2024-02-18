@@ -50,38 +50,6 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-# def sign_in(request):
-#     if request.method == 'POST':
-#         form = LoginForm(request.POST)
-#         if form.is_valid():
-#             password = form.cleaned_data['password']
-#             email = form.cleaned_data['email']
-#             user = authenticate(request, password=password, email=email)
-#             if user:
-#                 login(request, user)
-#                 messages.success(request, f'Hi {user.first_name} {user.last_name}')
-#                 return HttpResponse(f'Hi, you are successful to login in your account. Your email is {email}')
-#             else:
-#                 return HttpResponse('Email or password is incorrect!')
-#         else:
-#             messages.error(request, 'Invalid login')
-#     else:
-#         form = LoginForm()
-#     return render(request, "users/login.html", {'form': form})
-
-
-# def sign_up(request):
-#     if request.method == 'POST':
-#         form = RegisterForm(request.POST)
-#         if form.is_valid():
-#             form.save()
-#             return HttpResponse(f'Success sign up {form.cleaned_data}')
-#         else:
-#             return render(request, "users/register.html", {'form': form})
-
-#     else:
-#         form = RegisterForm()
-#         return render(request, "users/register.html", {'form': form})
 ROOT_URLCONF = 'myproject.urls'
 
 TEMPLATES = [
