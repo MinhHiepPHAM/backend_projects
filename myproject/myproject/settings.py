@@ -41,6 +41,11 @@ INSTALLED_APPS = [
     'authentication',
 ]
 
+AUTHENTICATION_BACKENDS = [
+    'authentication.backends.CustomModelBackend',
+    'django.contrib.auth.backends.ModelBackend',
+]
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -127,6 +132,7 @@ STATICFILES_DIRS = [
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'authentication.CustomUser'
+
 
 
 

@@ -51,7 +51,7 @@ class CustomLoginView(LoginView):
     def form_valid(self, form):
         # Custom logic when the form is valid (e.g., log the user activity)
         username = form.cleaned_data['username']
-        print(username)
+        #print(username)
         return HttpResponse(f'Welcome, {username}!')
     
    # def form_invalid(self, form):
