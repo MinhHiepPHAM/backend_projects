@@ -9,6 +9,8 @@ from authentication.models import CustomUser
 from django.contrib.auth.views import LoginView
 from django.views.generic.edit import *
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic.base import View
 
 
 # def sign_in(request):
@@ -52,15 +54,18 @@ class CustomLoginView(LoginView):
     def form_valid(self, form):
         # Custom logic when the form is valid (e.g., log the user activity)
         username = form.cleaned_data['username']
-        return redirect('dashboard',form=form)
+        self.request.session['username'] = username
+        return redirect('dashboard')
     
    # def form_invalid(self, form):
     #    return HttpResponse(f'Unsuccess {form.cleaned_data}')
 
-@login_required
-def dashboardView(request,form):
-    print(form)
-    return render(request,"users/dashboard.html",{'form':form})
+class DashboardView(LoginRequiredMixin, View):
+    login_url = "/dashboard"
+    def get(self, request, *args, **kwargs):
+        username = self.request.session['username']
+        return render(request,"users/dashboard.html",{'username':username})
+
 
 class RegisterView(FormView):
     template_name = "users/register.html"
@@ -69,9 +74,6 @@ class RegisterView(FormView):
     def form_valid(self, form):
         form.save()
         return redirect('login')
-    
-   # def form_invalid(self, form):
-    #    return HttpResponse(form.errors)
 
 
 
