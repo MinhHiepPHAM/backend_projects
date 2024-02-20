@@ -39,6 +39,8 @@ class RegisterView(FormView):
     def form_valid(self, form):
         form.save()
         return redirect('login')
+    
+class CustomLogoutView(LogoutView): pass
 
 
 # def sign_in(request):
