@@ -20,4 +20,5 @@ urlpatterns = [
     path('signup/', views.RegisterView.as_view(), name='register'),
     path('dashboard/', views.DashboardView.as_view(), name='dashboard'),
     path('logout/', views.CustomLogoutView.as_view(), name='logout'), # TODO: this will be redirected to home
+    path('home/', views.HomePageView.as_view(), name='home')
 ]

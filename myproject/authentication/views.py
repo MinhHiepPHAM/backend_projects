@@ -17,16 +17,13 @@ class CustomLoginView(LoginView):
     authentication_form = LoginForm
 
     def form_valid(self, form):
-        # Custom logic when the form is valid (e.g., log the user activity)
         username = form.cleaned_data['username']
         self.request.session['username'] = username
         return redirect('dashboard')
-    
-   # def form_invalid(self, form):
-    #    return HttpResponse(f'Unsuccess {form.cleaned_data}')
 
 class DashboardView(LoginRequiredMixin, View):
-    login_url = "/dashboard"
+    redirect_field_name = '/'
+
     def get(self, request, *args, **kwargs):
         username = self.request.session['username']
         return render(request,"users/dashboard.html",{'username':username})
@@ -40,7 +37,14 @@ class RegisterView(FormView):
         form.save()
         return redirect('login')
     
-class CustomLogoutView(LogoutView): pass
+class CustomLogoutView(LogoutView):
+    pass
+
+class HomePageView(View):
+    template_name = 'home.html'
+
+    def get(self, request, *args, **kwargs):
+        return render(request,self.template_name)
 
 
 # def sign_in(request):
