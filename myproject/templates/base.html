@@ -6,10 +6,26 @@
         <link rel="stylesheet" href="{% static 'css/authentication.css' %}">
         <link rel="stylesheet" href="{% static 'css/form.css' %}">
         <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+        <style>
+            .home-link {
+            text-decoration: none;
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            padding: 10px 20px;
+            border: 1px solid #3567b3;
+            border-radius: 8px;
+            background-color: #112f83;
+            
+        }
+        </style>
     </head>
 
     <body>
-    <div>HOME</div>
+    <div style="margin: 20px;">
+            <a href="{% url 'home' %}" class="home-link">HOME</a>
+    </div>
     {% block content %}{% endblock content %}
     </body>
 </html>
