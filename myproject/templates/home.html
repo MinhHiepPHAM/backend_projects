@@ -2,6 +2,23 @@
 
 {% block content %}
 
+<style>
+    .home-link {
+        text-decoration: none;
+        color: white;
+        font-size: 24px;
+        font-weight: bold;
+        padding: 10px 20px;
+        border: 1px solid #3567b3;
+        border-radius: 8px;
+        background-color: #112f83;
+    }
+</style>
+
+<div class = 'share-div' style="margin: 20px;">
+    <a href="{% url 'home' %}" class="home-link">HOME</a>
+</div>
+
 <p>Home page</p>
  
 {% endblock content%}
