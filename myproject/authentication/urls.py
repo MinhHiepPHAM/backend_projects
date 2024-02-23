@@ -11,14 +11,13 @@ Including another URLconf
 """
 
 
-from django.urls import path
+from django.urls import path,re_path
 from . import views
 
 urlpatterns = [
-    #path('login/', views.sign_in, name='login'),
-    path('login/', views.CustomLoginView.as_view(), name='login'),
-    path('signup/', views.RegisterView.as_view(), name='register'),
-    path('dashboard/', views.DashboardView.as_view(), name='dashboard'),
-    path('logout/', views.CustomLogoutView.as_view(), name='logout'), # TODO: this will be redirected to home
+    re_path(r'login/$', views.CustomLoginView.as_view(), name='login'),
+    re_path(r'signup/$', views.RegisterView.as_view(), name='register'),
+    re_path(r'dashboard/$', views.DashboardView.as_view(), name='dashboard'),
+    re_path(r'logout/$', views.CustomLogoutView.as_view(), name='logout'),
     path('home/', views.HomePageView.as_view(), name='home')
 ]
