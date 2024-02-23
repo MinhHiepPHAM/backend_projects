@@ -7,19 +7,31 @@
         <link rel="stylesheet" href="{% static 'css/form.css' %}">
         <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
         <style>
-            .share-div {
+            #share-div {
                 margin: 1rem;
-                padding: 2rem 2rem;
+                padding: 2px 2px;
                 text-align: center;
+                display: inline-table;
+                margin: 20px;
+            }
+            .container {
                 display: inline-block;
+                align-items: center;
+                }
+                
+            .container.item:nth-child(2){ /*Only second item padding and center text*/
+                padding-left: 1em;
+                padding-right: 1em;
+                text-align: center;
+            }
+            #home-page-img {
+                height: 48px;
+                width: 165px;
+                padding: 10px 15px;
             }
         </style>
     </head>
-
     <body>
-         <div class = 'share-div'>
-            My Page
-        </div>
     {% block content %}{% endblock content %}
     </body>
 </html>
