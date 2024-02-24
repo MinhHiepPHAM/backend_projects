@@ -13,6 +13,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.base import View
 from django.urls import reverse
+from django.contrib.auth.views import PasswordResetView, PasswordResetDoneView, PasswordResetConfirmView, PasswordResetCompleteView
     
 class CustomLoginView(LoginView):
     # form_class = LoginForm
@@ -49,4 +50,18 @@ class HomePageView(View):
         # print(user.is_authenticated)
         context = {"user":user}
         return render(request,self.template_name,context)
+    
+
+class CustomPasswordResetView(PasswordResetView):
+    template_name = 'password_reset/password_reset.html'
+
+class CustomPasswordResetDoneView(PasswordResetDoneView):
+    template_name = 'password_reset/password_reset_done.html'
+
+class CustomPasswordResetConfirmView(PasswordResetConfirmView):
+    template_name = 'password_reset/password_reset_confirm.html'
+
+class CustomPasswordResetCompleteView(PasswordResetCompleteView):
+    template_name = 'password_reset/password_reset_complete.html'
+
     
