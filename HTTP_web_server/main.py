@@ -50,7 +50,7 @@ class HttpServer(TCPServer):
     def handle_request(self,data):
         http_request = HttpRequest(data)
         try:
-            handler = getattr(self,http_request.method)
+            handler = getattr(self,'do_%s'%http_request.method)
         except AttributeError:
             handler = self.HTTP_501_handler
         
@@ -81,13 +81,20 @@ class HttpServer(TCPServer):
         return headers.encode()
     
     def GET(self, request):
-        response_line = self.response_line(status_code=200)
-
+        filename = request.uri.strip('/') # remove the slash from the request uri (ie. /index.html -> index.html)
+        if os.path.exists(filename):
+            status_code=200
+            with open(filename,'rb') as f:
+                response_body = f.read()
+        else:
+            status_code = 404
+            response_body = b"<h1>404 Not Found</h1>"
+        
+        response_line = self.response_line(status_code)
         response_headers = self.response_headers()
-
+        
         blank_line = b"\r\n"
-
-        response_body = b"<h1>GET: Hello World</h1>"
+        
         return b"".join([response_line, response_headers, blank_line, response_body])
     
 """
