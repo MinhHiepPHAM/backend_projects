@@ -80,7 +80,7 @@ class HttpServer(TCPServer):
             header += '%s: %s\r\n'%(header,context)
         return headers.encode()
     
-    def GET(self, request):
+    def do_GET(self, request):
         filename = request.uri.strip('/') # remove the slash from the request uri (ie. /index.html -> index.html)
         if os.path.exists(filename):
             status_code=200
