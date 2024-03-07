@@ -1,5 +1,6 @@
 import socket
 import os
+import mimetypes
 
 class TCPServer:
     def __init__(self, host='127.0.0.1', port=8888):
@@ -26,7 +27,7 @@ class TCPServer:
 
             response = self.handle_request(data)
 
-            print(response)
+            # print(response)
 
             conn.sendall(response) # send back to the client
 
@@ -75,24 +76,34 @@ class HttpServer(TCPServer):
         response = "HTTP/1.1 %d %s\r\n"%(status_code,status)
         return response.encode()
     
-    def response_headers(self):
-        headers = ""
-        for header, context in self.headers.items():
-            header += '%s: %s\r\n'%(header,context)
-        return headers.encode()
+    def response_headers(self,extra_header=None):
+        headers = self.headers.copy()
+        if extra_header:
+            headers.update(extra_header)
+
+        byte_headers = ""
+
+        for header, context in headers.items():
+            byte_headers += '%s: %s\r\n'%(header,context)
+        return byte_headers.encode()
     
     def do_GET(self, request):
         filename = request.uri.strip('/') # remove the slash from the request uri (ie. /index.html -> index.html)
+        print(filename)
         if os.path.exists(filename):
             status_code=200
-            with open(filename,'rb') as f:
+            content_type = mimetypes.guess_type(filename)[0] or 'text/html'
+            print(filename, content_type)
+            extra_headers = {'Content-Type': content_type}
+            with open(filename, 'rb') as f:
                 response_body = f.read()
         else:
             status_code = 404
             response_body = b"<h1>404 Not Found</h1>"
+            extra_headers = None
         
         response_line = self.response_line(status_code)
-        response_headers = self.response_headers()
+        response_headers = self.response_headers(extra_headers)
         
         blank_line = b"\r\n"
         
