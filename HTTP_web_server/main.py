@@ -93,7 +93,7 @@ class HttpServer(TCPServer):
         if os.path.exists(filename):
             status_code=200
             content_type = mimetypes.guess_type(filename)[0] or 'text/html'
-            print(filename, content_type)
+            # print(filename, content_type)
             extra_headers = {'Content-Type': content_type}
             with open(filename, 'rb') as f:
                 response_body = f.read()
