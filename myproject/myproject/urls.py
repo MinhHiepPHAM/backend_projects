@@ -21,5 +21,6 @@ from authentication import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('authentication.urls')),
+    path('', include('stock_price.urls')),
     path('home/', views.HomePageView.as_view(), name='home')
 ]
