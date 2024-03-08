@@ -1,11 +1,13 @@
 import requests
+from django.conf import settings
 
-def get_stock_price(symbol, api_key):
+
+def get_stock_price(symbol):
     base_url = 'https://www.alphavantage.co/query'
     function = 'GLOBAL_QUOTE'
     params = {
         'symbol': symbol,
-        'apikey': api_key,
+        'apikey': settings.ALPHA_VANTAGE_API_KEY,
         'function': function,
     }
 
