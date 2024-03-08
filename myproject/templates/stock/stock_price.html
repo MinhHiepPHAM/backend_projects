@@ -6,6 +6,10 @@
 </head>
 <body>
     <h1>Stock Price:</h1>
-    <p>{{ stock_price }}</p>
+    <ul>
+        {% for symbol, price in stock_prices.items %}
+            <li>{{ symbol }}: {{ price }}</li>
+        {% endfor %}
+    </ul>
 </body>
 </html>
