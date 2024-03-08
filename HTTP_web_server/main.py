@@ -2,6 +2,12 @@ import socket
 import os
 import mimetypes
 
+from flask import Flask, redirect
+ 
+ 
+app = Flask(__name__)
+
+
 class TCPServer:
     def __init__(self, host='127.0.0.1', port=8888):
         self.host = host
@@ -24,6 +30,8 @@ class TCPServer:
 
             # read data from client
             data = conn.recv(1024) # read only 1024 first bytes
+
+            print(data)
 
             response = self.handle_request(data)
 
@@ -51,6 +59,7 @@ class HttpServer(TCPServer):
 
     def handle_request(self,data):
         http_request = HttpRequest(data)
+        print(http_request.method)
         try:
             handler = getattr(self,'do_%s'%http_request.method)
         except AttributeError:
@@ -87,6 +96,12 @@ class HttpServer(TCPServer):
             byte_headers += '%s: %s\r\n'%(header,context)
         return byte_headers.encode()
     
+    """
+        GET    /index.html      HTTP/1.1           \r\n
+        |          |               |                |
+     Method       URI        HTTP version       Line break
+    """
+    
     def do_GET(self, request):
         filename = request.uri.strip('/') # remove the slash from the request uri (ie. /index.html -> index.html)
         print(filename)
@@ -108,12 +123,20 @@ class HttpServer(TCPServer):
         blank_line = b"\r\n"
         
         return b"".join([response_line, response_headers, blank_line, response_body])
-    
-"""
-    GET    /index.html      HTTP/1.1           \r\n
-     |          |               |                |
-  Method       URI        HTTP version       Line break
-"""
+
+    def do_POST(self, request):
+        status_code=200
+        content_type = 'text/html'
+        filename = 'login.html'
+        extra_headers = {'Content-Type': content_type}
+        with open(filename, 'rb') as f:
+            response_body = f.read()
+        
+        response_line = self.response_line(status_code)
+        response_headers = self.response_headers(extra_headers)
+        blank_line = b"\r\n"
+        
+        return b"".join([response_line, response_headers, blank_line, response_body])
 
 class HttpRequest:
     def __init__(self, data):

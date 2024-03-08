@@ -1,13 +1,32 @@
 <html>
 	<head>
 		<title>Index page</title>
+		<style>
+			.button {
+				background-color: #1e5b4d;
+				border: none;
+				color: white;
+				padding: 15px 15px;
+				text-align: center;
+				text-decoration: none;
+				display: inline-block;
+				font-size: 16px;
+				cursor: pointer;
+				border-radius: 8px;
+			}
+		</style>
 	</head>
 	
 	<body>
 		<h1>Index page</h1>
 		<p>This is the index page.</p>
 		<h2>This an image</h2>
-        <a href="image.png"><img alt="Click to show the image" src="/image.png" height="50px" width="48px"></a>
-		<button type="submit">Button</button>
+		<dev>
+			<a href="image.png"><img alt="Click to show the image" src="/image.png" height="100" width="90px"></a>
+			<form method="POST">
+				<button type="submit" class="button">Login</button>
+			</form>
+		</dev>
+		
 	</body>
 </html>
