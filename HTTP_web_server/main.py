@@ -111,7 +111,6 @@ class HttpServer(TCPServer):
     
 """
     GET    /index.html      HTTP/1.1           \r\n
-    \_/    \_________/      \______/          \____/
      |          |               |                |
   Method       URI        HTTP version       Line break
 """
@@ -127,6 +126,7 @@ class HttpRequest:
     def parse_request(self, data):
         header_line = data.split(b"\r\n")[0].decode()
         request_info = header_line.split(" ")
+        # print(request_info)
         self.method, self.uri, self.http_version = request_info
 
 if __name__ == '__main__':
