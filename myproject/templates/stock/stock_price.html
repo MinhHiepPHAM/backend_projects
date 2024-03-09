@@ -1,6 +1,12 @@
 {% extends 'base.html' %}
 
 {% block content %}
+    <div class="home-container">
+        <div>
+            <a href="{% url 'home' %}" class="home-link">Home</a>
+        </div>
+    </div>
+
     <h1 style="text-align: center; padding: 20px; background-color: #3498db; color:#fff;">Stock Prices</h1>
     <div class="stock-container">
         {% for symbol, price in stock_prices.items %}
