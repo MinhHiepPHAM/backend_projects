@@ -1,6 +1,12 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<div class="home-container">
+    <div>
+        <a href="{% url 'home' %}" class="home-link">Home</a>
+    </div>
+</div>
+
 <h2>Sign Up</h2>
 {% if form.errors %}
     <div class="alert alert-danger">

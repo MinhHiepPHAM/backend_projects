@@ -1,21 +1,27 @@
-.home-container {
-    margin: 1rem;
-    text-align: left;
+div.home-container {
     padding: 20px 20px;
-    margin: 20px;
-    background-color:rgb(23, 9, 145);
+    padding-right: 25px;
+    background-color:rgb(9, 80, 128);
     border: 1px solid #ddd;
     border-radius: 10px;
+    text-align: center;
+    display: inline-block;
+    width: 98%;
 
 }
+div.home-container div {
+    float: left;
+    padding-right: 5%;
+}
+
 .home-link {
     text-decoration: none;
     color: white;
-    font-size: 16px;
-    /*font-weight: bold;*/
+    font-size: 18px;
+    font-weight: bold;
     padding: 10px 10px;
     text-align: center;
     text-decoration: none;
     border-radius: 8px;
-    background-color: #75d1bc;
+    background-color: rgb(9, 80, 128);
 }

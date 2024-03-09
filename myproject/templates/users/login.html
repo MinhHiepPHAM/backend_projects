@@ -2,6 +2,12 @@
 
 {% block content %}
 
+<div class="home-container">
+    <div>
+        <a href="{% url 'home' %}" class="home-link">Home</a>
+    </div>
+</div>
+
 {% if form.errors %}
     <div class="alert alert-danger">
       <strong>Error:</strong> {{ form.errors }}
