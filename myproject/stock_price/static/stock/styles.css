@@ -5,20 +5,18 @@ body {
 }
 
 .stock-container {
-    display: flex;
+    /*==display: flex;*/
     justify-content: space-around;
     flex-wrap: wrap;
-    margin: 20px;
+    /*margin: 20px;*/
+    width: 50%;
 }
 
 .stock-item {
-    background-color: #fff;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    padding: 15px;
+    padding: auto;
     margin: 10px;
     text-align: center;
-    box-shadow: 0 2px 4px rgba(173, 173, 173, 0.1);
+    /*box-shadow: 0 2px 4px rgba(173, 173, 173, 0.1);*/
 }
 
 .stock-symbol {
@@ -31,3 +29,23 @@ body {
     font-size: 16px;
     color: #3498db;
 }
+
+.stock-table {
+    width: auto;
+    margin: 25px;
+    border-collapse: collapse;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.stock-table th, .stock-table td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: left;
+}
+
+.stock-table th {
+    background-color: #3498db;
+    color: #fff;
+}
+
+

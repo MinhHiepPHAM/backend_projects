@@ -1,13 +1,12 @@
 div.home-container {
     padding: 20px 20px;
-    padding-right: 25px;
     background-color:rgb(9, 80, 128);
     border: 1px solid #ddd;
     border-radius: 10px;
-    text-align: center;
     display: inline-block;
     width: 98%;
-
+    margin-top: 5px;
+    margin-left: 25px ;
 }
 div.home-container div {
     float: left;
@@ -17,7 +16,7 @@ div.home-container div {
 .home-link {
     text-decoration: none;
     color: white;
-    font-size: 18px;
+    font-size: 20px;
     font-weight: bold;
     padding: 10px 10px;
     text-align: center;

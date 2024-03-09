@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load custom_tags %}
 
 {% block content %}
     <div class="home-container">
@@ -7,14 +8,48 @@
         </div>
     </div>
 
-    <h1 style="text-align: center; padding: 20px; background-color: #3498db; color:#fff;">Stock Prices</h1>
+    <!--<h1 style="text-align: center; padding: 20px; background-color: #3498db; color:#fff;">Stock Prices</h1> -->
     <div class="stock-container">
-        {% for symbol, price in stock_prices.items %}
-            <div class="stock-item">
-                <p class="stock-symbol">{{ symbol }}</p>
-                <p class="stock-price">${{ price }}</p>
-            </div>
-        {% endfor %}
+        <!--<div class="stock-item">
+            <h1 style="
+                text-align: left;
+                color: #483ce4;
+            ">Stock Prices</h1>
+        </div>-->
+        <div>
+            <table class="stock-table">
+                <thead>
+                    <tr>
+                        <td colspan="4"
+                        style="
+                            text-align: center;
+                            color: white;
+                            font-size: 20px;
+                            font-weight: bold;
+                            background-color: #3498db;
+                        ">Stock Prices</td>
+                    </tr>
+                    <tr>
+                        <th>Symbol</th>
+                        <th>Price</th>
+                        <th>Volume</th>
+                        <th>Change</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for symbol, price in stock_prices.items %}
+                        <tr>
+                            <td>{{ symbol }}</td>
+                            <td>${{ price }}</td>
+                            {% get_dict_value stock_volumes symbol as volume %}
+                            <td>{{volume}}</td>
+                            {% get_dict_value stock_changes symbol as change %}
+                            <td>{{change}}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
 {% endblock content%}
 </html>
