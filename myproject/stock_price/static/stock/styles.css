@@ -4,13 +4,6 @@ body {
     margin: 0;
 }
 
-h1 {
-    text-align: center;
-    padding: 20px;
-    background-color: #3498db;
-    color: #fff;
-}
-
 .stock-container {
     display: flex;
     justify-content: space-around;
@@ -25,7 +18,7 @@ h1 {
     padding: 15px;
     margin: 10px;
     text-align: center;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 4px rgba(173, 173, 173, 0.1);
 }
 
 .stock-symbol {

@@ -1,15 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Live Stock Price</title>
-</head>
-<body>
-    <h1>Stock Price:</h1>
-    <ul>
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1 style="text-align: center; padding: 20px; background-color: #3498db; color:#fff;">Stock Prices</h1>
+    <div class="stock-container">
         {% for symbol, price in stock_prices.items %}
-            <li>{{ symbol }}: {{ price }}</li>
+            <div class="stock-item">
+                <p class="stock-symbol">{{ symbol }}</p>
+                <p class="stock-price">${{ price }}</p>
+            </div>
         {% endfor %}
-    </ul>
-</body>
+    </div>
+{% endblock content%}
 </html>

@@ -47,7 +47,6 @@ class HomePageView(View):
 
     def get(self, request, *args, **kwargs):
         user = request.user
-        # print(user.is_authenticated)
         context = {"user":user}
         return render(request,self.template_name,context)
     

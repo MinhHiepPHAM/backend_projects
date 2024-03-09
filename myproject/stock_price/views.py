@@ -10,5 +10,5 @@ def stock_price(request):
 
     stock_prices = get_stock_price(symbols)
 
-    return render(request, 'stock/stock_price.html', {'stock_prices': stock_prices})
+    return render(request, 'stock/stock_price.html', {'stock_prices': stock_prices, 'user':request.user})
 
