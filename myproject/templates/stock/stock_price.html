@@ -50,6 +50,14 @@
                 </tbody>
             </table>
         </div>
+        <div>
+            <form method="post">
+                {% csrf_token %}
+                <label for="id_symbol">New Stock Symbol:</label>
+                <input type="text" name="symbol" maxlength="10" required="" id="id_symbol" style="width: auto;">
+                <button type="submit" class="button">Add </button>
+            </form>
+        </div>
     </div>
 {% endblock content%}
 </html>

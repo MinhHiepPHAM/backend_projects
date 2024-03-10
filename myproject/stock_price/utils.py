@@ -23,10 +23,10 @@ def get_stock_price(symbols):
             stock_prices[symbol] =  float("{:.2f}".format(data['Close'][0]))  # Adjust this based on the actual API response
             stock_volumes[symbol] = data['Volume'][0]
             stock_changes[symbol] = float("{:.2f}".format(data['High'][0]-data['Low'][0]))
-        except requests.RequestException as e:
+        except KeyError:
             print(f"Error fetching stock data: {e}, {symbol}")
-            stock_prices[symbol] = 'N/A'
-            stock_volumes[symbol] = 'N/A'
-            stock_changes[symbol] = 'N/A'
+            stock_prices[symbol] = None
+            stock_volumes[symbol] = None
+            stock_changes[symbol] = None
             
     return stock_prices, stock_volumes, stock_changes
