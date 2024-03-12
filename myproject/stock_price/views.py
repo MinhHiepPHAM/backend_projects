@@ -10,7 +10,7 @@ def stock_price(request):
     new_stock = add_stock(request)
     
     if symbol := new_stock['symbol']: symbols.add(symbol)
-    stock_prices, stock_volumes, stock_changes = get_stock_price(symbols)
+    stock_prices, stock_volumes, stock_changes = get_stock_price(sorted(symbols))
 
     print(symbols)
 
