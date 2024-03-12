@@ -12,8 +12,6 @@ def stock_price(request):
     if symbol := new_stock['symbol']: symbols.add(symbol)
     stock_prices, stock_volumes, stock_changes = get_stock_price(sorted(symbols))
 
-    print(symbols)
-
     context = {'stock_prices': stock_prices,
         'stock_volumes': stock_volumes,
         'stock_changes': stock_changes,
@@ -29,7 +27,6 @@ def add_stock(request):
     symbol = None
     if request.method == 'POST':
         form = StockForm(request.POST)
-        print(form)
         if form.is_valid():
             form.save()
             symbol = form.cleaned_data['symbol']

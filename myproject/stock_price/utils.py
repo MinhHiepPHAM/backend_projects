@@ -24,7 +24,6 @@ def get_stock_price(symbols):
             stock_volumes[symbol] = data['Volume'][0]
             stock_changes[symbol] = float("{:.2f}".format(data['High'][0]-data['Low'][0]))
         except KeyError:
-            print(f"Error fetching stock data: {e}, {symbol}")
             stock_prices[symbol] = None
             stock_volumes[symbol] = None
             stock_changes[symbol] = None
