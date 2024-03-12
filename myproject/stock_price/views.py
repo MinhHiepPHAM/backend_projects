@@ -1,8 +1,9 @@
 from django.shortcuts import render, redirect
 from .utils import get_stock_price
 from .forms import StockForm
-from django.http import HttpResponseNotFound
+from django.http import HttpResponseNotFound, JsonResponse
 from django.http.response import HttpResponse
+import pandas as pd
 
 def stock_price(request):
     symbols = {'QCOM', 'AAPL', 'GOOGL'}
@@ -37,3 +38,19 @@ def add_stock(request):
     new_stock = {'form': form, 'symbol': symbol}
     
     return new_stock
+
+import csv
+def search_csv(request):
+    query = request.GET.get('q', '')
+    results = []
+    # df = pd.read_csv('stock_price/symbols.csv')
+    # for i,symbol in enumerate(df['symbol']):
+    #     if query.lower() in symbol.lower(): results.append(df[i])
+
+    with open('stock_price/symbols.csv', 'r') as file:
+        reader = csv.DictReader(file)
+        for row in reader:
+            if query.lower() in row['symbol'].lower():
+                results.append(row)
+
+    return JsonResponse(results, safe=False)

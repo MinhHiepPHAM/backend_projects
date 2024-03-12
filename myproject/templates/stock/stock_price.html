@@ -58,6 +58,42 @@
                 <button type="submit" class="button">Add </button>
             </form>
         </div>
+        <div>
+            <ul id="searchResults"></ul>
+        </div>
     </div>
+
+    
+
+    <script>
+        const searchInput = document.getElementById('id_symbol');
+        const searchResults = document.getElementById('searchResults');
+
+        searchInput.addEventListener('input', function() {
+            const query = this.value.trim();
+            fetch(`/search_csv?q=${query}`)
+                .then(response => response.json())
+                .then(data => {
+                    searchResults.innerHTML = '';
+                    data.forEach(item => {
+                        const p = document.createElement('p');
+                        p.textContent = JSON.stringify(item.symbol + ': ' + item.company).replace(/"/g, '');
+                        // p.addEventListener('mouseenter', function() {
+                        //     p.classList.add('highlight');
+                        // });
+                        // p.addEventListener('mouseleave', function() {
+                        //     p.classList.remove('highlight');
+                        // });
+                        p.addEventListener('click', function() {
+                            const inputBar = document.getElementById('id_symbol');
+                            inputBar.value = item.symbol;
+                            searchResults.innerHTML=''
+                        });
+                        searchResults.appendChild(p);
+                    });
+                })
+                .catch(error => console.error('Error:', error));
+        });
+    </script>
 {% endblock content%}
 </html>

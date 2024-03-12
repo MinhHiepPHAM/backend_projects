@@ -18,6 +18,7 @@ def get_stock_price(symbols):
         # }
 
         try:
+            symbol = symbol.upper()
             data = yf.download(symbol, period="1d")
             #print(data)
             stock_prices[symbol] =  float("{:.2f}".format(data['Close'][0]))  # Adjust this based on the actual API response
