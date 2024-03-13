@@ -20,10 +20,10 @@ def get_stock_price(symbols):
         try:
             symbol = symbol.upper()
             data = yf.download(symbol, period="1d")
-            #print(data)
+            # print(data)
             stock_prices[symbol] =  float("{:.2f}".format(data['Close'][0]))  # Adjust this based on the actual API response
             stock_volumes[symbol] = data['Volume'][0]
-            stock_changes[symbol] = float("{:.2f}".format(data['High'][0]-data['Low'][0]))
+            stock_changes[symbol] = float("{:.2f}".format(data['Open'][0]-data['Low'][0]))
         except KeyError:
             stock_prices[symbol] = None
             stock_volumes[symbol] = None

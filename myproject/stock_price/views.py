@@ -4,9 +4,11 @@ from .forms import StockForm
 from django.http import HttpResponseNotFound, JsonResponse
 from django.http.response import HttpResponse
 import pandas as pd
+import csv
+
+symbols = {'QCOM', 'AAPL', 'GOOGL'}
 
 def stock_price(request):
-    symbols = {'QCOM', 'AAPL', 'GOOGL'}
 
     new_stock = add_stock(request)
     
@@ -39,7 +41,6 @@ def add_stock(request):
     
     return new_stock
 
-import csv
 def search_csv(request):
     query = request.GET.get('q', '')
     results = []
