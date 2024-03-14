@@ -1,0 +1,44 @@
+.custom-select select {
+    /* Hide the default select arrow */
+    /* for Firefox */
+    -moz-appearance: none;
+    /* for Chrome */
+    -webkit-appearance: none;
+    appearance: none;
+    margin-top: 15px;
+    margin-left: 10px;
+}
+
+/* Style the select arrow icon */
+.custom-select::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    right: 0.5em;
+    width: 0;
+    height: 0;
+    border: 0.3em solid transparent;
+    border-top-color: currentColor;
+    transform: translateY(-50%);
+}
+
+/* Style the select options */
+.custom-select select {
+    width: fit-content;
+    padding: 0.5em 1em;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px; /* Adjust font size */
+    outline: none;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Add shadow for better visibility */
+}
+
+/* Style the select options on hover */
+.custom-select select:hover {
+    background-color: #f9f9f9;
+}
+
+/* Style the select options when focused */
+.custom-select select:focus {
+    border-color: #007bff; /* Change border color on focus */
+}

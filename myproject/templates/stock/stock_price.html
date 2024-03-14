@@ -16,6 +16,21 @@
                 color: #483ce4;
             ">Stock Prices</h1>
         </div>-->
+        <form method="post">
+            {% csrf_token %}
+            <div class="custom-select">
+                <select name="mySelect" onchange='this.form.submit()'>
+                    {% for option in options %}
+                    {% if period == option.value %}
+                        <option value="{{ option.value }}" selected="selected">{{ option.label }}</option>
+                    {% else %}
+                        <option value="{{ option.value }}">{{ option.label }}</option>
+                    {% endif %}    
+                    {% endfor %}
+                </select>
+                <!--<button type="submit" class="button">View</button>-->
+            </div>
+        </form>
         <div>
             <table class="stock-table">
                 <thead>
@@ -54,8 +69,8 @@
             <form method="post">
                 {% csrf_token %}
                 <label for="id_symbol">New Stock Symbol:</label>
-                <input type="text" name="symbol" maxlength="10" required="" id="id_symbol" style="width: auto;" placeholder="Symbol">
-                <button type="submit" class="button">Add </button>
+                <input onchange="this.form.submit()" type="text" name="symbol" maxlength="10" required="" id="id_symbol" style="width: auto;" placeholder="Symbol">
+                <!-- <button type="submit" class="button">Add </button> -->
             </form>
         </div>
         <div>
@@ -93,6 +108,20 @@
                     });
                 })
                 .catch(error => console.error('Error:', error));
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get the select element
+            const selectElement = document.getElementById('mySelect');
+
+            // Get the selected value
+            const selectedValue = selectElement.value;
+
+            // Set the value attribute of the selected option to the selected value
+            const selectedOption = selectElement.querySelector(`option[value="${selectedValue}"]`);
+            if (selectedOption) {
+                selectedOption.selected = true; // Set the selected option as default
+            }
         });
     </script>
 {% endblock content%}

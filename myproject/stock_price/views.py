@@ -13,13 +13,22 @@ def stock_price(request):
     new_stock = add_stock(request)
     
     if symbol := new_stock['symbol']: symbols.add(symbol)
-    stock_prices, stock_volumes, stock_changes = get_stock_price(sorted(symbols))
+    if period := period_selection(request):
+        pass
+    else:
+        period = '1d'
+    stock_prices, stock_volumes, stock_changes = get_stock_price(sorted(symbols),period)
 
-    context = {'stock_prices': stock_prices,
+    periods = get_period_options()
+    
+    context = {
+        'stock_prices': stock_prices,
         'stock_volumes': stock_volumes,
         'stock_changes': stock_changes,
         'user':request.user,
-        'stock_form': new_stock['form']
+        'stock_form': new_stock['form'],
+        'options':periods,
+        'period':period
     }
     
 
@@ -55,3 +64,21 @@ def search_csv(request):
                 results.append(row)
 
     return JsonResponse(results, safe=False)
+
+def get_period_options():
+    intervals = ['1d','5d','1mo','3mo','6mo','1y','2y','5y','10y','ytd','max']
+    labels = ['1 day','5 day','1 month','3 months','6 months','1 year','2 years','5 years','10 years','Year to date','All']
+
+    options = [
+        {'value': interval, 'label': label}
+        for interval, label in zip(intervals,labels)
+    ]
+
+    return options
+
+def period_selection(request):
+    selected_option = request.POST.get('mySelect')
+    if selected_option:
+        return selected_option
+    else:
+        return None

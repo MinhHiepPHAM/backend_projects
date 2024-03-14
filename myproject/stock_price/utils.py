@@ -3,7 +3,7 @@ from django.conf import settings
 import yfinance as yf
 
 
-def get_stock_price(symbols):
+def get_stock_price(symbols,period='5d'):
     # base_url = 'https://www.alphavantage.co/query'
     # function = 'GLOBAL_QUOTE'
 
@@ -19,11 +19,11 @@ def get_stock_price(symbols):
 
         try:
             symbol = symbol.upper()
-            data = yf.download(symbol, period="1d")
+            data = yf.download(symbol,period=period)
             # print(data)
-            stock_prices[symbol] =  float("{:.2f}".format(data['Close'][0]))  # Adjust this based on the actual API response
-            stock_volumes[symbol] = data['Volume'][0]
-            stock_changes[symbol] = float("{:.2f}".format(data['Open'][0]-data['Low'][0]))
+            stock_prices[symbol] =  float("{:.2f}".format(data['Close'][-1]))  # Adjust this based on the actual API response
+            stock_volumes[symbol] = data['Volume'][-1]
+            stock_changes[symbol] = float("{:.2f}".format(data['Close'][-1]-data['Open'][0]))
         except KeyError:
             stock_prices[symbol] = None
             stock_volumes[symbol] = None
