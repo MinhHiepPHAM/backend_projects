@@ -2,31 +2,66 @@ import requests
 from django.conf import settings
 import yfinance as yf
 
+class StockInfo:
+    def __init__(self, symbol):
+        self.symbol = symbol
+        self.close_price = 0
+        self.open_price = 0
+        self.volume = 0
+        self.change = 0
+    
+    def get_stock_price(self, data):
+        if data:
+            return float("{:.2f}".format(data[self.symbol]['Close'][-1]))
+        else:
+            return 0
+    
+    def get_open_price(self, data):
+        if data:
+            return float("{:.2f}".format(data[self.symbol]['Open'][0]))
+        else:
+            return 0
+        
+    def get_stock_volume(self, data):
+        if data:
+            return data[self.symbol]['Volume'][-1]
+        else:
+            return 0
+        
+    def get_stock_change(self):
+        return float("{:.2f}".format(self.close_price-self.open_price))
+    
+    def __eq__(self, other):
+        return self.symbol.lower() == self.other.symbol.lower()
+    
+    def __hash__(self) -> int:
+        return hash(self.symbol)
 
-def get_stock_price(symbols,period='5d'):
-    # base_url = 'https://www.alphavantage.co/query'
-    # function = 'GLOBAL_QUOTE'
-
-    stock_prices = dict()
-    stock_volumes = dict()
-    stock_changes = dict()
-    for symbol in symbols:
-        # params = {
-        #     'symbol': symbol,
-        #     'apikey': settings.ALPHA_VANTAGE_API_KEY,
-        #     'function': function,
-        # }
-
+class StockData:
+    def __init__(self, period) -> None:
+        self.period = period
+        self.data = dict()
+        self.stocks = set()
+    
+    def download_data(self,symbol, period):
         try:
             symbol = symbol.upper()
             data = yf.download(symbol,period=period)
-            # print(data)
-            stock_prices[symbol] =  float("{:.2f}".format(data['Close'][-1]))  # Adjust this based on the actual API response
-            stock_volumes[symbol] = data['Volume'][-1]
-            stock_changes[symbol] = float("{:.2f}".format(data['Close'][-1]-data['Open'][0]))
-        except KeyError:
-            stock_prices[symbol] = None
-            stock_volumes[symbol] = None
-            stock_changes[symbol] = None
-            
-    return stock_prices, stock_volumes, stock_changes
+        except:
+            data = None
+        
+        self.data[symbol] = data
+
+    def add_stock(self,symbol):
+        stock = StockInfo(symbol)
+        self.download_data(symbol,self.period)
+        stock.close_price = stock.get_stock_price(self.data)
+        stock.open_price = stock.get_open_price(self.data)
+        stock.volume = stock.get_stock_volume(self.data)
+        stock.change = stock.get_stock_change()
+        self.stocks.add(stock)
+    
+    def get_stock(self,symbol):
+        for stock in self.stocks:
+            if stock.symbol == symbol: return stock
+        return None # TODO:create None stock is better ?                                                                                                                                            

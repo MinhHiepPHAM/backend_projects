@@ -21,7 +21,7 @@
             <div class="custom-select">
                 <select name="mySelect" onchange='this.form.submit()'>
                     {% for option in options %}
-                    {% if period == option.value %}
+                    {% if stock_data.period == option.value %}
                         <option value="{{ option.value }}" selected="selected">{{ option.label }}</option>
                     {% else %}
                         <option value="{{ option.value }}">{{ option.label }}</option>
@@ -52,14 +52,14 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for symbol, price in stock_prices.items %}
+                    {% for stock in stock_data.stocks %}
                         <tr>
-                            <td>{{ symbol }}</td>
-                            <td>${{ price }}</td>
-                            {% get_dict_value stock_volumes symbol as volume %}
-                            <td>{{volume}}</td>
-                            {% get_dict_value stock_changes symbol as change %}
-                            <td>{{change}}</td>
+                            <td>{{ stock.symbol }}</td>
+                            <td>${{ stock.close_price }}</td>
+                            
+                            <td>{{stock.volume}}</td>
+                           
+                            <td>${{stock.change}}</td>
                         </tr>
                     {% endfor %}
                 </tbody>
