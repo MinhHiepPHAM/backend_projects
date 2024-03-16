@@ -47,19 +47,17 @@
                     <tr>
                         <th>Symbol</th>
                         <th>Price</th>
-                        <th>Volume</th>
                         <th>Change</th>
+                        <th>Volume</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for stock in stock_data.stocks %}
                         <tr>
                             <td>{{ stock.symbol }}</td>
-                            <td>${{ stock.close_price }}</td>
-                            
-                            <td>{{stock.volume}}</td>
-                           
+                            <td>${{stock.close_price }}</td>
                             <td>${{stock.change}}</td>
+                            <td>{{stock.volume}}</td>
                         </tr>
                     {% endfor %}
                 </tbody>
@@ -69,8 +67,8 @@
             <form method="post">
                 {% csrf_token %}
                 <label for="id_symbol">New Stock Symbol:</label>
-                <input onchange="this.form.submit()" type="text" name="symbol" maxlength="10" required="" id="id_symbol" style="width: auto;" placeholder="Symbol">
-                <!-- <button type="submit" class="button">Add </button> -->
+                <input type="text" name="symbol" maxlength="10" required="" id="id_symbol" style="width: auto;" placeholder="Symbol">
+                <button type="submit" class="button">Add </button>
             </form>
         </div>
         <div>
