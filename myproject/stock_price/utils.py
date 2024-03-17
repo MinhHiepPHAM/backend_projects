@@ -103,8 +103,6 @@ class StockData:
         data = self.data[symbol]
         df = pd.DataFrame(data)
 
-        
-
         timespan = self.get_time_span(df,period)
         
         fig = go.Figure()
@@ -121,7 +119,7 @@ class StockData:
         else:
             tickformat = '%m-%d-%Y'
         fig.update_layout(
-            title=f'Stock Price of {symbol}',
+            title=f'Stock Price of {symbol} ({self.get_stock(symbol).change}$)',
             xaxis=dict(title='Time', tickformat=tickformat, showgrid=False),
             yaxis=dict(title='Price', showgrid=False),
             showlegend=True,
