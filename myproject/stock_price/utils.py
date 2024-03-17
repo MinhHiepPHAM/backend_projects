@@ -106,7 +106,6 @@ class StockData:
         
 
         timespan = self.get_time_span(df,period)
-        # print(timespan)
         
         fig = go.Figure()
 
@@ -120,7 +119,7 @@ class StockData:
         if period == '1d':
             tickformat = 'HH:MM'
         else:
-            tickformat = '%Y-%m-%d'
+            tickformat = '%m-%d-%Y'
         fig.update_layout(
             title=f'Stock Price of {symbol}',
             xaxis=dict(title='Time', tickformat=tickformat, showgrid=False),

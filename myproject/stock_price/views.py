@@ -7,6 +7,10 @@ import pandas as pd
 import csv
 
 symbols = {'QCOM', 'AAPL', 'GOOGL'}
+PERIOD = '1d'
+SYMBOL = 'QCOM'
+
+print('TOTO')
 
 def get_period_options():
     intervals = ['1d','5d','1mo','3mo','6mo','1y','2y','5y','10y','ytd','max']
@@ -25,23 +29,26 @@ def stock_price(request):
     new_stock = add_new_stock(request)
     
     if symbol := new_stock['symbol']: symbols.add(symbol)
-    if period := period_selection(request):
-        pass
-    else:
-        period = '1d'
+    global PERIOD
+    if period:=period_selection(request):
+        PERIOD = period
 
-    stock_data = StockData(period)
+    stock_data = StockData(PERIOD)
     for symbol in symbols:
         stock_data.add_stock(symbol)
 
-    plot_html = stock_data.plot_stock('QCOM',period)
+    global SYMBOL
+    if sym:= symbol_selection(request): SYMBOL = sym
+    plot_html = stock_data.plot_stock(SYMBOL, PERIOD)
     
     context = {
         'user':request.user,
         'stock_form': new_stock['form'],
         'options':periods,
         'stock_data': stock_data,
-        'plot':plot_html,
+        'plot_html':plot_html,
+        'plot_symbol':SYMBOL,
+        'symbols': symbols
     }
     
 
@@ -76,7 +83,14 @@ def search_csv(request):
     return JsonResponse(results, safe=False)
 
 def period_selection(request):
-    selected_option = request.POST.get('mySelect')
+    selected_option = request.POST.get('period-selection')
+    if selected_option:
+        return selected_option
+    else:
+        return None
+    
+def symbol_selection(request):
+    selected_option = request.POST.get('symbol-selection')
     if selected_option:
         return selected_option
     else:

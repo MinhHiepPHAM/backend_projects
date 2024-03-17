@@ -10,75 +10,90 @@
 
     <!--<h1 style="text-align: center; padding: 20px; background-color: #3498db; color:#fff;">Stock Prices</h1> -->
     <div class="grid-container">
-    <div class="stock-container">
-        <!--<div class="stock-item">
-            <h1 style="
-                text-align: left;
-                color: #483ce4;
-            ">Stock Prices</h1>
-        </div>-->
-        <form method="post">
-            {% csrf_token %}
-            <div class="custom-select">
-                <select name="mySelect" onchange='this.form.submit()'>
-                    {% for option in options %}
-                    {% if stock_data.period == option.value %}
-                        <option value="{{ option.value }}" selected="selected">{{ option.label }}</option>
-                    {% else %}
-                        <option value="{{ option.value }}">{{ option.label }}</option>
-                    {% endif %}    
-                    {% endfor %}
-                </select>
-                <!--<button type="submit" class="button">View</button>-->
-            </div>
-        </form>
-        <div>
-            <table class="stock-table">
-                <thead>
-                    <tr>
-                        <td colspan="4"
-                        style="
-                            text-align: center;
-                            color: white;
-                            font-size: 20px;
-                            font-weight: bold;
-                            background-color: #3498db;
-                        ">Stock Prices</td>
-                    </tr>
-                    <tr>
-                        <th>Symbol</th>
-                        <th>Price</th>
-                        <th>Change</th>
-                        <th>Volume</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for stock in stock_data.stocks %}
-                        <tr>
-                            <td>{{ stock.symbol }}</td>
-                            <td>${{stock.close_price }}</td>
-                            <td>${{stock.change}}</td>
-                            <td>{{stock.volume}}</td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-        <div>
+        <div class="stock-container">
+            <!--<div class="stock-item">
+                <h1 style="
+                    text-align: left;
+                    color: #483ce4;
+                ">Stock Prices</h1>
+            </div>-->
             <form method="post">
                 {% csrf_token %}
-                <!-- <label for="id_symbol">New Stock Symbol:</label> -->
-                <input type="text" name="symbol" maxlength="10" required="" id="id_symbol" style="width: auto;" placeholder="New Symbol">
-                <button type="submit" class="button">Add </button>
+                <div class="custom-select">
+                    <select name="period-selection" onchange='this.form.submit()'>
+                        {% for option in options %}
+                        {% if stock_data.period == option.value %}
+                            <option value="{{ option.value }}" selected="selected">{{ option.label }}</option>
+                        {% else %}
+                            <option value="{{ option.value }}">{{ option.label }}</option>
+                        {% endif %}    
+                        {% endfor %}
+                    </select>
+                    <!--<button type="submit" class="button">View</button>-->
+                </div>
             </form>
+            <div>
+                <table class="stock-table">
+                    <thead>
+                        <tr>
+                            <td colspan="4"
+                            style="
+                                text-align: center;
+                                color: white;
+                                font-size: 20px;
+                                font-weight: bold;
+                                background-color: #3498db;
+                            ">Stock Prices</td>
+                        </tr>
+                        <tr>
+                            <th>Symbol</th>
+                            <th>Price</th>
+                            <th>Change</th>
+                            <th>Volume</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for stock in stock_data.stocks %}
+                            <tr>
+                                <td>{{ stock.symbol }}</td>
+                                <td>${{stock.close_price }}</td>
+                                <td>${{stock.change}}</td>
+                                <td>{{stock.volume}}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div>
+                <form method="post">
+                    {% csrf_token %}
+                    <!-- <label for="id_symbol">New Stock Symbol:</label> -->
+                    <input type="text" name="symbol" maxlength="10" required="" id="id_symbol" style="width: auto;" placeholder="New Symbol">
+                    <button type="submit" class="button">Add </button>
+                </form>
+            </div>
+            <div>
+                <ul id="searchResults"></ul>
+            </div>
         </div>
-        <div>
-            <ul id="searchResults"></ul>
+        
+        <div style="width: 100%; margin-left: 150px; margin-top: 10px;">
+            <form method="post">
+                {% csrf_token %}
+                <div class="custom-select">
+                    <select name="symbol-selection" onchange='this.form.submit()'>
+                        {% for symbol in symbols %}
+                            {% if symbol == plot_symbol %}
+                                <option value="{{ symbol }}" selected="selected">{{symbol}}</option>
+                            {% else %}
+                                <option value="{{ symbol }}">{{symbol}}</option>
+                            {% endif %}    
+                        {% endfor %}
+                    </select>
+                </div>
+            </form>
+            {{ plot_html|safe }}
         </div>
-    </div>
-    <div style="width: 100%; margin-left: 150px; margin-top: 10px;">
-        {{ plot|safe }}
-    </div>
     </div>
 
 
