@@ -9,7 +9,7 @@ body {
     justify-content: space-around;
     flex-wrap: wrap;
     /*margin: 20px;*/
-    width: 50%;
+    width: 30%;
 }
 
 .stock-item {
@@ -48,4 +48,7 @@ body {
     color: #fff;
 }
 
-
+.grid-container {
+    display: flex;
+    /* grid-template-columns: 25% 75%; */
+}

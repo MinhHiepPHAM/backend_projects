@@ -9,6 +9,7 @@
     </div>
 
     <!--<h1 style="text-align: center; padding: 20px; background-color: #3498db; color:#fff;">Stock Prices</h1> -->
+    <div class="grid-container">
     <div class="stock-container">
         <!--<div class="stock-item">
             <h1 style="
@@ -66,8 +67,8 @@
         <div>
             <form method="post">
                 {% csrf_token %}
-                <label for="id_symbol">New Stock Symbol:</label>
-                <input type="text" name="symbol" maxlength="10" required="" id="id_symbol" style="width: auto;" placeholder="Symbol">
+                <!-- <label for="id_symbol">New Stock Symbol:</label> -->
+                <input type="text" name="symbol" maxlength="10" required="" id="id_symbol" style="width: auto;" placeholder="New Symbol">
                 <button type="submit" class="button">Add </button>
             </form>
         </div>
@@ -75,11 +76,11 @@
             <ul id="searchResults"></ul>
         </div>
     </div>
-    <div>
+    <div style="width: 100%; margin-left: 150px; margin-top: 10px;">
         {{ plot|safe }}
     </div>
+    </div>
 
-    
 
     <script>
         const searchInput = document.getElementById('id_symbol');

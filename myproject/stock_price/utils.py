@@ -5,6 +5,7 @@ from matplotlib import pyplot as plt
 import pandas as pd
 import io
 import base64
+import plotly.graph_objects as go 
 
 class StockInfo:
     def __init__(self, symbol):
@@ -71,19 +72,45 @@ class StockData:
         return None # TODO:create None stock is better ?   
 
     def plot_stock(self, symbol):
-        data = self.data[symbol]
-        close_prices = pd.DataFrame(data)['Adj Close']
-        plt.plot(close_prices)
-        plt.title('Stock Price Modification')
-        plt.xlabel('Date')
-        plt.ylabel('Price')
-        # plt.grid(True)
+        # data = self.data[symbol]
+        # close_prices = pd.DataFrame(data)['Adj Close']
+        # plt.plot(close_prices)
+        # plt.title('Stock Price Modification')
+        # plt.xlabel('Date')
+        # plt.ylabel('Price')
+        # # plt.grid(True)
 
-        # Save the plot as a PNG image
-        buffer = io.BytesIO()
-        plt.savefig(buffer, format='png')
-        buffer.seek(0)
-        img_str = base64.b64encode(buffer.read()).decode()
-        # Generate HTML to display the image
-        return f'<img src="data:image/png;base64,{img_str}" alt="Stock Price Modification">'
+        # # Save the plot as a PNG image
+        # buffer = io.BytesIO()
+        # plt.savefig(buffer, format='png')
+        # buffer.seek(0)
+        # img_str = base64.b64encode(buffer.read()).decode()
+        # # Generate HTML to display the image
+        # return f'<img src="data:image/png;base64,{img_str}" alt="Stock Price Modification">'
+
+        data = self.data[symbol]
+        df = pd.DataFrame(data)
+
+        # print(df['Date'])
         
+        fig = go.Figure()
+
+        # Add trace for stock prices
+        fig.add_trace(go.Scatter(x=df.index, y=df['Adj Close'], mode='lines', name='Stock Price', 
+                                line=dict(color='blue', width=1),
+                                # marker=dict(color='white', size=8),
+                                hoverinfo='y'))
+
+        # Update layout
+        fig.update_layout(
+            title=f'Stock Price of {symbol}',
+            xaxis=dict(title='Time', tickformat='%Y-%m-%d', showgrid=False),
+            yaxis=dict(title='Price', showgrid=False),
+            showlegend=True,
+            legend=dict(x=0, y=1.1, orientation='h'),
+            plot_bgcolor='white',
+            # autosize=True,
+            margin=dict(l=40, r=40, t=80, b=40),
+        )
+
+        return fig.to_html(full_html=False)
