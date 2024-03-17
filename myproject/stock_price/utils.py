@@ -1,6 +1,10 @@
 import requests
 from django.conf import settings
 import yfinance as yf
+from matplotlib import pyplot as plt
+import pandas as pd
+import io
+import base64
 
 class StockInfo:
     def __init__(self, symbol):
@@ -64,4 +68,22 @@ class StockData:
     def get_stock(self,symbol):
         for stock in self.stocks:
             if stock.symbol == symbol: return stock
-        return None # TODO:create None stock is better ?                                                                                                                                            
+        return None # TODO:create None stock is better ?   
+
+    def plot_stock(self, symbol):
+        data = self.data[symbol]
+        close_prices = pd.DataFrame(data)['Adj Close']
+        plt.plot(close_prices)
+        plt.title('Stock Price Modification')
+        plt.xlabel('Date')
+        plt.ylabel('Price')
+        # plt.grid(True)
+
+        # Save the plot as a PNG image
+        buffer = io.BytesIO()
+        plt.savefig(buffer, format='png')
+        buffer.seek(0)
+        img_str = base64.b64encode(buffer.read()).decode()
+        # Generate HTML to display the image
+        return f'<img src="data:image/png;base64,{img_str}" alt="Stock Price Modification">'
+        

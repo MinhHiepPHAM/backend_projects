@@ -33,13 +33,15 @@ def stock_price(request):
     stock_data = StockData(period)
     for symbol in symbols:
         stock_data.add_stock(symbol)
-    # stock_prices, stock_volumes, stock_changes = get_stock_price(sorted(symbols),period)
+
+    plot_html = stock_data.plot_stock('QCOM')
     
     context = {
         'user':request.user,
         'stock_form': new_stock['form'],
         'options':periods,
-        'stock_data': stock_data
+        'stock_data': stock_data,
+        'plot':plot_html,
     }
     
 
