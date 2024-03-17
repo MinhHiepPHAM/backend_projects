@@ -34,7 +34,7 @@ def stock_price(request):
     for symbol in symbols:
         stock_data.add_stock(symbol)
 
-    plot_html = stock_data.plot_stock('QCOM')
+    plot_html = stock_data.plot_stock('QCOM',period)
     
     context = {
         'user':request.user,
