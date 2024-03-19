@@ -94,6 +94,11 @@
             </form>
             {{ plot_html|safe }}
         </div>
+        </div>
+        {% for headline in headlines %}
+            <p>{{headline}}</p> 
+        {% endfor %}
+        <div>
     </div>
 
 

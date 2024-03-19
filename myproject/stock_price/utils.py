@@ -1,11 +1,18 @@
-import requests
 from django.conf import settings
 import yfinance as yf
 from matplotlib import pyplot as plt
 import pandas as pd
-import io
-import base64
 import plotly.graph_objects as go 
+from bs4 import BeautifulSoup
+
+from selenium import webdriver
+from selenium.webdriver.firefox.service import Service
+from selenium.webdriver.firefox.options import Options
+from webdriver_manager.firefox import GeckoDriverManager
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.by import By
+from selenium.common import TimeoutException
 
 class StockInfo:
     def __init__(self, symbol):
@@ -74,22 +81,6 @@ class StockData:
         for stock in self.stocks:
             if stock.symbol == symbol: return stock
         return None # TODO:create None stock is better ?
-    
-        # data = self.data[symbol]
-        # close_prices = pd.DataFrame(data)['Adj Close']
-        # plt.plot(close_prices)
-        # plt.title('Stock Price Modification')
-        # plt.xlabel('Date')
-        # plt.ylabel('Price')
-        # # plt.grid(True)
-
-        # # Save the plot as a PNG image
-        # buffer = io.BytesIO()
-        # plt.savefig(buffer, format='png')
-        # buffer.seek(0)
-        # img_str = base64.b64encode(buffer.read()).decode()
-        # # Generate HTML to display the image
-        # return f'<img src="data:image/png;base64,{img_str}" alt="Stock Price Modification">'
 
     def get_time_span(self,data_frame, period):
         if period == '1d':
@@ -130,3 +121,78 @@ class StockData:
         )
 
         return fig.to_html(full_html=False)
+    
+class StockNew:
+    def __init__(self, url, headline):
+        self.url = url
+        self.headline = headline
+
+    def __eq__(self, other: object):
+        return self.url == other.url and self.headline == other.headline
+    
+    def __hash__(self) -> int:
+        return hash(self.url,self.headline)
+
+class News:
+    def __init__(self):
+        self.stock_news = dict() # new per stock symbol
+
+    def add_new(self, symbol, url, headline):
+        new = StockNew(url,headline)
+        if symbol in self.stock_news:
+            self.stock_news[symbol] = {new}
+        else:
+            self.stock_news[symbol].add(new)
+
+
+    def scrape_stock_news(self,symbol):
+        driver_path = "/usr/local/bin/geckodriver"
+
+        # Initialize WebDriver with headless mode to not open the new windown
+        options = Options()
+        options.add_argument('--headless')
+
+        driver = webdriver.Chrome(service=Service(GeckoDriverManager().install()), options=options)
+
+        url = 'https://finance.yahoo.com/quote/QCOM/news/'
+        driver.set_window_size(1920, 1080)
+
+        # Navigate to the URL
+        driver.get(url)
+        try:
+            # wait up to 3 seconds for the consent modal to show up
+            consent_overlay = WebDriverWait(driver, 3).until(EC.presence_of_element_located((By.CSS_SELECTOR, '.consent-overlay')))
+
+            # click the "Accept all" button
+            accept_all_button = consent_overlay.find_element(By.CSS_SELECTOR, '.accept-all')
+            accept_all_button.click()
+        except TimeoutException:
+            print('Cookie consent overlay missing')
+
+        # Get the HTML content after JavaScript execution
+        html_content = driver.page_source
+
+        # Close the browser
+        driver.quit()
+
+        headlines = []
+        urls = []
+        if html_content:
+            # Parse the HTML content of the page
+            soup = BeautifulSoup(html_content, 'html.parser')
+
+            # Find all news articles
+            news_articles = soup.find_all('h3', class_='Mb(5px)')
+
+            # Extract news headlines and URLs     
+            for article in news_articles:
+                headline = article.text
+                url = article.find('a')['href']
+                headlines.append(headline)
+                urls.append(url)
+
+        return headlines, urls
+        
+
+
+
