@@ -1,12 +1,11 @@
 from django.shortcuts import render, redirect
 from .utils import StockData, News
-from .forms import StockForm
 from django.http import HttpResponseNotFound, JsonResponse
 from django.http.response import HttpResponse
 import pandas as pd
 import csv
 
-symbols = {'QCOM', 'AAPL', 'GOOGL'}
+SYMBOLS = {'QCOM', 'AAPL', 'GOOGL'}
 PERIOD = '1d'
 SYMBOL = 'QCOM'
 
@@ -25,15 +24,15 @@ periods = get_period_options()
 
 def stock_price(request):
 
-    new_stock = add_new_stock(request)
+    new_stock_symbol = add_new_stock(request)
     
-    if symbol := new_stock['symbol']: symbols.add(symbol)
+    if symbol := new_stock_symbol: SYMBOLS.add(symbol)
     global PERIOD
     if period:=period_selection(request):
         PERIOD = period
 
     stock_data = StockData(PERIOD)
-    for symbol in symbols:
+    for symbol in SYMBOLS:
         stock_data.add_stock(symbol)
 
     global SYMBOL
@@ -50,12 +49,12 @@ def stock_price(request):
     
     context = {
         'user':request.user,
-        'stock_form': new_stock['form'],
+        # 'stock_form': new_stock['form'],
         'options':periods,
         'stock_data': stock_data,
         'plot_html':plot_html,
         'plot_symbol':SYMBOL,
-        'symbols': symbols,
+        'symbols': SYMBOLS,
         'headlines': headlines,
         'urls': urls,
     }
@@ -65,19 +64,7 @@ def stock_price(request):
 
 
 def add_new_stock(request):
-    symbol = None
-    if request.method == 'POST':
-        form = StockForm(request.POST)
-        if form.is_valid():
-            form.save()
-            symbol = form.cleaned_data['symbol']
-            # print('add_stock', symbol)
-    else:
-        form = StockForm()
-
-    new_stock = {'form': form, 'symbol': symbol}
-    
-    return new_stock
+    return request.POST.get('symbol')
 
 def search_csv(request):
     query = request.GET.get('q', '')

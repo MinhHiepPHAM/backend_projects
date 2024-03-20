@@ -151,8 +151,9 @@ class News:
         # Initialize WebDriver with headless mode to not open the new windown
         options = Options()
         options.add_argument('--headless')
+        options.add_argument('--blink-settings=imagesEnabled=false')
 
-        driver = webdriver.Chrome(service=Service(GeckoDriverManager().install()), options=options)
+        driver = webdriver.Firefox(service=Service(GeckoDriverManager().install()), options=options)
 
         url = 'https://finance.yahoo.com/quote/QCOM/news/'
         driver.set_window_size(1920, 1080)
