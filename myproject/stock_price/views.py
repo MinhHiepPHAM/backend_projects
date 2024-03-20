@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .utils import StockData, News
+from .utils import StockData
 from django.http import HttpResponseNotFound, JsonResponse
 from django.http.response import HttpResponse
 import pandas as pd
@@ -39,24 +39,23 @@ def stock_price(request):
     if sym:= symbol_selection(request): SYMBOL = sym
     plot_html = stock_data.plot_stock(SYMBOL, PERIOD)
     
-    news = News()
-    headlines, urls = news.scrape_stock_news('QCOM')
+    # news = News()
+    # headlines, urls = news.scrape_stock_news('QCOM')
 
-    headlines = [headline for headline in headlines if headline]
-    urls = [url for url in urls if url]
+    # headlines = [headline for headline in headlines if headline]
+    # urls = [url for url in urls if url]
 
 
     
     context = {
         'user':request.user,
-        # 'stock_form': new_stock['form'],
         'options':periods,
         'stock_data': stock_data,
         'plot_html':plot_html,
         'plot_symbol':SYMBOL,
         'symbols': SYMBOLS,
-        'headlines': headlines,
-        'urls': urls,
+        # 'headlines': headlines,
+        # 'urls': urls,
     }
     
 

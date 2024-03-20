@@ -1,18 +1,8 @@
-from django.conf import settings
 import yfinance as yf
-from matplotlib import pyplot as plt
+# from matplotlib import pyplot as plt
 import pandas as pd
 import plotly.graph_objects as go 
-from bs4 import BeautifulSoup
 
-from selenium import webdriver
-from selenium.webdriver.firefox.service import Service
-from selenium.webdriver.firefox.options import Options
-from webdriver_manager.firefox import GeckoDriverManager
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.common.by import By
-from selenium.common import TimeoutException
 
 class StockInfo:
     def __init__(self, symbol):
@@ -143,57 +133,4 @@ class News:
             self.stock_news[symbol] = {new}
         else:
             self.stock_news[symbol].add(new)
-
-
-    def scrape_stock_news(self,symbol):
-        driver_path = "/usr/local/bin/geckodriver"
-
-        # Initialize WebDriver with headless mode to not open the new windown
-        options = Options()
-        options.add_argument('--headless')
-        options.add_argument('--blink-settings=imagesEnabled=false')
-
-        driver = webdriver.Firefox(service=Service(GeckoDriverManager().install()), options=options)
-
-        url = 'https://finance.yahoo.com/quote/QCOM/news/'
-        driver.set_window_size(1920, 1080)
-
-        # Navigate to the URL
-        driver.get(url)
-        try:
-            # wait up to 3 seconds for the consent modal to show up
-            consent_overlay = WebDriverWait(driver, 3).until(EC.presence_of_element_located((By.CSS_SELECTOR, '.consent-overlay')))
-
-            # click the "Accept all" button
-            accept_all_button = consent_overlay.find_element(By.CSS_SELECTOR, '.accept-all')
-            accept_all_button.click()
-        except TimeoutException:
-            print('Cookie consent overlay missing')
-
-        # Get the HTML content after JavaScript execution
-        html_content = driver.page_source
-
-        # Close the browser
-        driver.quit()
-
-        headlines = []
-        urls = []
-        if html_content:
-            # Parse the HTML content of the page
-            soup = BeautifulSoup(html_content, 'html.parser')
-
-            # Find all news articles
-            news_articles = soup.find_all('h3', class_='Mb(5px)')
-
-            # Extract news headlines and URLs     
-            for article in news_articles:
-                headline = article.text
-                url = article.find('a')['href']
-                headlines.append(headline)
-                urls.append(url)
-
-        return headlines, urls
-        
-
-
 
