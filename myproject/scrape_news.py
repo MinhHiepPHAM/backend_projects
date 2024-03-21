@@ -1,6 +1,5 @@
 import django
 from django.conf import settings
-from utils import News
 settings.configure(
     DATABASES={
         'default': {
@@ -24,8 +23,9 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.common import TimeoutException
-from models import NewsModel
 from datetime import date
+from stock_price import utils
+from stock_price import models
 
 def scrape_stock_news(symbols):
     # driver_path = "/usr/local/bin/geckodriver"
@@ -36,13 +36,13 @@ def scrape_stock_news(symbols):
 
     driver = webdriver.Firefox(service=Service(GeckoDriverManager().install()), options=options)
     driver.set_window_size(1920, 1080)
-    recent_news = News()
+    recent_news = utils.News()
     recent_news.read_recent_news_from_db(n_day=7)
     for symbol in symbols:
         urls,headlines = get_urls(symbol, driver)
         for url, headline in zip(urls, headlines):
-            if not recent_news.check_new_in_db(symbol,url): continue
-            news = NewsModel(url=url, symbol=symbol,scrapped_date=date.today(),headline=headline)
+            if recent_news.check_new_in_db(symbol,url): continue
+            news = models.NewsModel(url=url, symbol=symbol,scrapped_date=date.today(),headline=headline)
             news.save()
 
 
@@ -84,5 +84,5 @@ def get_urls(symbol, driver):
 
     return headlines, urls
 
-
-scrape_stock_news({'QCOM'})
+if __name__ == '__main__':
+    scrape_stock_news({'QCOM'})

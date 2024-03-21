@@ -41,7 +41,10 @@ def stock_price(request):
     news = News()
     news.read_recent_news_from_db()
     # TODO: add to for loop to display the news of all stocks
-    stock_news = list(news.new_per_symbol[SYMBOL])[:15]
+    try:
+        stock_news = list(news.new_per_symbol[SYMBOL])[:15]
+    except KeyError:
+        stock_news = []
     
     context = {
         'user':request.user,

@@ -3,7 +3,7 @@ import yfinance as yf
 import pandas as pd
 import plotly.graph_objects as go 
 from datetime import datetime, timedelta
-from .models import NewsModel
+from stock_price import models
 
 
 class StockInfo:
@@ -141,7 +141,7 @@ class News:
     # and maybe delete the new if the url is not still actived
     def read_recent_news_from_db(self, n_day=3):
         one_week_ago = datetime.now() - timedelta(days=n_day)
-        object_datas = NewsModel.objects.filter(scrapped_date__gte=one_week_ago).order_by('scrapped_date')
+        object_datas = models.NewsModel.objects.filter(scrapped_date__gte=one_week_ago).order_by('scrapped_date')
         for data in object_datas:
             new = StockNew(data.url, data.headline, data.symbol)
             self.recent_stock_news.append(new)
