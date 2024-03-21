@@ -34,12 +34,12 @@ def scrape_stock_news(symbols):
     options.add_argument('--headless')
     options.add_argument('--blink-settings=imagesEnabled=false')
 
-    driver = webdriver.Firefox(service=Service(GeckoDriverManager().install()), options=options)
-    driver.set_window_size(1920, 1080)
     recent_news = utils.News()
     recent_news.read_recent_news_from_db(n_day=7)
     for symbol in symbols:
-        urls,headlines = get_urls(symbol, driver)
+        driver = webdriver.Firefox(service=Service(GeckoDriverManager().install()), options=options)
+        driver.set_window_size(1920, 1080)
+        headlines, urls = get_urls(symbol, driver)
         for url, headline in zip(urls, headlines):
             if recent_news.check_new_in_db(symbol,url): continue
             news = models.NewsModel(url=url, symbol=symbol,scrapped_date=date.today(),headline=headline)
@@ -68,6 +68,7 @@ def get_urls(symbol, driver):
 
     headlines = []
     urls = []
+    home_url = 'https://finance.yahoo.com'
     if html_content:
         # Parse the HTML content of the page
         soup = BeautifulSoup(html_content, 'html.parser')
@@ -78,11 +79,11 @@ def get_urls(symbol, driver):
         # Extract news headlines and URLs     
         for article in news_articles:
             headline = article.text
-            url = article.find('a')['href']
+            url = home_url + article.find('a')['href']
             headlines.append(headline)
             urls.append(url)
 
     return headlines, urls
 
 if __name__ == '__main__':
-    scrape_stock_news({'QCOM'})
+    scrape_stock_news({'QCOM', 'AAPL', 'GOOGL'})

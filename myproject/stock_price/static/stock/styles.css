@@ -52,3 +52,14 @@ body {
     display: flex;
     /* grid-template-columns: 25% 75%; */
 }
+
+.news-link {
+    color: #007bff; /* Set the text color */
+    text-decoration: none; /* Remove underline */
+    /* font-weight: bold; */
+    transition: color 0.3s ease; /* Add smooth color transition */
+}
+
+.news-link:hover {
+    color: #700aac;
+}
