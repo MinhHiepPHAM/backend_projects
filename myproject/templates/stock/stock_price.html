@@ -94,11 +94,13 @@
             </form>
             {{ plot_html|safe }}
         </div>
-        <!-- </div>
-        {% for headline in headlines %}
-            <p>{{headline}}</p> 
+        </div>
+        {% for new in news %}
+            <p>{{new.headline}}</p>
+            <p>{{new.url}}</p> 
+
         {% endfor %}
-        <div> -->
+        <div>
     </div>
 
 

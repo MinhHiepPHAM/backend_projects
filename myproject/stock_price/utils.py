@@ -2,6 +2,8 @@ import yfinance as yf
 # from matplotlib import pyplot as plt
 import pandas as pd
 import plotly.graph_objects as go 
+from datetime import datetime, timedelta
+from .models import NewsModel
 
 
 class StockInfo:
@@ -121,25 +123,32 @@ class StockNew:
     def __eq__(self, other: object):
         return self.url == other.url and self.symbol == other.symbol
     
-    def __hash__(self) -> int:
-        return hash(self.url,self.headline)
+    def __hash__(self):
+        return hash((self.url,self.headline))
 
 class News:
     def __init__(self):
         self.new_per_symbol = dict() # new per stock symbol
-        self.recent_stock_news = set() # store the stock of recent week
+        self.recent_stock_news = list() # store the stock of recent week
 
-    def add_new(self, symbol, url, headline):
-        new = StockNew(url, headline, symbol)
-        if symbol in self.stock_news:
-            self.new_per_symbol[symbol] = {new}
+    def add_new(self, new):
+        if new.symbol not in self.new_per_symbol:
+            self.new_per_symbol[new.symbol] = {new}
         else:
-            self.new_per_symbol[symbol].add(new)
+            self.new_per_symbol[new.symbol].add(new)
 
-    # get the stock_news of 1 week
+    # get the stock_news from the past week
     # and maybe delete the new if the url is not still actived
-    def read_stock_from_db(model,timespan): pass
-    def check_new_in_db(stock_new):
+    def read_recent_news_from_db(self, n_day=3):
+        one_week_ago = datetime.now() - timedelta(days=n_day)
+        object_datas = NewsModel.objects.filter(scrapped_date__gte=one_week_ago).order_by('scrapped_date')
+        for data in object_datas:
+            new = StockNew(data.url, data.headline, data.symbol)
+            self.recent_stock_news.append(new)
+            self.add_new(new)
+
+    def check_new_in_db(self,symbol, url):
+        stock_new = StockNew(url=url, symbol=symbol,headline='')
         return stock_new in self.recent_stock_news
         
 

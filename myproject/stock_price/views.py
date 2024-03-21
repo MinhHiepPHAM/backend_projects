@@ -1,9 +1,10 @@
 from django.shortcuts import render, redirect
-from .utils import StockData
+from .utils import StockData, News
 from django.http import HttpResponseNotFound, JsonResponse
 from django.http.response import HttpResponse
 import pandas as pd
 import csv
+from .models import StockModel
 
 SYMBOLS = {'QCOM', 'AAPL', 'GOOGL'}
 PERIOD = '1d'
@@ -39,13 +40,10 @@ def stock_price(request):
     if sym:= symbol_selection(request): SYMBOL = sym
     plot_html = stock_data.plot_stock(SYMBOL, PERIOD)
     
-    # news = News()
-    # headlines, urls = news.scrape_stock_news('QCOM')
-
-    # headlines = [headline for headline in headlines if headline]
-    # urls = [url for url in urls if url]
-
-
+    news = News()
+    news.read_recent_news_from_db()
+    # TODO: add to for loop to display the news of all stocks
+    stock_news = list(news.new_per_symbol[SYMBOL])[:15]
     
     context = {
         'user':request.user,
@@ -54,7 +52,7 @@ def stock_price(request):
         'plot_html':plot_html,
         'plot_symbol':SYMBOL,
         'symbols': SYMBOLS,
-        # 'headlines': headlines,
+        'news': stock_news,
         # 'urls': urls,
     }
     

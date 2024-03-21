@@ -1,5 +1,6 @@
 import django
 from django.conf import settings
+from utils import News
 settings.configure(
     DATABASES={
         'default': {
@@ -35,9 +36,12 @@ def scrape_stock_news(symbols):
 
     driver = webdriver.Firefox(service=Service(GeckoDriverManager().install()), options=options)
     driver.set_window_size(1920, 1080)
+    recent_news = News()
+    recent_news.read_recent_news_from_db(n_day=7)
     for symbol in symbols:
         urls,headlines = get_urls(symbol, driver)
         for url, headline in zip(urls, headlines):
+            if not recent_news.check_new_in_db(symbol,url): continue
             news = NewsModel(url=url, symbol=symbol,scrapped_date=date.today(),headline=headline)
             news.save()
 
