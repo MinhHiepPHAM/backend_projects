@@ -113,24 +113,33 @@ class StockData:
         return fig.to_html(full_html=False)
     
 class StockNew:
-    def __init__(self, url, headline):
+    def __init__(self, url, headline, symbol):
         self.url = url
         self.headline = headline
+        self.symbol = symbol
 
     def __eq__(self, other: object):
-        return self.url == other.url and self.headline == other.headline
+        return self.url == other.url and self.symbol == other.symbol
     
     def __hash__(self) -> int:
         return hash(self.url,self.headline)
 
 class News:
     def __init__(self):
-        self.stock_news = dict() # new per stock symbol
+        self.new_per_symbol = dict() # new per stock symbol
+        self.recent_stock_news = set() # store the stock of recent week
 
     def add_new(self, symbol, url, headline):
-        new = StockNew(url,headline)
+        new = StockNew(url, headline, symbol)
         if symbol in self.stock_news:
-            self.stock_news[symbol] = {new}
+            self.new_per_symbol[symbol] = {new}
         else:
-            self.stock_news[symbol].add(new)
+            self.new_per_symbol[symbol].add(new)
+
+    # get the stock_news of 1 week
+    # and maybe delete the new if the url is not still actived
+    def read_stock_from_db(model,timespan): pass
+    def check_new_in_db(stock_new):
+        return stock_new in self.recent_stock_news
+        
 
