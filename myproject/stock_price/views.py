@@ -1,10 +1,8 @@
 from django.shortcuts import render, redirect
 from .utils import StockData, News
-from django.http import HttpResponseNotFound, JsonResponse
-from django.http.response import HttpResponse
+from django.http import JsonResponse
 import pandas as pd
 import csv
-from .models import StockModel
 
 SYMBOLS = {'QCOM', 'AAPL', 'GOOGL'}
 PERIOD = '1d'
