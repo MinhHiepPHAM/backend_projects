@@ -26,6 +26,7 @@ from selenium.common import TimeoutException
 from datetime import date
 from stock_price import utils
 from stock_price import models
+import pandas as pd
 
 def scrape_stock_news(symbols):
     # driver_path = "/usr/local/bin/geckodriver"
@@ -86,4 +87,8 @@ def get_urls(symbol, driver):
     return headlines, urls
 
 if __name__ == '__main__':
-    scrape_stock_news({'QCOM', 'AAPL', 'GOOGL'})
+
+    df = pd.read_csv('myproject/stock_price/symbols.csv')
+    # print(df['symbol'])
+
+    scrape_stock_news(df['symbol'])
