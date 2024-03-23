@@ -27,6 +27,17 @@ from datetime import date
 from stock_price import utils
 from stock_price import models
 import pandas as pd
+import multiprocessing
+import time
+
+def scape_each_symbol(symbol, options, recent_news):
+    driver = webdriver.Firefox(service=Service(GeckoDriverManager().install()), options=options)
+    driver.set_window_size(1920, 1080)
+    headlines, urls = get_urls(symbol, driver)
+    for url, headline in zip(urls, headlines):
+        if recent_news.check_new_in_db(symbol,url): continue
+        news = models.NewsModel(url=url, symbol=symbol,scrapped_date=date.today(),headline=headline)
+        news.save()
 
 def scrape_stock_news(symbols):
     # driver_path = "/usr/local/bin/geckodriver"
@@ -37,14 +48,15 @@ def scrape_stock_news(symbols):
 
     recent_news = utils.News()
     recent_news.read_recent_news_from_db(n_day=7)
-    for symbol in symbols:
-        driver = webdriver.Firefox(service=Service(GeckoDriverManager().install()), options=options)
-        driver.set_window_size(1920, 1080)
-        headlines, urls = get_urls(symbol, driver)
-        for url, headline in zip(urls, headlines):
-            if recent_news.check_new_in_db(symbol,url): continue
-            news = models.NewsModel(url=url, symbol=symbol,scrapped_date=date.today(),headline=headline)
-            news.save()
+
+    args = ((symbol, options, recent_news) for symbol in symbols)
+
+    starttime = time.time()
+    pool = multiprocessing.Pool()
+    pool.starmap(scape_each_symbol, args)
+    pool.close()
+
+    print('That tooks {} minutes'.format((time.time() - starttime)/60))
 
 
 def get_urls(symbol, driver):
