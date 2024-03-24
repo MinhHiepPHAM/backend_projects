@@ -125,7 +125,7 @@ def check_all_url():
     # all_urls = models.NewsModel.objects.values_list('url',flat=True)
     all_objects = models.NewsModel.objects.all()
 
-    for obj in all_objects[:10]:
+    for obj in all_objects:
         delete_invalid_url(obj)
 
 if __name__ == '__main__':
