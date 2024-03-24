@@ -29,6 +29,8 @@ from stock_price import models
 import pandas as pd
 import multiprocessing
 import time
+import requests
+import re
 
 def scape_each_symbol(symbol, options, recent_news):
     driver = webdriver.Firefox(service=Service(GeckoDriverManager().install()), options=options)
@@ -58,6 +60,15 @@ def scrape_stock_news(symbols):
 
     print('That tooks {} minutes'.format((time.time() - starttime)/60))
 
+def is_valid_url(url):
+    regex = re.compile(
+        r'^(?:http|ftp)s?://' # http:// or https://
+        r'(?:(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+(?:[A-Z]{2,6}\.?|[A-Z0-9-]{2,}\.?)|' #domain...
+        r'localhost|' #localhost...
+        r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})' # ...or ip
+        r'(?::\d+)?' # optional port
+        r'(?:/?|[/?]\S+)$', re.IGNORECASE)
+    return re.match(regex, url) is not None
 
 def get_urls(symbol, driver):
     # Navigate to the URL
@@ -92,15 +103,37 @@ def get_urls(symbol, driver):
         # Extract news headlines and URLs     
         for article in news_articles:
             headline = article.text
-            url = home_url + article.find('a')['href']
+            url = article.find('a')['href']
+            if is_valid_url(url): url = home_url + url
             headlines.append(headline)
             urls.append(url)
 
     return headlines, urls
 
+def is_active_url(url):
+    try:
+        code = requests.get(url).status_code
+        return code == 200
+    except Exception as e:
+        print('UNACTIVE URL OR INVALID URL', url)
+        return False
+
+def delete_invalid_url(obj):
+    if not is_active_url(obj.url): models.NewsModel.delete(obj)
+
+def check_all_url():
+    # all_urls = models.NewsModel.objects.values_list('url',flat=True)
+    all_objects = models.NewsModel.objects.all()
+
+    for obj in all_objects[:10]:
+        delete_invalid_url(obj)
+
 if __name__ == '__main__':
 
-    df = pd.read_csv('myproject/stock_price/symbols.csv')
-    # print(df['symbol'])
+    # df = pd.read_csv('myproject/stock_price/symbols.csv')
+    # all_urls = models.NewsModel.objects.values_list('url',flat=True)
+    start = time.time()
+    check_all_url()
+    print(f'That tooks: {(time.time()-start)/60} minutes to check if url is active or not')
 
-    scrape_stock_news(df['symbol'])
+    # scrape_stock_news(df['symbol'])
