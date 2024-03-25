@@ -31,6 +31,8 @@ import multiprocessing
 import time
 import requests
 import re
+from pathlib import Path
+import os
 
 def scape_each_symbol(symbol, options, recent_news):
     driver = webdriver.Firefox(service=Service(GeckoDriverManager().install()), options=options)
@@ -130,10 +132,12 @@ def check_all_url():
 
 if __name__ == '__main__':
 
-    # df = pd.read_csv('myproject/stock_price/symbols.csv')
+    current_path = Path(__file__).parent
+    path_to_symbols = os.path.join(current_path,'stock_price/symbols.csv')
+    df = pd.read_csv(path_to_symbols)
     # all_urls = models.NewsModel.objects.values_list('url',flat=True)
     start = time.time()
-    check_all_url()
+    # check_all_url()
     print(f'That tooks: {(time.time()-start)/60} minutes to check if url is active or not')
 
     # scrape_stock_news(df['symbol'])
