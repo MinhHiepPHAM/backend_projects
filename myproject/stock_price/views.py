@@ -3,6 +3,8 @@ from .utils import StockData, News
 from django.http import JsonResponse
 import pandas as pd
 import csv
+from django.views.decorators.cache import cache_page
+from django.core.cache import cache
 
 # SYMBOLS = {'QCOM', 'AAPL', 'GOOGL'}
 PERIOD = '1d'
@@ -21,6 +23,7 @@ def get_period_options():
     return options
 periods = get_period_options()
 
+@cache_page(60*2)
 def stock_price(request):
 
     new_stock_symbol = add_new_stock(request)
