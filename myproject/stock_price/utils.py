@@ -16,19 +16,31 @@ class StockInfo:
     
     def get_stock_price(self, data):
         if data:
-            return float("{:.2f}".format(data[self.symbol]['Close'][-1]))
+            try:
+                return float("{:.2f}".format(data[self.symbol]['Close'][-1]))
+            except Exception:
+                print('FAILED DOWNLOAD CLOSE PRICE INFO',self.symbol)
+                return 0
         else:
             return 0
     
     def get_open_price(self, data):
         if data:
-            return float("{:.2f}".format(data[self.symbol]['Open'][0]))
+            try:
+                return float("{:.2f}".format(data[self.symbol]['Open'][0]))
+            except Exception:
+                print('FAILED DOWNLOAD OPEN PRICE INFO',self.symbol)
+                return 0
         else:
             return 0
         
     def get_stock_volume(self, data):
         if data:
-            return data[self.symbol]['Volume'][-1]
+            try:
+                return data[self.symbol]['Volume'][-1]
+            except Exception:
+                print('FAILED DOWNLOAD VOLUME INFO',self.symbol)
+                return 0
         else:
             return 0
         
@@ -51,7 +63,8 @@ class StockData:
         try:
             symbol = symbol.upper()
             data = yf.download(symbol,period=period,interval=interval)
-        except:
+        except Exception:
+            print('FAILED TO DOWNLOAD: ', symbol)
             data = None
         
         self.data[symbol] = data
@@ -82,7 +95,6 @@ class StockData:
         return timespan
     
     def plot_stock(self, symbol, period):
-
         data = self.data[symbol]
         df = pd.DataFrame(data)
 

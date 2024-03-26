@@ -10,6 +10,8 @@ from selenium.common import TimeoutException
 from datetime import date
 import pandas as pd
 import time
+from pathlib import Path
+import os
 
 def get_trending_symbols():
     t1 = time.time()
@@ -57,9 +59,19 @@ def get_trending_symbols():
         # print('bs4:', (t5-t4)/60)
         return [symbol_link.text for symbol_link in symbol_links if 'data-symbol' in str(symbol_link)]
 
+def write_tickers_to_file(filename):
+    trending_tickers = get_trending_symbols()
+    series = pd.Series(trending_tickers)
+    current_path = Path(__file__).parent
+    file_path = os.path.join(current_path,filename)
+    series.to_csv(file_path,index=None,header=None)
+    return file_path
 
 if __name__ == '__main__':
-    print(get_trending_symbols())
+    file_path = write_tickers_to_file('trending_ticker.csv')
+
+    # df = pd.read_csv(file_path)
+    # print(df)
 
 
     

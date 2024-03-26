@@ -19,28 +19,56 @@
     <!--<h1 style="text-align: center; padding: 20px; background-color: #3498db; color:#fff;">Stock Prices</h1> -->
     <div class="grid-container">
         <div class="stock-container">
-            <!--<div class="stock-item">
-                <h1 style="
-                    text-align: left;
-                    color: #483ce4;
-                ">Stock Prices</h1>
-            </div>-->
-            <form method="post">
-                {% csrf_token %}
-                <div class="custom-select">
-                    <select name="period-selection" onchange='this.form.submit()'>
-                        {% for option in options %}
-                        {% if stock_data.period == option.value %}
-                            <option value="{{ option.value }}" selected="selected">{{ option.label }}</option>
-                        {% else %}
-                            <option value="{{ option.value }}">{{ option.label }}</option>
-                        {% endif %}    
-                        {% endfor %}
-                    </select>
-                    <!--<button type="submit" class="button">View</button>-->
-                </div>
-            </form>
+            <!-- Trending Stock -->
             <div>
+                <table class="stock-table">
+                    <thead>
+                        <tr>
+                            <td colspan="4"
+                            style="
+                                text-align: center;
+                                color: white;
+                                font-size: 20px;
+                                font-weight: bold;
+                                background-color: #3498db;
+                            ">Trending Stocks</td>
+                        </tr>
+                        <tr>
+                            <th>Symbol</th>
+                            <th>Price</th>
+                            <th>Change</th>
+                            <th>Volume</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for stock in trending.stocks %}
+                            <tr>
+                                <td>{{ stock.symbol }}</td>
+                                <td>${{stock.close_price }}</td>
+                                <td>${{stock.change}}</td>
+                                <td>{{stock.volume}}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div style="width: 100%;display: inline-block;">
+            <!-- <div>
+                <form method="post">
+                    {% csrf_token %}
+                    <label for="id_symbol">New Stock Symbol:</label>
+                    <input type="text" name="symbol" maxlength="10" required="" id="id_symbol" style="width: auto;" placeholder="New Symbol">
+                    <button type="submit" class="button">Add </button>
+                </form>
+                <div>
+                    <ul id="searchResults"></ul>
+                </div>
+            </div> -->
+
+            <!-- Stock to view -->
+            <!-- <div>
                 <table class="stock-table">
                     <thead>
                         <tr>
@@ -71,44 +99,55 @@
                         {% endfor %}
                     </tbody>
                 </table>
-            </div>
-            <div>
-                <form method="post">
-                    {% csrf_token %}
-                    <!-- <label for="id_symbol">New Stock Symbol:</label> -->
-                    <input type="text" name="symbol" maxlength="10" required="" id="id_symbol" style="width: auto;" placeholder="New Symbol">
-                    <button type="submit" class="button">Add </button>
-                </form>
-            </div>
-            <div>
-                <ul id="searchResults"></ul>
-            </div>
-        </div>
-        
-        <div style="width: 100%;">
-            <form method="post">
-                {% csrf_token %}
-                <div class="custom-select">
-                    <select name="symbol-selection" onchange='this.form.submit()'>
-                        {% for symbol in symbols %}
-                            {% if symbol == plot_symbol %}
-                                <option value="{{ symbol }}" selected="selected">{{symbol}}</option>
-                            {% else %}
-                                <option value="{{ symbol }}">{{symbol}}</option>
-                            {% endif %}    
-                        {% endfor %}
-                    </select>
+            </div> -->
+            <div style="display: flex;">
+                <div>
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="custom-select">
+                            <select name="symbol-selection" onchange='this.form.submit()'>
+                                {% for symbol in symbols %}
+                                    {% if symbol == plot_symbol %}
+                                        <option value="{{ symbol }}" selected="selected">{{symbol}}</option>
+                                    {% else %}
+                                        <option value="{{ symbol }}">{{symbol}}</option>
+                                    {% endif %}    
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </form>
                 </div>
-            </form>
-            {{ plot_html|safe }}
+
+                <div>
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="custom-select">
+                            <select name="period-selection" onchange='this.form.submit()'>
+                                {% for option in options %}
+                                    {% if trending.period == option.value %}
+                                        <option value="{{ option.value }}" selected="selected">{{ option.label }}</option>
+                                    {% else %}
+                                        <option value="{{ option.value }}">{{ option.label }}</option>
+                                    {% endif %}    
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div>
+                <div>
+                    {{ plot_html|safe }}
+                </div>
+                <div>
+                    {% for new in news %}
+                    <div style="margin-left: 25px; margin-top: 15px;">
+                        <a href="{{new.url}}" class="news-link">{{new.headline}}</a><br>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
         </div>
-        </div>
-        {% for new in news %}
-        <div style="margin-left: 25px; margin-top: 15px;">
-            <a href="{{new.url}}" class="news-link">{{new.headline}}</a><br>
-        </div>
-        {% endfor %}
-        <div>
     </div>
 
 

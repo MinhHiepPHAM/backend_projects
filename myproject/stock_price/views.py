@@ -4,9 +4,9 @@ from django.http import JsonResponse
 import pandas as pd
 import csv
 
-SYMBOLS = {'QCOM', 'AAPL', 'GOOGL'}
+# SYMBOLS = {'QCOM', 'AAPL', 'GOOGL'}
 PERIOD = '1d'
-SYMBOL = 'QCOM'
+SYMBOL = None
 
 
 def get_period_options():
@@ -25,22 +25,29 @@ def stock_price(request):
 
     new_stock_symbol = add_new_stock(request)
     
-    if symbol := new_stock_symbol: SYMBOLS.add(symbol)
+    # if symbol := new_stock_symbol: SYMBOLS.add(symbol)
     global PERIOD
     if period:=period_selection(request):
         PERIOD = period
 
-    stock_data = StockData(PERIOD)
-    for symbol in SYMBOLS:
-        stock_data.add_stock(symbol)
+    # stock_data = StockData(PERIOD)
+    # for symbol in SYMBOLS:
+    #     stock_data.add_stock(symbol)
 
+    # global SYMBOL
+    # if sym:= symbol_selection(request): SYMBOL = sym
+
+    trending_data = get_trending_tickers(PERIOD)
+
+    SYMBOLS = [stock_info.symbol for stock_info in trending_data.stocks]
     global SYMBOL
+    if not SYMBOL: SYMBOL = SYMBOLS[0]
     if sym:= symbol_selection(request): SYMBOL = sym
-    plot_html = stock_data.plot_stock(SYMBOL, PERIOD)
     
+    plot_html = trending_data.plot_stock(SYMBOL, PERIOD)
+
     news = News()
-    news.read_recent_news_from_db()
-    # TODO: add to for loop to display the news of all stocks
+    news.read_recent_news_from_db(n_day=7)
     try:
         stock_news = list(news.new_per_symbol[SYMBOL])[:15]
     except KeyError:
@@ -49,12 +56,12 @@ def stock_price(request):
     context = {
         'user':request.user,
         'options':periods,
-        'stock_data': stock_data,
+        # 'stock_data': stock_data,
         'plot_html':plot_html,
         'plot_symbol':SYMBOL,
         'symbols': SYMBOLS,
         'news': stock_news,
-        # 'urls': urls,
+        'trending': trending_data,
     }
     
 
@@ -89,3 +96,11 @@ def symbol_selection(request):
         return selected_option
     else:
         return None
+    
+def get_trending_tickers(period):
+    tickers =  pd.read_csv('myproject/trending_ticker.csv',index_col=None,header=None)
+    trending_data = StockData(period)
+    # print(tickers)
+    for ticker in tickers[0]:
+        trending_data.add_stock(ticker)
+    return trending_data
