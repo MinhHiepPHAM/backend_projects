@@ -136,8 +136,13 @@
                 </div>
             </div>
             <div>
-                <div>
-                    {{ plot_html|safe }}
+                <div style="margin-top: 10px; margin-bottom: 15px;">
+                    <div style="margin-bottom: 20px;">
+                        {{ plot_html|safe }}
+                    </div>
+                    <div>
+                        {{ top_five_plot_html|safe }}
+                    </div>
                 </div>
                 <div>
                     {% for new in news %}

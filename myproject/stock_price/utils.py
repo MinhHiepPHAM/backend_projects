@@ -48,7 +48,7 @@ class StockInfo:
         return float("{:.2f}".format(self.close_price-self.open_price))
     
     def __eq__(self, other):
-        return self.symbol.lower() == self.other.symbol.lower()
+        return self.symbol.lower() == other.symbol.lower()
     
     def __hash__(self) -> int:
         return hash(self.symbol)
@@ -57,7 +57,7 @@ class StockData:
     def __init__(self, period) -> None:
         self.period = period
         self.data = dict()
-        self.stocks = set()
+        self.stocks = list()
     
     def download_data(self,symbol, period, interval):
         try:
@@ -80,7 +80,8 @@ class StockData:
         stock.open_price = stock.get_open_price(self.data)
         stock.volume = stock.get_stock_volume(self.data)
         stock.change = stock.get_stock_change()
-        self.stocks.add(stock)
+        if stock not in self.stocks:
+            self.stocks.append(stock)
     
     def get_stock(self,symbol):
         for stock in self.stocks:
@@ -94,19 +95,20 @@ class StockData:
             timespan = data_frame.index
         return timespan
     
-    def plot_stock(self, symbol, period):
-        data = self.data[symbol]
-        df = pd.DataFrame(data)
-
-        timespan = self.get_time_span(df,period)
-        
+    def plot_stock(self, symbols, period, title):
         fig = go.Figure()
+        colors = ['blue', 'red', 'green', 'violet', 'black']
+        for i, symbol in enumerate(symbols):
+            data = self.data[symbol]
+            df = pd.DataFrame(data)
 
-        # Add trace for stock prices
-        fig.add_trace(go.Scatter(x=timespan, y=df['Adj Close'], mode='lines+markers', name='Stock Price', 
-                                line=dict(color='blue', width=1),
-                                marker=dict(color='blue', size=3),
-                                hoverinfo='y'))
+            timespan = self.get_time_span(df,period)
+            
+            # Add trace for stock prices
+            fig.add_trace(go.Scatter(x=timespan, y=df['Adj Close'], mode='lines+markers', name=symbol, 
+                                    line=dict(color=colors[i], width=1),
+                                    marker=dict(color=colors[i], size=3),
+                                    hoverinfo='y'))
 
         # Update layout
         if period == '1d':
@@ -114,12 +116,12 @@ class StockData:
         else:
             tickformat = '%m-%d-%Y'
         fig.update_layout(
-            title=f'Stock Price of {symbol} ({self.get_stock(symbol).change}$)',
+            title=title,
             xaxis=dict(title='Time', tickformat=tickformat, showgrid=False),
             yaxis=dict(title='Price', showgrid=False),
             showlegend=True,
             legend=dict(x=0, y=1.1, orientation='h'),
-            plot_bgcolor='white',
+            plot_bgcolor='#24cad6' if len(symbols)==1 else '#93a8eb',
             # autosize=True,
             margin=dict(l=40, r=40, t=80, b=40),
         )

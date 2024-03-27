@@ -138,6 +138,7 @@ if __name__ == '__main__':
     # all_urls = models.NewsModel.objects.values_list('url',flat=True)
     start = time.time()
     # check_all_url()
-    print(f'That tooks: {(time.time()-start)/60} minutes to check if url is active or not')
+    # print(f'That tooks: {(time.time()-start)/60} minutes to check if url is active or not')
 
-    # scrape_stock_news(df['symbol'])
+    scrape_stock_news(df['symbol'])
+    print(f'That tooks: {(time.time()-start)/60} minutes to scrap the news')

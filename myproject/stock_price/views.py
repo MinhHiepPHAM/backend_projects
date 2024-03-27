@@ -47,7 +47,9 @@ def stock_price(request):
     if not SYMBOL: SYMBOL = SYMBOLS[0]
     if sym:= symbol_selection(request): SYMBOL = sym
     
-    plot_html = trending_data.plot_stock(SYMBOL, PERIOD)
+    plot_html = trending_data.plot_stock([SYMBOL], PERIOD, f'Stock Price of {SYMBOL} ({trending_data.get_stock(SYMBOL).change}$)')
+    
+    top_five_plot_html = trending_data.plot_stock(SYMBOLS[:5], PERIOD, "Top five trending tickers")
 
     news = News()
     news.read_recent_news_from_db(n_day=7)
@@ -61,6 +63,7 @@ def stock_price(request):
         'options':periods,
         # 'stock_data': stock_data,
         'plot_html':plot_html,
+        'top_five_plot_html':top_five_plot_html,
         'plot_symbol':SYMBOL,
         'symbols': SYMBOLS,
         'news': stock_news,
