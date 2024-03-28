@@ -38,9 +38,13 @@ def scape_each_symbol(symbol, options, recent_news):
     driver = webdriver.Firefox(service=Service(GeckoDriverManager().install()), options=options)
     driver.set_window_size(1920, 1080)
     headlines, urls = get_urls(symbol, driver)
+    # import pprint; pprint.pprint(headlines)
     for url, headline in zip(urls, headlines):
-        if recent_news.check_new_in_db(symbol,url): continue
-        news = models.NewsModel(url=url, symbol=symbol,scrapped_date=date.today(),headline=headline)
+        if recent_news.check_new_in_db(symbol,url):
+            # print(symbol,headline)
+            continue
+        news = models.NewsModel(url=url,symbol=symbol,scrapped_date=date.today(),headline=headline)
+        # print(symbol,news.headline)
         news.save()
 
 def scrape_stock_news(symbols):
@@ -53,14 +57,17 @@ def scrape_stock_news(symbols):
     recent_news = utils.News()
     recent_news.read_recent_news_from_db(n_day=7)
 
-    args = ((symbol, options, recent_news) for symbol in symbols)
+    # args = ((symbol, options, recent_news) for symbol in symbols)
 
-    starttime = time.time()
-    pool = multiprocessing.Pool()
-    pool.starmap(scape_each_symbol, args)
-    pool.close()
+    for symbol in symbols:
+        scape_each_symbol(symbol,options,recent_news)
 
-    print('That tooks {} minutes'.format((time.time() - starttime)/60))
+    # starttime = time.time()
+    # pool = multiprocessing.Pool()
+    # pool.starmap(scape_each_symbol, args)
+    # pool.close()
+
+    # print('That tooks {} minutes'.format((time.time() - starttime)/60))
 
 def is_valid_url(url):
     regex = re.compile(
@@ -102,7 +109,8 @@ def get_urls(symbol, driver):
         # Find all news articles
         news_articles = soup.find_all('h3', class_='Mb(5px)')
 
-        # Extract news headlines and URLs     
+        # Extract news headlines and URLs   
+        # print('XXX', symbol,news_articles)  
         for article in news_articles:
             headline = article.text
             url = article.find('a')['href']
@@ -133,12 +141,14 @@ def check_all_url():
 if __name__ == '__main__':
 
     current_path = Path(__file__).parent
-    path_to_symbols = os.path.join(current_path,'stock_price/symbols.csv')
+    # path_to_symbols = os.path.join(current_path,'stock_price/symbols.csv')
+    path_to_symbols = os.path.join(current_path,'trending_ticker.csv')
+    trending_tickers =  pd.read_csv(path_to_symbols,index_col=None,header=None)
     df = pd.read_csv(path_to_symbols)
     # all_urls = models.NewsModel.objects.values_list('url',flat=True)
     start = time.time()
     # check_all_url()
     # print(f'That tooks: {(time.time()-start)/60} minutes to check if url is active or not')
-
-    scrape_stock_news(df['symbol'])
+    # print(trending_tickers[0])
+    scrape_stock_news(trending_tickers[0][0])
     print(f'That tooks: {(time.time()-start)/60} minutes to scrap the news')

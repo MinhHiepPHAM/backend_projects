@@ -57,8 +57,6 @@ def stock_price(request):
         stock_news = list(news.new_per_symbol[SYMBOL])[:15]
     except KeyError:
         stock_news = []
-
-    print(request)
     
     context = {
         'user':request.user,
@@ -106,7 +104,7 @@ def symbol_selection(request):
         return None
     
 def get_trending_tickers(period):
-    tickers =  pd.read_csv('myproject/trending_ticker.csv',index_col=None,header=None)
+    tickers =  pd.read_csv('trending_ticker.csv',index_col=None,header=None)
     trending_data = StockData(period)
     # print(tickers)
     for ticker in tickers[0]:
