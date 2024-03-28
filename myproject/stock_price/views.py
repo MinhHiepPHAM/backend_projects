@@ -57,6 +57,8 @@ def stock_price(request):
         stock_news = list(news.new_per_symbol[SYMBOL])[:15]
     except KeyError:
         stock_news = []
+
+    print(request)
     
     context = {
         'user':request.user,
@@ -110,3 +112,16 @@ def get_trending_tickers(period):
     for ticker in tickers[0]:
         trending_data.add_stock(ticker)
     return trending_data
+
+def ticker_view(request,symbol):
+    period = '6mo'
+    stock_data = StockData(period)
+    stock_data.add_stock(symbol)
+
+    plot_html = stock_data.plot_stock([symbol],period, "Stock price")
+
+    context = {
+        'plot_html': plot_html,
+        'symbol':symbol
+    }
+    return render(request, 'stock/ticker.html',context)

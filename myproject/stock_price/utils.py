@@ -97,7 +97,7 @@ class StockData:
     
     def plot_stock(self, symbols, period, title):
         fig = go.Figure()
-        colors = ['blue', 'red', 'green', 'violet', 'black']
+        colors = ['blue', 'red', '#cc8c14', '#28a317', 'black']
         for i, symbol in enumerate(symbols):
             data = self.data[symbol]
             df = pd.DataFrame(data)
@@ -121,7 +121,7 @@ class StockData:
             yaxis=dict(title='Price', showgrid=False),
             showlegend=True,
             legend=dict(x=0, y=1.1, orientation='h'),
-            plot_bgcolor='#24cad6' if len(symbols)==1 else '#93a8eb',
+            plot_bgcolor='white',
             # autosize=True,
             margin=dict(l=40, r=40, t=80, b=40),
         )

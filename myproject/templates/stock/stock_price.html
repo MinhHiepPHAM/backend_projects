@@ -43,7 +43,9 @@
                     <tbody>
                         {% for stock in trending.stocks %}
                             <tr>
-                                <td>{{ stock.symbol }}</td>
+                                {% with symbol=stock.symbol %}
+                                <td><a href="{% url 'ticker_info' symbol=symbol %}">{{ stock.symbol }}</a></td>
+                                {% endwith %}
                                 <td>${{stock.close_price }}</td>
                                 <td>${{stock.change}}</td>
                                 <td>{{stock.volume}}</td>
