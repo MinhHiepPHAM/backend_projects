@@ -17,26 +17,65 @@
     </div>
     <div class="grid-container">
         <div>
-            <form method="post">
-                {% csrf_token %}
-                <div class="custom-select">
-                    <select name="period-selection" onchange='this.form.submit()'>
-                        {% for option in options %}
-                            {% if period == option.value %}
-                                <option value="{{ option.value }}" selected="selected">{{ option.label }}</option>
-                            {% else %}
-                                <option value="{{ option.value }}">{{ option.label }}</option>
-                            {% endif %}    
-                        {% endfor %}
-                    </select>
-                </div>
-            </form>
+            <div>
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="custom-select">
+                        <select name="period-selection" onchange='this.form.submit()'>
+                            {% for option in options %}
+                                {% if period == option.value %}
+                                    <option value="{{ option.value }}" selected="selected">{{ option.label }}</option>
+                                {% else %}
+                                    <option value="{{ option.value }}">{{ option.label }}</option>
+                                {% endif %}    
+                            {% endfor %}
+                        </select>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Stock to view -->
+        <div>
+            <table class="stock-table">
+                <tr>
+                    <th>Open</th>
+                    <td>{{stock.open_price}}$</td>
+                </tr>
+                <tr>
+                    <th>High</th>
+                    <td>{{stock.high_price}}$</td>
+                </tr>
+                <tr>
+                    <th>Low</th>
+                    <td>{{stock.low_price}}$</td>
+                </tr>
+                <tr>
+                    <th>Close</th>
+                    <td>{{stock.close_price}}$</td>
+                </tr>
+                <tr>
+                    <th>Ajusted Clode</th>
+                    <td>{{stock.adj_close}}$</td>
+                </tr>
+                <tr>
+                    <th>Change</th>
+                    <td>{{stock.change}}$</td>
+                </tr>
+                <tr>
+                    <th>Volume</th>
+                    <td>{{stock.volume}}</td>
+                </tr>
+
+              </table>
+        </div>
+            
         </div>
 
         <div style="margin-bottom: 20px;">
             {{ plot_html|safe }}
         </div>
-    <div></div>
+
+    </div>
 
 {% endblock content%}
 </html>

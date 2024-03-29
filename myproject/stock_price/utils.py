@@ -13,8 +13,11 @@ class StockInfo:
         self.open_price = 0
         self.volume = 0
         self.change = 0
+        self.low_price = 0
+        self.high_price = 0
+        self.adj_close = 0
     
-    def get_stock_price(self, data):
+    def get_close_price(self, data):
         if data:
             try:
                 return float("{:.2f}".format(data[self.symbol]['Close'][-1]))
@@ -27,9 +30,39 @@ class StockInfo:
     def get_open_price(self, data):
         if data:
             try:
-                return float("{:.2f}".format(data[self.symbol]['Open'][0]))
+                return float("{:.2f}".format(data[self.symbol]['Open'][-1]))
             except Exception:
                 print('FAILED DOWNLOAD OPEN PRICE INFO',self.symbol)
+                return 0
+        else:
+            return 0
+    
+    def get_ajusted_close_price(self, data):
+        if data:
+            try:
+                return float("{:.2f}".format(data[self.symbol]['Adj Close'][-1]))
+            except Exception:
+                print('FAILED DOWNLOAD ADJ CLOSE PRICE INFO',self.symbol)
+                return 0
+        else:
+            return 0
+
+        
+    def get_low_price(self, data):
+        if data:
+            try:
+                return float("{:.2f}".format(data[self.symbol]['Low'][-1]))
+            except Exception:
+                print('FAILED DOWNLOAD LOW PRICE INFO',self.symbol)
+                return 0
+        else:
+            return 0
+    def get_high_price(self, data):
+        if data:
+            try:
+                return float("{:.2f}".format(data[self.symbol]['High'][-1]))
+            except Exception:
+                print('FAILED DOWNLOAD HIGH PRICE INFO',self.symbol)
                 return 0
         else:
             return 0
@@ -76,8 +109,11 @@ class StockData:
         else:
             interval = '1d'
         self.download_data(symbol,self.period,interval)
-        stock.close_price = stock.get_stock_price(self.data)
+        stock.close_price = stock.get_close_price(self.data)
         stock.open_price = stock.get_open_price(self.data)
+        stock.low_price = stock.get_low_price(self.data)
+        stock.high_price = stock.get_high_price(self.data)
+        stock.adj_close = stock.get_ajusted_close_price(self.data)
         stock.volume = stock.get_stock_volume(self.data)
         stock.change = stock.get_stock_change()
         if stock not in self.stocks:

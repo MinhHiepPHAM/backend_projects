@@ -7,7 +7,7 @@ from django.views.decorators.cache import cache_page
 from django.core.cache import cache
 
 # SYMBOLS = {'QCOM', 'AAPL', 'GOOGL'}
-PERIOD = '1d'
+PERIOD = '1mo'
 SYMBOL = None
 
 
@@ -23,7 +23,7 @@ def get_period_options():
     return options
 periods = get_period_options()
 
-@cache_page(60*2)
+# @cache_page(60*2)
 def stock_price(request):
 
     new_stock_symbol = add_new_stock(request)
@@ -118,13 +118,17 @@ def ticker_view(request,symbol):
         PERIOD = period
     stock_data = StockData(period)
     stock_data.add_stock(symbol)
+    # print(stock_data.data[symbol])
+    assert len(stock_data.stocks) == 1
+    stock_info = stock_data.stocks[0]
+
 
     plot_html = stock_data.plot_stock([symbol],PERIOD, "Stock price")
 
     context = {
         'plot_html': plot_html,
-        'symbol':symbol,
         'period':PERIOD,
-        'options':get_period_options()
+        'options':get_period_options(),
+        'stock': stock_info
     }
     return render(request, 'stock/ticker.html',context)
