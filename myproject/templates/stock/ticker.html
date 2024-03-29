@@ -15,10 +15,28 @@
             {% endif %}
         </div>
     </div>
+    <div class="grid-container">
+        <div>
+            <form method="post">
+                {% csrf_token %}
+                <div class="custom-select">
+                    <select name="period-selection" onchange='this.form.submit()'>
+                        {% for option in options %}
+                            {% if period == option.value %}
+                                <option value="{{ option.value }}" selected="selected">{{ option.label }}</option>
+                            {% else %}
+                                <option value="{{ option.value }}">{{ option.label }}</option>
+                            {% endif %}    
+                        {% endfor %}
+                    </select>
+                </div>
+            </form>
+        </div>
 
-    <div style="margin-bottom: 20px;">
-        {{ plot_html|safe }}
-    </div>
+        <div style="margin-bottom: 20px;">
+            {{ plot_html|safe }}
+        </div>
+    <div></div>
 
 {% endblock content%}
 </html>
