@@ -4,7 +4,7 @@ settings.configure(
     DATABASES={
         'default': {
             'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': 'my_database',
+            'NAME': 'mydb',
             'USER': 'minh_hiep',
             'HOST': 'localhost',
             'PASSWORD': 'minh-hiep123',
@@ -38,7 +38,7 @@ def scape_each_symbol(symbol, options, recent_news):
     driver = webdriver.Firefox(service=Service(GeckoDriverManager().install()), options=options)
     driver.set_window_size(1920, 1080)
     headlines, urls = get_urls(symbol, driver)
-    # import pprint; pprint.pprint(headlines)
+    # import pprint; pprint.pprint(recent_news.recent_stock_news)
     for url, headline in zip(urls, headlines):
         if recent_news.check_new_in_db(symbol,url):
             # print(symbol,headline)
@@ -102,6 +102,7 @@ def get_urls(symbol, driver):
     headlines = []
     urls = []
     home_url = 'https://finance.yahoo.com'
+    # print(html_content)
     if html_content:
         # Parse the HTML content of the page
         soup = BeautifulSoup(html_content, 'html.parser')
@@ -149,6 +150,6 @@ if __name__ == '__main__':
     start = time.time()
     # check_all_url()
     # print(f'That tooks: {(time.time()-start)/60} minutes to check if url is active or not')
-    # print(trending_tickers[0])
-    scrape_stock_news(trending_tickers[0][0])
+    # print(trending_tickers[0][0])
+    scrape_stock_news(trending_tickers[0])
     print(f'That tooks: {(time.time()-start)/60} minutes to scrap the news')

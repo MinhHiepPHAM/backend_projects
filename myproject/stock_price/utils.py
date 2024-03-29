@@ -138,7 +138,7 @@ class StockNew:
         return self.url == other.url and self.symbol == other.symbol
     
     def __hash__(self):
-        return hash((self.url,self.headline))
+        return hash((self.url,self.symbol))
     
     def __repr__(self) -> str:
         return f'{self.symbol}, {self.url}, {self.headline}'
@@ -157,7 +157,11 @@ class News:
     # get the stock_news from the past week
     def read_recent_news_from_db(self, n_day=3):
         one_week_ago = datetime.now() - timedelta(days=n_day)
-        object_datas = models.NewsModel.objects.filter(scrapped_date__gte=one_week_ago).order_by('scrapped_date')
+        try:
+            object_datas = models.NewsModel.objects.filter(scrapped_date__gte=one_week_ago).order_by('scrapped_date')
+        except Exception:
+            print('Exception')
+            object_datas = []
         for data in object_datas:
             new = StockNew(data.url, data.headline, data.symbol)
             self.recent_stock_news.add(new)
