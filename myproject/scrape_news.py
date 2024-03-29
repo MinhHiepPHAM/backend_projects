@@ -115,7 +115,8 @@ def get_urls(symbol, driver):
         for article in news_articles:
             headline = article.text
             url = article.find('a')['href']
-            if is_valid_url(url): url = home_url + url
+            # print(url,is_active_url(url))
+            if not is_valid_url(url): url = home_url + url
             headlines.append(headline)
             urls.append(url)
 

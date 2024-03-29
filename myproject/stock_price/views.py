@@ -125,10 +125,18 @@ def ticker_view(request,symbol):
 
     plot_html = stock_data.plot_stock([symbol],PERIOD, "Stock price")
 
+    news = News()
+    news.read_recent_news_from_db(n_day=7)
+    try:
+        stock_news = list(news.new_per_symbol[symbol])[:12]
+    except KeyError:
+        stock_news = []
+
     context = {
         'plot_html': plot_html,
         'period':PERIOD,
         'options':get_period_options(),
-        'stock': stock_info
+        'stock': stock_info,
+        'news': stock_news
     }
     return render(request, 'stock/ticker.html',context)
