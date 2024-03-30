@@ -38,10 +38,11 @@ def scape_each_symbol(symbol, options, recent_news):
     driver = webdriver.Firefox(service=Service(GeckoDriverManager().install()), options=options)
     driver.set_window_size(1920, 1080)
     headlines, urls = get_urls(symbol, driver)
+    print('scrapping:', symbol, type(symbol))
     # import pprint; pprint.pprint(recent_news.recent_stock_news)
     for url, headline in zip(urls, headlines):
         if recent_news.check_new_in_db(symbol,url):
-            # print(symbol,headline)
+            print(symbol,headline)
             continue
         news = models.NewsModel(url=url,symbol=symbol,scrapped_date=date.today(),headline=headline)
         # print(symbol,news.headline)
@@ -143,14 +144,20 @@ def check_all_url():
 if __name__ == '__main__':
 
     current_path = Path(__file__).parent
-    # path_to_symbols = os.path.join(current_path,'stock_price/symbols.csv')
-    path_to_symbols = os.path.join(current_path,'trending_ticker.csv')
-    trending_tickers =  pd.read_csv(path_to_symbols,index_col=None,header=None)
-    df = pd.read_csv(path_to_symbols)
+    path_to_all_symbols = os.path.join(current_path,'symbols.csv')
+    path_to_trending_symbols = os.path.join(current_path,'trending_ticker.csv')
+    trending_tickers =  pd.read_csv(path_to_trending_symbols, index_col=None, header=None)[0]
+    all_symbols = pd.read_csv(path_to_all_symbols)['Ticker']
     # all_urls = models.NewsModel.objects.values_list('url',flat=True)
     start = time.time()
     # check_all_url()
     # print(f'That tooks: {(time.time()-start)/60} minutes to check if url is active or not')
-    # print(trending_tickers[0][0])
-    scrape_stock_news(trending_tickers[0])
-    print(f'That tooks: {(time.time()-start)/60} minutes to scrap the news')
+    # print(trending_tickers['Ticker'])
+    scrape_stock_news(trending_tickers)
+    # print(f'That tooks: {(time.time()-start)/60} minutes to scrap the news')
+    # scrape_stock_news(all_symbols)
+    print(all_symbols)
+    print(trending_tickers)
+
+
+    
