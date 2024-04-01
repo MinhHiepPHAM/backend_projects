@@ -22,7 +22,7 @@ def get_period_options():
     return options
 periods = get_period_options()
 
-@cache_page(60*2)
+# @cache_page(60*2)
 def stock_price(request):
     global PERIOD
     if period:=period_selection(request):
@@ -51,7 +51,7 @@ def stock_price(request):
         'top_five_plot_html':top_five_plot_html,
         'plot_symbol':SYMBOL,
         'symbols': SYMBOLS,
-        'news': recent_news[:8],
+        'news': recent_news[:10],
         'trending': stock_trending_objs,
         'period': PERIOD
     }
@@ -89,7 +89,7 @@ def symbol_selection(request):
     else:
         return None
 
-@cache_page(60*2)
+# @cache_page(60*2)
 def ticker_view(request,symbol):
     global PERIOD
     if period:=period_selection(request):

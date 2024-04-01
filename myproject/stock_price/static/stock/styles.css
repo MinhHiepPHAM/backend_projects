@@ -63,3 +63,36 @@ body {
 .news-link:hover {
     color: #700aac;
 }
+
+
+.search-container {
+    width: 250px;
+    margin: 0 auto;
+  }
+  
+  form {
+    display: flex;
+  }
+  
+  input[type="text"] {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px 0 0 5px;
+    font-size: 16px;
+    margin-bottom: 0;
+  }
+  
+  button {
+    padding: 10px 20px;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    border-radius: 0 5px 5px 0;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  
+  button:hover {
+    background-color: #0056b3;
+  }

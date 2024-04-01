@@ -80,7 +80,5 @@ def write_stock_info_to_db():
        
 if __name__ == '__main__':
     start = time.time()
-    # df = get_screener('111')
     write_stock_info_to_db()
     print(f'That tooks {(time.time()-start)/60} minutes to get all tickers')
-    # df.to_csv('symbol.csv', index=None)

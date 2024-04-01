@@ -17,71 +17,88 @@
     </div>
     <div class="grid-container">
         <div>
-            <div>
-                <form method="post">
-                    {% csrf_token %}
-                    <div class="custom-select">
-                        <select name="period-selection" onchange='this.form.submit()'>
-                            {% for option in options %}
-                                {% if period == option.value %}
-                                    <option value="{{ option.value }}" selected="selected">{{ option.label }}</option>
-                                {% else %}
-                                    <option value="{{ option.value }}">{{ option.label }}</option>
-                                {% endif %}    
-                            {% endfor %}
-                        </select>
+            <div style="display: flex;">
+                <div>
+                    <div>
+                        <form method="post" style="padding-left: 0;">
+                            {% csrf_token %}
+                            <div class="custom-select">
+                                <select name="period-selection" onchange='this.form.submit()'>
+                                    {% for option in options %}
+                                        {% if period == option.value %}
+                                            <option value="{{ option.value }}" selected="selected">{{ option.label }}</option>
+                                        {% else %}
+                                            <option value="{{ option.value }}">{{ option.label }}</option>
+                                        {% endif %}    
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </form>
                     </div>
-                </form>
+
+                    <!-- Stock to view -->
+                    <div>
+                        <table class="stock-table">
+                            <tr>
+                                <th>Open</th>
+                                <td>{{stock.open_price}}$</td>
+                            </tr>
+                            <tr>
+                                <th>High</th>
+                                <td>{{stock.high_price}}$</td>
+                            </tr>
+                            <tr>
+                                <th>Low</th>
+                                <td>{{stock.low_price}}$</td>
+                            </tr>
+                            <tr>
+                                <th>Close</th>
+                                <td>{{stock.close_price}}$</td>
+                            </tr>
+                            <tr>
+                                <th>Ajusted Clode</th>
+                                <td>{{stock.adj_close_price}}$</td>
+                            </tr>
+                            <tr>
+                                <th>Change</th>
+                                <td>${% get_change_price stock.adj_close_price stock.open_price %}</td>
+                            </tr>
+                            <tr>
+                                <th>Volume</th>
+                                <td>{{stock.volume}}</td>
+                            </tr>
+
+                        </table>
+                    </div>
+                    <div class="search-container">
+                        <form  method="GET">
+                            {% csrf_token %}
+                            <input type="text" placeholder="Another ticker...">
+                            <button type="submit">Go</button>
+                        </form>
+                    </div>
+                </div>
+
+
+                <div style="margin-bottom: 20px; margin-top: 20px;">
+                    {{ plot_html|safe }}
+                </div>
             </div>
-
-            <!-- Stock to view -->
-        <div>
-            <table class="stock-table">
-                <tr>
-                    <th>Open</th>
-                    <td>{{stock.open_price}}$</td>
-                </tr>
-                <tr>
-                    <th>High</th>
-                    <td>{{stock.high_price}}$</td>
-                </tr>
-                <tr>
-                    <th>Low</th>
-                    <td>{{stock.low_price}}$</td>
-                </tr>
-                <tr>
-                    <th>Close</th>
-                    <td>{{stock.close_price}}$</td>
-                </tr>
-                <tr>
-                    <th>Ajusted Clode</th>
-                    <td>{{stock.adj_close_price}}$</td>
-                </tr>
-                <tr>
-                    <th>Change</th>
-                    <td>${% get_change_price stock.adj_close_price stock.open_price %}</td>
-                </tr>
-                <tr>
-                    <th>Volume</th>
-                    <td>{{stock.volume}}</td>
-                </tr>
-
-              </table>
-        </div>
-            
         </div>
 
-        <div style="margin-bottom: 20px;">
-            {{ plot_html|safe }}
-        </div>
+
+
+
+
 
         <div>
-            News
+            <h3 style="font-style: bold; margin-left: 25px;">Related news:</h3>
             {% for new in news %}
             <div style="margin-left: 25px; margin-top: 15px;">
                 <a href="{{new.url}}" class="news-link">{{new.headline}}</a><br>
             </div>
             {% endfor %}
+            <br>
         </div>
 
     </div>
