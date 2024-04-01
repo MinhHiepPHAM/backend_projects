@@ -1,3 +1,19 @@
+import django
+from django.conf import settings
+settings.configure(
+    DATABASES={
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': 'mydb',
+            'USER': 'minh_hiep',
+            'HOST': 'localhost',
+            'PASSWORD': 'minh-hiep123',
+            'port': 5432
+        },
+    },
+    TIME_ZONE='Europe/Paris',
+)
+django.setup()
 from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.firefox.service import Service
@@ -12,19 +28,15 @@ import pandas as pd
 import time
 from pathlib import Path
 import os
+from stock_price import models
 
 def get_trending_symbols():
-    t1 = time.time()
     options = Options()
     options.add_argument('--headless')
     options.add_argument('--blink-settings=imagesEnabled=false')
     driver = webdriver.Firefox(service=Service(GeckoDriverManager().install()), options=options)
     driver.set_window_size(1920, 1080)
 
-    # t2 = time.time()
-    # print('options:', (t2-t1)/60)
-
-    # Navigate to the URL
     url = 'https://finance.yahoo.com/lookup'
     driver.get(url)
     try:
@@ -37,41 +49,30 @@ def get_trending_symbols():
     except TimeoutException:
         print('Cookie consent overlay missing')
     
-    # t3 = time.time()
-    # print('get url:', (t3-t2)/60)
-
-    # Get the HTML content after JavaScript execution
     html_content = driver.page_source
-
-    # t4= time.time()
-    # print('html content:', (t4-t3)/60)
+    if not html_content: return []
 
     # Close the browser
     driver.quit()
 
-    if html_content:
-        # Parse the HTML content of the page
-        soup = BeautifulSoup(html_content, 'html.parser')
+    soup = BeautifulSoup(html_content, 'html.parser')
+    symbol_links = soup.find_all('a', class_='Fw(b)')
+    return [symbol_link.text for symbol_link in symbol_links if 'data-symbol' in str(symbol_link)]
 
-        # Find all news articles
-        symbol_links = soup.find_all('a', class_='Fw(b)')
-        # t5 = time.time()
-        # print('bs4:', (t5-t4)/60)
-        return [symbol_link.text for symbol_link in symbol_links if 'data-symbol' in str(symbol_link)]
-
-def write_tickers_to_file(filename):
+def update_db_with_trending_ticker():
     trending_tickers = get_trending_symbols()
-    series = pd.Series(trending_tickers)
-    current_path = Path(__file__).parent
-    file_path = os.path.join(current_path,filename)
-    series.to_csv(file_path,index=None,header=None)
-    return file_path
+    old_trending_objs = models.StockModel.objects.filter(is_trending=True)
+    for obj in old_trending_objs:
+        # print(obj, type(obj))
+        obj.is_trending=False
+        obj.save()
+    for ticker in trending_tickers:
+        obj = models.StockModel.objects.filter(symbol=ticker)
+        obj.update(is_trending=True)
+
 
 if __name__ == '__main__':
-    file_path = write_tickers_to_file('trending_ticker.csv')
-
-    # df = pd.read_csv(file_path)
-    # print(df)
+    update_db_with_trending_ticker()
 
 
     

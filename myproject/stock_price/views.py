@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .utils import StockData, News
+from .utils import *
 from django.http import JsonResponse
 import pandas as pd
 import csv
@@ -26,37 +26,32 @@ periods = get_period_options()
 # @cache_page(60*2)
 def stock_price(request):
 
-    new_stock_symbol = add_new_stock(request)
-    
-    # if symbol := new_stock_symbol: SYMBOLS.add(symbol)
+    # new_stock_symbol = add_new_stock(request)
     global PERIOD
     if period:=period_selection(request):
         PERIOD = period
 
-    # stock_data = StockData(PERIOD)
-    # for symbol in SYMBOLS:
-    #     stock_data.add_stock(symbol)
+    # trending_data = get_trending_tickers(PERIOD)
 
-    # global SYMBOL
-    # if sym:= symbol_selection(request): SYMBOL = sym
-
-    trending_data = get_trending_tickers(PERIOD)
-
-    SYMBOLS = [stock_info.symbol for stock_info in trending_data.stocks]
+    stock_trending_objs = models.StockModel.objects.filter(is_trending=True)
+    SYMBOLS = [obj.symbol for obj in stock_trending_objs]
     global SYMBOL
     if not SYMBOL: SYMBOL = SYMBOLS[0]
     if sym:= symbol_selection(request): SYMBOL = sym
-    
-    plot_html = trending_data.plot_stock([SYMBOL], PERIOD, f'Stock Price of {SYMBOL} ({trending_data.get_stock(SYMBOL).change}$)')
-    
-    top_five_plot_html = trending_data.plot_stock(SYMBOLS[:5], PERIOD, "Top five trending tickers")
 
-    news = News()
-    news.read_recent_news_from_db(n_day=7)
-    try:
-        stock_news = list(news.new_per_symbol[SYMBOL])[:15]
-    except KeyError:
-        stock_news = []
+    stock_obj = models.StockModel.objects.get(symbol=SYMBOL)
+    stock_change = float("{:.2f}".format(stock_obj.adj_close_price-stock_obj.open_price))
+    
+    plot_html = plot_stock([SYMBOL], PERIOD, f'Stock Price of {SYMBOL}({stock_change}$)')
+    
+    top_five_plot_html = plot_stock(SYMBOLS[:5], PERIOD, "Top five trending tickers")
+
+    # news = News()
+    # news.read_recent_news_from_db(n_day=7)
+    # try:
+    #     stock_news = list(news.new_per_symbol[SYMBOL])[:15]
+    # except KeyError:
+    #     stock_news = []
     
     context = {
         'user':request.user,
@@ -66,8 +61,9 @@ def stock_price(request):
         'top_five_plot_html':top_five_plot_html,
         'plot_symbol':SYMBOL,
         'symbols': SYMBOLS,
-        'news': stock_news,
-        'trending': trending_data,
+        # 'news': stock_news,
+        'trending': stock_trending_objs,
+        'period': PERIOD
     }
     
 
@@ -116,27 +112,27 @@ def ticker_view(request,symbol):
     global PERIOD
     if period:=period_selection(request):
         PERIOD = period
-    stock_data = StockData(period)
-    stock_data.add_stock(symbol)
+    # stock_data = StockData(period)
+    # stock_data.add_stock(symbol)
     # print(stock_data.data[symbol])
-    assert len(stock_data.stocks) == 1
-    stock_info = stock_data.stocks[0]
+    # assert len(stock_data.stocks) == 1
+    stock_obj = models.StockModel.objects.get(symbol=symbol)
 
 
-    plot_html = stock_data.plot_stock([symbol],PERIOD, "Stock price")
+    plot_html = plot_stock([symbol],PERIOD, "Stock price")
 
-    news = News()
-    news.read_recent_news_from_db(n_day=7)
-    try:
-        stock_news = list(news.new_per_symbol[symbol])[:12]
-    except KeyError:
-        stock_news = []
+    # news = News()
+    # news.read_recent_news_from_db(n_day=7)
+    # try:
+    #     stock_news = list(news.new_per_symbol[symbol])[:12]
+    # except KeyError:
+    #     stock_news = []
 
     context = {
         'plot_html': plot_html,
         'period':PERIOD,
         'options':get_period_options(),
-        'stock': stock_info,
-        'news': stock_news
+        'stock': stock_obj,
+        # 'news': stock_news
     }
     return render(request, 'stock/ticker.html',context)

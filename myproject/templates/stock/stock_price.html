@@ -41,13 +41,13 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for stock in trending.stocks %}
+                        {% for stock in trending %}
                             <tr>
                                 {% with symbol=stock.symbol %}
                                 <td><a href="{% url 'ticker_info' symbol=symbol %}">{{ stock.symbol }}</a></td>
                                 {% endwith %}
-                                <td>${{stock.close_price }}</td>
-                                <td>${{stock.change}}</td>
+                                <td>${{stock.adj_close_price}}</td>
+                                <td>${% get_change_price stock.adj_close_price stock.open_price %}</td>
                                 <td>{{stock.volume}}</td>
                             </tr>
                         {% endfor %}
@@ -126,7 +126,7 @@
                         <div class="custom-select">
                             <select name="period-selection" onchange='this.form.submit()'>
                                 {% for option in options %}
-                                    {% if trending.period == option.value %}
+                                    {% if period == option.value %}
                                         <option value="{{ option.value }}" selected="selected">{{ option.label }}</option>
                                     {% else %}
                                         <option value="{{ option.value }}">{{ option.label }}</option>
@@ -146,14 +146,14 @@
                         {{ top_five_plot_html|safe }}
                     </div>
                 </div>
-                <div>
+                <!-- <div>
                     News
                     {% for new in news %}
                     <div style="margin-left: 25px; margin-top: 15px;">
                         <a href="{{new.url}}" class="news-link">{{new.headline}}</a><br>
                     </div>
                     {% endfor %}
-                </div>
+                </div> -->
             </div>
         </div>
     </div>

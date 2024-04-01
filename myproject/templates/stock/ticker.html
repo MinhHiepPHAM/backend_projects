@@ -55,11 +55,11 @@
                 </tr>
                 <tr>
                     <th>Ajusted Clode</th>
-                    <td>{{stock.adj_close}}$</td>
+                    <td>{{stock.adj_close_price}}$</td>
                 </tr>
                 <tr>
                     <th>Change</th>
-                    <td>{{stock.change}}$</td>
+                    <td>${% get_change_price stock.adj_close_price stock.open_price %}</td>
                 </tr>
                 <tr>
                     <th>Volume</th>
@@ -75,14 +75,14 @@
             {{ plot_html|safe }}
         </div>
 
-        <div>
+        <!-- <div>
             News
             {% for new in news %}
             <div style="margin-left: 25px; margin-top: 15px;">
                 <a href="{{new.url}}" class="news-link">{{new.headline}}</a><br>
             </div>
             {% endfor %}
-        </div>
+        </div> -->
 
     </div>
 
