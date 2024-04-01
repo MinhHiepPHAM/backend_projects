@@ -47,11 +47,13 @@ def stock_price(request):
     top_five_plot_html = plot_stock(SYMBOLS[:5], PERIOD, "Top five trending tickers")
 
     # news = News()
-    # news.read_recent_news_from_db(n_day=7)
+    recent_news = read_recent_news_from_db()
     # try:
     #     stock_news = list(news.new_per_symbol[SYMBOL])[:15]
     # except KeyError:
     #     stock_news = []
+
+    # print(recent_news)
     
     context = {
         'user':request.user,
@@ -61,7 +63,7 @@ def stock_price(request):
         'top_five_plot_html':top_five_plot_html,
         'plot_symbol':SYMBOL,
         'symbols': SYMBOLS,
-        # 'news': stock_news,
+        'news': recent_news[:8],
         'trending': stock_trending_objs,
         'period': PERIOD
     }
@@ -99,13 +101,13 @@ def symbol_selection(request):
     else:
         return None
     
-def get_trending_tickers(period):
-    tickers =  pd.read_csv('trending_ticker.csv',index_col=None,header=None)
-    trending_data = StockData(period)
-    # print(tickers)
-    for ticker in tickers[0]:
-        trending_data.add_stock(ticker)
-    return trending_data
+# def get_trending_tickers(period):
+#     tickers =  pd.read_csv('trending_ticker.csv',index_col=None,header=None)
+#     trending_data = StockData(period)
+#     # print(tickers)
+#     for ticker in tickers[0]:
+#         trending_data.add_stock(ticker)
+#     return trending_data
 
 
 def ticker_view(request,symbol):
@@ -122,7 +124,7 @@ def ticker_view(request,symbol):
     plot_html = plot_stock([symbol],PERIOD, "Stock price")
 
     # news = News()
-    # news.read_recent_news_from_db(n_day=7)
+    stock_news = read_recent_news_from_db()[:15]
     # try:
     #     stock_news = list(news.new_per_symbol[symbol])[:12]
     # except KeyError:
@@ -133,6 +135,6 @@ def ticker_view(request,symbol):
         'period':PERIOD,
         'options':get_period_options(),
         'stock': stock_obj,
-        # 'news': stock_news
+        'news': stock_news
     }
     return render(request, 'stock/ticker.html',context)

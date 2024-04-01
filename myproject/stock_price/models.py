@@ -1,19 +1,19 @@
 from django.db import models
     
 class NewsModel(models.Model):
-    url = models.URLField()
-    symbol = models.CharField(max_length=10)
+    url = models.URLField(primary_key=True)
+    # symbol = models.CharField(max_length=10)
     scrapped_date = models.DateField()
     headline = models.CharField(max_length=250)
     context = models.TextField()
     class Meta:
         app_label = 'stock_price'
-        constraints = [
-            models.UniqueConstraint(fields=['url', 'symbol'], name='unique_field_pair')
-        ]
+        # constraints = [
+        #     models.UniqueConstraint(fields=['url', 'symbol'], name='unique_field_pair')
+        # ]
 
     def __repr__(self):
-        return f'{self.symbol}: {self.url}'
+        return f'{self.url}'
     
 class StockManger(models.Manager): pass
     

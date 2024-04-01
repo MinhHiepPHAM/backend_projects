@@ -47,7 +47,7 @@ def get_stock_info(version):
 def write_stock_info_to_db():
     stock_data = get_stock_info(version='111')
     
-    for table in list(stock_data)[:288]:
+    for table in list(stock_data):
         for ticker, company, sector, industry, country in zip(table['Ticker'], table['Company'], table['Sector'], table['Industry'], table['Country']):  
             obj = models.StockModel.objects.filter(symbol=ticker)
             is_exist =  obj.exists()

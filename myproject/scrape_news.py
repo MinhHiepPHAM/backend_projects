@@ -26,42 +26,42 @@ from selenium.common import TimeoutException
 from datetime import date
 from stock_price import utils
 from stock_price import models
-import pandas as pd
-import multiprocessing
 import time
 import requests
 import re
-from pathlib import Path
-import os
 
-def scape_each_symbol(symbol, options, recent_news):
+headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36'}
+
+def scape_each_symbol(stock_object, options):
     driver = webdriver.Firefox(service=Service(GeckoDriverManager().install()), options=options)
     driver.set_window_size(1920, 1080)
-    headlines, urls = get_urls(symbol, driver)
-    print('scrapping:', symbol, type(symbol))
-    # import pprint; pprint.pprint(recent_news.recent_stock_news)
-    for url, headline in zip(urls, headlines):
-        if recent_news.check_new_in_db(symbol,url):
-            print(symbol,headline)
-            continue
-        news = models.NewsModel(url=url,symbol=symbol,scrapped_date=date.today(),headline=headline)
-        # print(symbol,news.headline)
-        news.save()
+    headlines, urls = get_urls(stock_object.symbol, driver)
+    print('scrapping:', stock_object.symbol)
 
-def scrape_stock_news(symbols):
+    for url, headline in zip(urls, headlines):
+        if utils.check_news_in_db(url):
+            print("Already exist in DB:",stock_object.symbol,headline)
+            continue
+        url_context = get_news_content(url)
+
+        news = models.NewsModel(url=url,scrapped_date=date.today(),headline=headline,context=url_context)
+        news.save()
+        stock_object.related_news.add(news)
+
+def scrape_stock_news(stock_objects):
     # driver_path = "/usr/local/bin/geckodriver"
     # Initialize WebDriver with headless mode to not open the new windown
     options = Options()
     options.add_argument('--headless')
     options.add_argument('--blink-settings=imagesEnabled=false')
 
-    recent_news = utils.News()
-    recent_news.read_recent_news_from_db(n_day=7)
+    # recent_news = utils.News()
+    # recent_news = utils.read_recent_news_from_db()
 
     # args = ((symbol, options, recent_news) for symbol in symbols)
 
-    for symbol in symbols:
-        scape_each_symbol(symbol,options,recent_news)
+    for obj in stock_objects:
+        scape_each_symbol(obj,options)
 
     # starttime = time.time()
     # pool = multiprocessing.Pool()
@@ -123,9 +123,24 @@ def get_urls(symbol, driver):
 
     return headlines, urls
 
+def get_news_content(url):
+    if not is_active_url(url):
+        print('not active:', url)
+        return
+    reponse = requests.get(url,headers=headers)
+    
+    html_content = reponse.text
+    soup = BeautifulSoup(html_content, 'html.parser')
+    news_in_html = soup.find_all('div', class_='caas-body')
+    all_content_in_text = []
+    for content in news_in_html:
+        article_content = content.find_all(re.compile('p|h2'))
+        all_content_in_text.extend([cont.text for cont in article_content])
+    return '\n'.join(all_content_in_text)
+    
 def is_active_url(url):
     try:
-        code = requests.get(url).status_code
+        code = requests.get(url,headers=headers).status_code
         return code == 200
     except Exception as e:
         print('UNACTIVE URL OR INVALID URL', url)
@@ -142,22 +157,23 @@ def check_all_url():
         delete_invalid_url(obj)
 
 if __name__ == '__main__':
-
-    current_path = Path(__file__).parent
-    path_to_all_symbols = os.path.join(current_path,'symbols.csv')
-    path_to_trending_symbols = os.path.join(current_path,'trending_ticker.csv')
-    trending_tickers =  pd.read_csv(path_to_trending_symbols, index_col=None, header=None)[0]
-    all_symbols = pd.read_csv(path_to_all_symbols)['Ticker']
-    # all_urls = models.NewsModel.objects.values_list('url',flat=True)
+    # current_path = Path(__file__).parent
+    # path_to_all_symbols = os.path.join(current_path,'symbols.csv')
+    # path_to_trending_symbols = os.path.join(current_path,'trending_ticker.csv')
+    # trending_tickers =  pd.read_csv(path_to_trending_symbols, index_col=None, header=None)[0]
+    # all_symbols = pd.read_csv(path_to_all_symbols)['Ticker']
+    # # all_urls = models.NewsModel.objects.values_list('url',flat=True)
     start = time.time()
-    # check_all_url()
+    # # check_all_url()
     # print(f'That tooks: {(time.time()-start)/60} minutes to check if url is active or not')
-    # print(trending_tickers['Ticker'])
-    scrape_stock_news(trending_tickers)
+    # # print(trending_tickers['Ticker'])
+    stock_objects = models.StockModel.objects.filter(is_trending=True)
+
+    scrape_stock_news(stock_objects)
     # print(f'That tooks: {(time.time()-start)/60} minutes to scrap the news')
-    # scrape_stock_news(all_symbols)
-    print(all_symbols)
-    print(trending_tickers)
+    # # scrape_stock_news(all_symbols)
+    # print(all_symbols)
+    # print(trending_tickers)
 
 
     
