@@ -5,125 +5,6 @@ import plotly.graph_objects as go
 from datetime import datetime, timedelta
 from stock_price import models
 
-
-# class StockInfo:
-#     def __init__(self, symbol):
-#         self.symbol = symbol
-#         self.close_price = 0
-#         self.open_price = 0
-#         self.volume = 0
-#         self.change = 0
-#         self.low_price = 0
-#         self.high_price = 0
-#         self.adj_close = 0
-    
-#     def get_close_price(self, data):
-#         if data:
-#             try:
-#                 return float("{:.2f}".format(data[self.symbol]['Close'][-1]))
-#             except Exception:
-#                 print('FAILED DOWNLOAD CLOSE PRICE INFO',self.symbol)
-#                 return 0
-#         else:
-#             return 0
-    
-#     def get_open_price(self, data):
-#         if data:
-#             try:
-#                 return float("{:.2f}".format(data[self.symbol]['Open'][-1]))
-#             except Exception:
-#                 print('FAILED DOWNLOAD OPEN PRICE INFO',self.symbol)
-#                 return 0
-#         else:
-#             return 0
-    
-#     def get_ajusted_close_price(self, data):
-#         if data:
-#             try:
-#                 return float("{:.2f}".format(data[self.symbol]['Adj Close'][-1]))
-#             except Exception:
-#                 print('FAILED DOWNLOAD ADJ CLOSE PRICE INFO',self.symbol)
-#                 return 0
-#         else:
-#             return 0
-
-        
-#     def get_low_price(self, data):
-#         if data:
-#             try:
-#                 return float("{:.2f}".format(data[self.symbol]['Low'][-1]))
-#             except Exception:
-#                 print('FAILED DOWNLOAD LOW PRICE INFO',self.symbol)
-#                 return 0
-#         else:
-#             return 0
-#     def get_high_price(self, data):
-#         if data:
-#             try:
-#                 return float("{:.2f}".format(data[self.symbol]['High'][-1]))
-#             except Exception:
-#                 print('FAILED DOWNLOAD HIGH PRICE INFO',self.symbol)
-#                 return 0
-#         else:
-#             return 0
-        
-#     def get_stock_volume(self, data):
-#         if data:
-#             try:
-#                 return data[self.symbol]['Volume'][-1]
-#             except Exception:
-#                 print('FAILED DOWNLOAD VOLUME INFO',self.symbol)
-#                 return 0
-#         else:
-#             return 0
-        
-#     def get_stock_change(self):
-#         return float("{:.2f}".format(self.close_price-self.open_price))
-    
-#     def __eq__(self, other):
-#         return self.symbol.lower() == other.symbol.lower()
-    
-#     def __hash__(self) -> int:
-#         return hash(self.symbol)
-
-# class StockData:
-#     def __init__(self, period) -> None:
-#         self.period = period
-#         self.data = dict()
-#         self.stocks = list()
-    
-#     def download_data(self,symbol, period, interval):
-#         try:
-#             symbol = symbol.upper()
-#             data = yf.download(symbol,period=period,interval=interval)
-#         except Exception:
-#             print('FAILED TO DOWNLOAD: ', symbol)
-#             data = None
-        
-#         self.data[symbol] = data
-
-#     def add_stock(self,symbol):
-#         stock = StockInfo(symbol)
-#         if self.period == '1d':
-#             interval = '60m'
-#         else:
-#             interval = '1d'
-#         self.download_data(symbol,self.period,interval)
-#         stock.close_price = stock.get_close_price(self.data)
-#         stock.open_price = stock.get_open_price(self.data)
-#         stock.low_price = stock.get_low_price(self.data)
-#         stock.high_price = stock.get_high_price(self.data)
-#         stock.adj_close = stock.get_ajusted_close_price(self.data)
-#         stock.volume = stock.get_stock_volume(self.data)
-#         stock.change = stock.get_stock_change()
-#         if stock not in self.stocks:
-#             self.stocks.append(stock)
-    
-#     def get_stock(self,symbol):
-#         for stock in self.stocks:
-#             if stock.symbol == symbol: return stock
-#         return None # TODO:create None stock is better ?
-
 def get_time_span(data_frame, period):
     if period == '1d':
         timespan = pd.to_datetime(data_frame.index.hour.astype(str) + ':' + data_frame.index.minute.astype(str), format='%H:%M').time
@@ -169,7 +50,7 @@ def read_recent_news_from_db(nday=7):
     except Exception:
         print(f'Exception: there have been no news since {nday} days.')
         news_objects = models.NewsModel.objects.none()
-    # print('news:',news_objects)
+
     return news_objects
 
 def check_news_in_db(url):
@@ -179,47 +60,3 @@ def check_news_in_db(url):
     except Exception:
         return False
     
-# class StockNew:
-#     def __init__(self, url, headline, symbol):
-#         self.url = url
-#         self.headline = headline
-#         self.symbol = symbol
-
-#     def __eq__(self, other: object):
-#         return self.url == other.url and self.symbol == other.symbol
-    
-#     def __hash__(self):
-#         return hash((self.url,self.symbol))
-    
-#     def __repr__(self) -> str:
-#         return f'{self.symbol}, {self.url}, {self.headline}'
-
-# class News:
-#     def __init__(self):
-#         self.new_per_symbol = dict() # new per stock symbol
-#         self.recent_stock_news = set() # store the stock of recent week
-
-#     def add_new(self, new):
-#         if new.symbol not in self.new_per_symbol:
-#             self.new_per_symbol[new.symbol] = [new]
-#         else:
-#             self.new_per_symbol[new.symbol].append(new)
-
-#     # get the stock_news from the past week
-#     def read_recent_news_from_db(self, n_day=3):
-#         one_week_ago = datetime.now() - timedelta(days=n_day)
-#         try:
-#             object_datas = models.NewsModel.objects.filter(scrapped_date__gte=one_week_ago).order_by('scrapped_date')
-#         except Exception:
-#             print('Exception')
-#             object_datas = []
-#         for data in object_datas:
-#             new = StockNew(data.url, data.headline, data.symbol)
-#             self.recent_stock_news.add(new)
-#             self.add_new(new)
-
-#     def check_new_in_db(self,symbol, url):
-#         stock_new = StockNew(url=url, symbol=symbol,headline='')
-#         return stock_new in self.recent_stock_news
-        
-

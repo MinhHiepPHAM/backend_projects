@@ -1,7 +1,6 @@
 from django.shortcuts import render, redirect
 from .utils import *
 from django.http import JsonResponse
-import pandas as pd
 import csv
 from django.views.decorators.cache import cache_page
 from django.core.cache import cache
@@ -25,13 +24,9 @@ periods = get_period_options()
 
 # @cache_page(60*2)
 def stock_price(request):
-
-    # new_stock_symbol = add_new_stock(request)
     global PERIOD
     if period:=period_selection(request):
         PERIOD = period
-
-    # trending_data = get_trending_tickers(PERIOD)
 
     stock_trending_objs = models.StockModel.objects.filter(is_trending=True)
     SYMBOLS = [obj.symbol for obj in stock_trending_objs]
@@ -46,14 +41,7 @@ def stock_price(request):
     
     top_five_plot_html = plot_stock(SYMBOLS[:5], PERIOD, "Top five trending tickers")
 
-    # news = News()
     recent_news = read_recent_news_from_db()
-    # try:
-    #     stock_news = list(news.new_per_symbol[SYMBOL])[:15]
-    # except KeyError:
-    #     stock_news = []
-
-    # print(recent_news)
     
     context = {
         'user':request.user,
@@ -100,35 +88,16 @@ def symbol_selection(request):
         return selected_option
     else:
         return None
-    
-# def get_trending_tickers(period):
-#     tickers =  pd.read_csv('trending_ticker.csv',index_col=None,header=None)
-#     trending_data = StockData(period)
-#     # print(tickers)
-#     for ticker in tickers[0]:
-#         trending_data.add_stock(ticker)
-#     return trending_data
-
 
 def ticker_view(request,symbol):
     global PERIOD
     if period:=period_selection(request):
         PERIOD = period
-    # stock_data = StockData(period)
-    # stock_data.add_stock(symbol)
-    # print(stock_data.data[symbol])
-    # assert len(stock_data.stocks) == 1
     stock_obj = models.StockModel.objects.get(symbol=symbol)
-
 
     plot_html = plot_stock([symbol],PERIOD, "Stock price")
 
-    # news = News()
     stock_news = read_recent_news_from_db()[:15]
-    # try:
-    #     stock_news = list(news.new_per_symbol[symbol])[:12]
-    # except KeyError:
-    #     stock_news = []
 
     context = {
         'plot_html': plot_html,

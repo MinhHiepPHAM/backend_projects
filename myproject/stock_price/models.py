@@ -2,7 +2,6 @@ from django.db import models
     
 class NewsModel(models.Model):
     url = models.URLField(primary_key=True)
-    # symbol = models.CharField(max_length=10)
     scrapped_date = models.DateField()
     headline = models.CharField(max_length=250)
     context = models.TextField()

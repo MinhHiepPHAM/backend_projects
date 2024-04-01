@@ -112,7 +112,6 @@ def get_urls(symbol, driver):
         news_articles = soup.find_all('h3', class_='Mb(5px)')
 
         # Extract news headlines and URLs   
-        # print('XXX', symbol,news_articles)  
         for article in news_articles:
             headline = article.text
             url = article.find('a')['href']
@@ -157,23 +156,12 @@ def check_all_url():
         delete_invalid_url(obj)
 
 if __name__ == '__main__':
-    # current_path = Path(__file__).parent
-    # path_to_all_symbols = os.path.join(current_path,'symbols.csv')
-    # path_to_trending_symbols = os.path.join(current_path,'trending_ticker.csv')
-    # trending_tickers =  pd.read_csv(path_to_trending_symbols, index_col=None, header=None)[0]
-    # all_symbols = pd.read_csv(path_to_all_symbols)['Ticker']
-    # # all_urls = models.NewsModel.objects.values_list('url',flat=True)
     start = time.time()
-    # # check_all_url()
-    # print(f'That tooks: {(time.time()-start)/60} minutes to check if url is active or not')
-    # # print(trending_tickers['Ticker'])
+
     stock_objects = models.StockModel.objects.filter(is_trending=True)
 
     scrape_stock_news(stock_objects)
-    # print(f'That tooks: {(time.time()-start)/60} minutes to scrap the news')
-    # # scrape_stock_news(all_symbols)
-    # print(all_symbols)
-    # print(trending_tickers)
+    print(f'That tooks: {(time.time()-start)/60} minutes to scrap the news')
 
 
     
