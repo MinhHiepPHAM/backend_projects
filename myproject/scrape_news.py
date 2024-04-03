@@ -56,7 +56,7 @@ def scrape_stock_news(stock_objects):
     options.add_argument('--blink-settings=imagesEnabled=false')
 
     # recent_news = utils.News()
-    # recent_news = utils.read_recent_news_from_db()
+    # recent_news = utils.get_stock_new_from_db()
 
     # args = ((symbol, options, recent_news) for symbol in symbols)
 

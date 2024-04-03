@@ -66,13 +66,13 @@ body {
 
 
 .search-container {
-    width: 250px;
-    margin: 0 auto;
+    width: 260px;
+    margin-left: 5px;
   }
   
-  form {
+  /* form {
     display: flex;
-  }
+  } */
   
   input[type="text"] {
     flex: 1;
@@ -83,7 +83,7 @@ body {
     margin-bottom: 0;
   }
   
-  button {
+  .go-button {
     padding: 10px 20px;
     border: none;
     background-color: #007bff;
@@ -93,6 +93,6 @@ body {
     font-size: 16px;
   }
   
-  button:hover {
+  .go-button:hover {
     background-color: #0056b3;
   }

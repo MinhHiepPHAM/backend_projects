@@ -41,7 +41,7 @@ def stock_price(request):
     
     top_five_plot_html = plot_stock(SYMBOLS[:5], PERIOD, "Top five trending tickers")
 
-    recent_news = read_recent_news_from_db()
+    recent_news = get_stock_new_from_db(SYMBOL)
     
     context = {
         'user':request.user,
@@ -63,17 +63,11 @@ def stock_price(request):
 def add_new_stock(request):
     return request.POST.get('symbol')
 
-def search_csv(request):
+def search_symbol(request):
     query = request.GET.get('q', '')
-    results = []
+    results = models.StockModel.objects.filter(symbol__icontains=query).values()
 
-    with open('stock_price/symbols.csv', 'r') as file:
-        reader = csv.DictReader(file)
-        for row in reader:
-            if query.lower() in row['symbol'].lower():
-                results.append(row)
-
-    return JsonResponse(results, safe=False)
+    return JsonResponse(list(results), safe=False)
 
 def period_selection(request):
     selected_option = request.POST.get('period-selection')
@@ -94,11 +88,12 @@ def ticker_view(request,symbol):
     global PERIOD
     if period:=period_selection(request):
         PERIOD = period
+    print(symbol)
     stock_obj = models.StockModel.objects.get(symbol=symbol)
 
     plot_html = plot_stock([symbol],PERIOD, "Stock price")
 
-    stock_news = read_recent_news_from_db()[:15]
+    stock_news = get_stock_new_from_db(symbol)[:15]
 
     context = {
         'plot_html': plot_html,

@@ -43,12 +43,11 @@ def plot_stock(symbols, period, title):
 
     return fig.to_html(full_html=False)
 
-def read_recent_news_from_db(nday=7):
-    interval = datetime.now() - timedelta(days=nday)
+def get_stock_new_from_db(ticker):
     try:
-        news_objects = models.NewsModel.objects.filter(scrapped_date__gte=interval).order_by('-scrapped_date')
+        news_objects = models.StockModel.objects.get(symbol=ticker).related_news.all().order_by('-scrapped_date')
     except Exception:
-        print(f'Exception: there have been no news since {nday} days.')
+        print(f'Exception: there have been no news.')
         news_objects = models.NewsModel.objects.none()
 
     return news_objects

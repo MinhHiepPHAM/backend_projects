@@ -70,12 +70,28 @@
 
                         </table>
                     </div>
-                    <div class="search-container">
-                        <form  method="GET">
-                            {% csrf_token %}
-                            <input type="text" placeholder="Another ticker...">
-                            <button type="submit">Go</button>
-                        </form>
+
+                    <div style="width: 280px;">
+                        <div class="search-container">
+                            <form  method="POST" style="margin-left: 5px;">
+                                {% csrf_token %}
+                                <input id="id_symbol" type="text" placeholder="Another ticker...">
+                                <!-- <button type="submit">Go</button> -->
+                                <!-- {% with ticker as getInputTicker %} -->
+                                <a href="#"
+                                style="padding: 10px 20px;
+                                    border: none;
+                                    background-color: #007bff;
+                                    color: white;
+                                    border-radius: 0 5px 5px 0;
+                                    cursor: pointer;
+                                    font-size: 16px;" id="go_to">Go</a>
+                                <!-- {% endwith %} -->
+                            </form>
+                        </div>  
+                        <div>
+                            <ul id="searchResults"></ul>
+                        </div>
                     </div>
                 </div>
 
@@ -85,11 +101,6 @@
                 </div>
             </div>
         </div>
-
-
-
-
-
 
         <div>
             <h3 style="font-style: bold; margin-left: 25px;">Related news:</h3>
@@ -102,6 +113,51 @@
         </div>
 
     </div>
+
+    <script>
+        const searchInput = document.getElementById('id_symbol');
+        const searchResults = document.getElementById('searchResults');
+
+        searchInput.addEventListener('input', function() {
+            const query = this.value.trim();
+            fetch(`/search_symbol?q=${query}`)
+                .then(response => response.json())
+                .then(data => {
+                    searchResults.innerHTML = '';
+                    data.forEach(item => {
+                        const p = document.createElement('p');
+                        p.textContent = JSON.stringify(item.symbol + ': ' + item.company).replace(/"/g, '');
+                        // p.addEventListener('mouseenter', function() {
+                        //     p.classList.add('highlight');
+                        // });
+                        // p.addEventListener('mouseleave', function() {
+                        //     p.classList.remove('highlight');
+                        // });
+                        p.addEventListener('click', function() {
+                            const inputBar = document.getElementById('id_symbol');
+                            inputBar.value = item.symbol;
+                            searchResults.innerHTML=''
+                            document.getElementById('go_to').href = "{% url 'ticker_info' symbol='__ticker__' %}".replace('__ticker__', inputBar.value);
+                        });
+
+                        searchResults.appendChild(p);
+                    });
+                })
+                .catch(error => console.error('Error:', error));
+        });
+
+        // const goToLink = document.getElementById('go_to')
+        // goToLink.addEventListener("click", function() {
+
+        //     // Construct the URL with the ticker value
+        //     var url = "{% url 'ticker_info' symbol='%ticker%' %}".replace('%ticker%', 'QCOM');
+
+        //     // Set the href attribute of the anchor tag
+        //     goToLink.href = url;
+        // });
+        
+
+    </script>
 
 {% endblock content%}
 </html>

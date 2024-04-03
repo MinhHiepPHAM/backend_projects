@@ -165,7 +165,7 @@
 
         searchInput.addEventListener('input', function() {
             const query = this.value.trim();
-            fetch(`/search_csv?q=${query}`)
+            fetch(`/search_symbol?q=${query}`)
                 .then(response => response.json())
                 .then(data => {
                     searchResults.innerHTML = '';
