@@ -5,6 +5,7 @@
     <div class="home-container">
         <div>
             <a href="{% url 'home' %}" class="home-link" >Home</a>
+            <a href="{% url 'stock_price' %}" class="button" >Trending</a>
         </div>
         <div style="float: right;">
             {% if user.is_authenticated %}

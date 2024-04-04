@@ -24,17 +24,19 @@
                 <table class="stock-table">
                     <thead>
                         <tr>
-                            <td colspan="4"
+                            <td colspan="5"
                             style="
                                 text-align: center;
-                                color: white;
+                                color: #124e75;
                                 font-size: 20px;
                                 font-weight: bold;
-                                background-color: #3498db;
+                                background-color: none;
+                                border: none;
                             ">Trending Stocks</td>
                         </tr>
                         <tr>
                             <th>Symbol</th>
+                            <th>Company</th>
                             <th>Price</th>
                             <th>Change</th>
                             <th>Volume</th>
@@ -46,6 +48,7 @@
                                 {% with symbol=stock.symbol %}
                                 <td><a href="{% url 'ticker_info' symbol=symbol %}">{{ stock.symbol }}</a></td>
                                 {% endwith %}
+                                <td>{{stock.company}}</td>
                                 <td>${{stock.adj_close_price}}</td>
                                 <td>${% get_change_price stock.adj_close_price stock.open_price %}</td>
                                 <td>{{stock.volume}}</td>

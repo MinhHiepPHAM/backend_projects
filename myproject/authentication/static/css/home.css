@@ -2,11 +2,11 @@ div.home-container {
     padding: 20px 20px;
     background-color:rgb(9, 80, 128);
     border: 1px solid #ddd;
-    border-radius: 10px;
+    /* border-radius: 10px; */
     display: inline-block;
-    width: 98%;
+    width: 100%;
     margin-top: 5px;
-    margin-left: 25px ;
+    /* margin-left: 25px ; */
 }
 div.home-container div {
     float: left;
@@ -16,11 +16,11 @@ div.home-container div {
 .home-link {
     text-decoration: none;
     color: white;
-    font-size: 20px;
-    font-weight: bold;
+    font-size: 16px;
     padding: 10px 10px;
     text-align: center;
     text-decoration: none;
     border-radius: 8px;
     background-color: rgb(9, 80, 128);
+    border: 1px solid;
 }
