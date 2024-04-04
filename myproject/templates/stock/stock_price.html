@@ -31,7 +31,7 @@
                                 font-size: 20px;
                                 font-weight: bold;
                                 background-color: none;
-                                border: none;
+                                border: none;   
                             ">Trending Stocks</td>
                         </tr>
                         <tr>
@@ -139,6 +139,27 @@
                         </div>
                     </form>
                 </div>
+
+                <div style="margin-top: 15px; margin-left: 10px;">
+                    <form  method="POST">
+                        {% csrf_token %}
+                        <input style="width: 70%;" id="id_symbol" type="text" placeholder="Another ticker...">
+                        <!-- <button type="submit">Go</button> -->
+                        <!-- {% with ticker as getInputTicker %} -->
+                        <a href="#"
+                        style="padding: 10px 15px;
+                            border: none;
+                            background-color: #007bff;
+                            color: white;
+                            border-radius: 0 5px 5px 0;
+                            cursor: pointer;
+                            font-size: 16px;" id="go_to">Go</a>
+                        <!-- {% endwith %} -->
+                    </form>
+                    <div>
+                        <ul id="searchResults"></ul>
+                    </div>
+                </div> 
             </div>
             <div>
                 <div style="margin-top: 10px; margin-bottom: 15px;">
@@ -175,12 +196,6 @@
                     data.forEach(item => {
                         const p = document.createElement('p');
                         p.textContent = JSON.stringify(item.symbol + ': ' + item.company).replace(/"/g, '');
-                        // p.addEventListener('mouseenter', function() {
-                        //     p.classList.add('highlight');
-                        // });
-                        // p.addEventListener('mouseleave', function() {
-                        //     p.classList.remove('highlight');
-                        // });
                         p.addEventListener('click', function() {
                             const inputBar = document.getElementById('id_symbol');
                             inputBar.value = item.symbol;
@@ -192,19 +207,16 @@
                 .catch(error => console.error('Error:', error));
         });
 
-        document.addEventListener('DOMContentLoaded', function() {
-            // Get the select element
-            const selectElement = document.getElementById('mySelect');
+        const goToLink = document.getElementById('go_to')
+        goToLink.addEventListener("click", function() {
 
-            // Get the selected value
-            const selectedValue = selectElement.value;
+            // Construct the URL with the ticker value
+            var url = "{% url 'ticker_info' symbol='__ticker__' %}".replace('__ticker__', searchInput.value);
 
-            // Set the value attribute of the selected option to the selected value
-            const selectedOption = selectElement.querySelector(`option[value="${selectedValue}"]`);
-            if (selectedOption) {
-                selectedOption.selected = true; // Set the selected option as default
-            }
+            // Set the href attribute of the anchor tag
+            goToLink.href = url;
         });
+
     </script>
 {% endblock content%}
 </html>

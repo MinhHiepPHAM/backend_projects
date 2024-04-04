@@ -128,12 +128,6 @@
                     data.forEach(item => {
                         const p = document.createElement('p');
                         p.textContent = JSON.stringify(item.symbol + ': ' + item.company).replace(/"/g, '');
-                        // p.addEventListener('mouseenter', function() {
-                        //     p.classList.add('highlight');
-                        // });
-                        // p.addEventListener('mouseleave', function() {
-                        //     p.classList.remove('highlight');
-                        // });
                         p.addEventListener('click', function() {
                             const inputBar = document.getElementById('id_symbol');
                             inputBar.value = item.symbol;
