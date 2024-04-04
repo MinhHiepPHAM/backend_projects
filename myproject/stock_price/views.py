@@ -37,7 +37,7 @@ def stock_price(request):
     stock_obj = models.StockModel.objects.get(symbol=SYMBOL)
     stock_change = float("{:.2f}".format(stock_obj.adj_close_price-stock_obj.open_price))
     
-    plot_html = plot_stock([SYMBOL], PERIOD, f'Stock Price of {SYMBOL}({stock_change}$)')
+    plot_html = plot_stock([SYMBOL], PERIOD, f'Stock Price of {SYMBOL}: {stock_obj.company}({stock_change}$)')
     
     top_five_plot_html = plot_stock(SYMBOLS[:5], PERIOD, "Top five trending tickers")
 
@@ -91,7 +91,7 @@ def ticker_view(request,symbol):
     print(symbol)
     stock_obj = models.StockModel.objects.get(symbol=symbol)
 
-    plot_html = plot_stock([symbol],PERIOD, "Stock price")
+    plot_html = plot_stock([symbol],PERIOD, f'{stock_obj.symbol}: {stock_obj.company}')
 
     stock_news = get_stock_new_from_db(symbol)[:15]
 
