@@ -60,51 +60,6 @@
         </div>
 
         <div style="width: 100%;display: inline-block;">
-            <!-- <div>
-                <form method="post">
-                    {% csrf_token %}
-                    <label for="id_symbol">New Stock Symbol:</label>
-                    <input type="text" name="symbol" maxlength="10" required="" id="id_symbol" style="width: auto;" placeholder="New Symbol">
-                    <button type="submit" class="button">Add </button>
-                </form>
-                <div>
-                    <ul id="searchResults"></ul>
-                </div>
-            </div> -->
-
-            <!-- Stock to view -->
-            <!-- <div>
-                <table class="stock-table">
-                    <thead>
-                        <tr>
-                            <td colspan="4"
-                            style="
-                                text-align: center;
-                                color: white;
-                                font-size: 20px;
-                                font-weight: bold;
-                                background-color: #3498db;
-                            ">Stock Prices</td>
-                        </tr>
-                        <tr>
-                            <th>Symbol</th>
-                            <th>Price</th>
-                            <th>Change</th>
-                            <th>Volume</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for stock in stock_data.stocks %}
-                            <tr>
-                                <td>{{ stock.symbol }}</td>
-                                <td>${{stock.close_price }}</td>
-                                <td>${{stock.change}}</td>
-                                <td>{{stock.volume}}</td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div> -->
             <div style="display: flex;">
                 <div>
                     <form method="post">
@@ -141,9 +96,9 @@
                 </div>
 
                 <div style="margin-top: 15px; margin-left: 10px;">
-                    <form  method="POST">
-                        {% csrf_token %}
-                        <input style="width: 70%;" id="id_symbol" type="text" placeholder="Another ticker...">
+                    <!-- <form  method="POST">
+                        {% csrf_token %} -->
+                        <input style="width: 70%; margin-top: 15px; margin-left: 10px;" id="id_symbol" type="text" placeholder="Another ticker...">
                         <!-- <button type="submit">Go</button> -->
                         <!-- {% with ticker as getInputTicker %} -->
                         <a href="#"
@@ -155,7 +110,7 @@
                             cursor: pointer;
                             font-size: 16px;" id="go_to">Go</a>
                         <!-- {% endwith %} -->
-                    </form>
+                    <!-- </form> -->
                     <div>
                         <ul id="searchResults"></ul>
                     </div>

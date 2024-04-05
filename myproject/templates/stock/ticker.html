@@ -74,8 +74,8 @@
 
                     <div style="width: 280px;">
                         <div class="search-container">
-                            <form  method="POST" style="margin-left: 5px;">
-                                {% csrf_token %}
+                            <!-- <form  method="POST" style="margin-left: 5px;"> -->
+                                <!-- {% csrf_token %} -->
                                 <input style="width: 70%;" id="id_symbol" type="text" placeholder="Another ticker...">
                                 <!-- <button type="submit">Go</button> -->
                                 <!-- {% with ticker as getInputTicker %} -->
@@ -88,7 +88,7 @@
                                     cursor: pointer;
                                     font-size: 16px;" id="go_to">Go</a>
                                 <!-- {% endwith %} -->
-                            </form>
+                            <!-- </form> -->
                         </div>  
                         <div>
                             <ul id="searchResults"></ul>
