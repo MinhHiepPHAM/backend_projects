@@ -2,13 +2,15 @@
 {% load custom_tags %}
 
 {% block content %}
-    <div class="home-container">
+    <div class="home-container" style="padding: 10px;">
         <div style="padding-top: 10px;">
             <a href="{% url 'home' %}" class="home-link" >Home</a>
         </div>
-        <div style="display: flex; padding-left: 350px;">
-            <input type="text" placeholder="Search..." style="width: 500px;">
-            <button id="searchButton"><i class="fas fa-search"></i></button>    
+        <div style="padding-top: 0; padding-left: 350px;">
+            <form action="{% url 'search_result' %}" style="display: flex;margin: 0px;height: 40px;">
+                <input type="text" name="search" placeholder="Search..." style="width: 500px;">
+                <button id="searchButton" type="submit"><i class="fas fa-search"></i></button>
+            </form>
         </div>
         <div style="float: right; padding-top: 10px;">
             {% if user.is_authenticated %}

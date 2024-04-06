@@ -88,7 +88,7 @@ def ticker_view(request,symbol):
     global PERIOD
     if period:=period_selection(request):
         PERIOD = period
-    print(symbol)
+    print('ticker view:',symbol)
     stock_obj = models.StockModel.objects.get(symbol=symbol)
 
     plot_html = plot_stock([symbol],PERIOD, f'{stock_obj.symbol}: {stock_obj.company}')
@@ -103,3 +103,8 @@ def ticker_view(request,symbol):
         'news': stock_news
     }
     return render(request, 'stock/ticker.html',context)
+
+def search_news(request):
+    print("search:",request)
+    context = {}
+    return render(request, 'stock/search_results.html', context)
