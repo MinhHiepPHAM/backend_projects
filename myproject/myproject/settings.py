@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'authentication',
     'stock_price',
+    'django.contrib.postgres'
 ]
 
 AUTHENTICATION_BACKENDS = [

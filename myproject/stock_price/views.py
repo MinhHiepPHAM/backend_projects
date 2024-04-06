@@ -105,6 +105,11 @@ def ticker_view(request,symbol):
     return render(request, 'stock/ticker.html',context)
 
 def search_news(request):
-    print("search:",request)
-    context = {}
+    input_text = request, request.GET.get('search')
+    # print('input:', input_text)
+    results = models.NewsModel.objects.filter(context__search=input_text)
+    # import pprint; pprint.pprint(results)
+
+
+    context = {'results':results}
     return render(request, 'stock/search_results.html', context)

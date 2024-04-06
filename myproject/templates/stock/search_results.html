@@ -24,5 +24,11 @@
 
 
     <h3>News</h3>
+    {% for news in results %}
+    <div style="margin-left: 25px; margin-top: 15px;">
+        <a href="{{new.url}}" class="news-link">{{news.headline}}</a><br>
+        <p>{{news.context|truncatechars:300}}</p>
+    </div>
+    {% endfor %}
 
 {% endblock content %}
