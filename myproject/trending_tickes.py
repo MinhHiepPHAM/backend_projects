@@ -12,6 +12,15 @@ settings.configure(
         },
     },
     TIME_ZONE='Europe/Paris',
+    CACHES = {
+        'default': {
+            'BACKEND': 'django_redis.cache.RedisCache',
+            'LOCATION': 'redis://localhost:6379/1',
+            'OPTIONS': {
+                'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+            }
+        }
+    }
 )
 django.setup()
 from bs4 import BeautifulSoup
@@ -29,6 +38,7 @@ import time
 from pathlib import Path
 import os
 from stock_price import models
+from django.core.cache import cache
 
 def get_trending_symbols():
     options = Options()
@@ -63,9 +73,9 @@ def update_db_with_trending_ticker():
     trending_tickers = get_trending_symbols()
     old_trending_objs = models.StockModel.objects.filter(is_trending=True)
     for obj in old_trending_objs:
-        # print(obj, type(obj))
         obj.is_trending=False
         obj.save()
+    cache.delete('trending_stock')
     for ticker in trending_tickers:
         obj = models.StockModel.objects.filter(symbol=ticker)
         obj.update(is_trending=True)

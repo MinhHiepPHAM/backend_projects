@@ -39,7 +39,5 @@ class StockModel(models.Model):
     def __repr__(self) -> str:
         return self.symbol
     
-    @classmethod
-    def get_stock_change(cls,obj):
-        return obj.adj_close_price- obj.open_price
+    
     

@@ -22,13 +22,12 @@ def get_period_options():
     return options
 periods = get_period_options()
 
-# @cache_page(60*2)
 def stock_price(request):
     global PERIOD
     if period:=period_selection(request):
         PERIOD = period
 
-    stock_trending_objs = models.StockModel.objects.filter(is_trending=True)
+    stock_trending_objs = get_trending_stocks()
     SYMBOLS = [obj.symbol for obj in stock_trending_objs]
     global SYMBOL
     if not SYMBOL: SYMBOL = SYMBOLS[0]
@@ -41,22 +40,20 @@ def stock_price(request):
     
     top_five_plot_html = plot_stock(SYMBOLS[:5], PERIOD, "Top five trending tickers")
 
-    recent_news = get_stock_new_from_db(SYMBOL)
+    recent_news = get_stock_news_from_db(SYMBOL)
     
     context = {
         'user':request.user,
         'options':periods,
-        # 'stock_data': stock_data,
         'plot_html':plot_html,
         'top_five_plot_html':top_five_plot_html,
         'plot_symbol':SYMBOL,
         'symbols': SYMBOLS,
-        'news': recent_news[:10],
+        'news': recent_news,
         'trending': stock_trending_objs,
         'period': PERIOD
     }
     
-
     return render(request, 'stock/stock_price.html', context)
 
 
@@ -83,7 +80,6 @@ def symbol_selection(request):
     else:
         return None
 
-# @cache_page(60*2)
 def ticker_view(request,symbol):
     global PERIOD
     if period:=period_selection(request):
@@ -93,7 +89,7 @@ def ticker_view(request,symbol):
 
     plot_html = plot_stock([symbol],PERIOD, f'{stock_obj.symbol}: {stock_obj.company}')
 
-    stock_news = get_stock_new_from_db(symbol)[:15]
+    stock_news = get_stock_news_from_db(symbol)
 
     context = {
         'plot_html': plot_html,
@@ -106,10 +102,7 @@ def ticker_view(request,symbol):
 
 def search_news(request):
     input_text = request, request.GET.get('search')
-    # print('input:', input_text)
     results = models.NewsModel.objects.filter(context__search=input_text)
-    # import pprint; pprint.pprint(results)
-
-
+    
     context = {'results':results}
     return render(request, 'stock/search_results.html', context)

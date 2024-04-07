@@ -12,6 +12,15 @@ settings.configure(
         },
     },
     TIME_ZONE='Europe/Paris',
+    CACHES = {
+        'default': {
+            'BACKEND': 'django_redis.cache.RedisCache',
+            'LOCATION': 'redis://localhost:6379/1',
+            'OPTIONS': {
+                'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+            }
+        }
+    }
 )
 django.setup()
 from bs4 import BeautifulSoup
@@ -29,6 +38,7 @@ from stock_price import models
 import time
 import requests
 import re
+from django.core.cache import cache
 
 headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36'}
 
@@ -55,20 +65,8 @@ def scrape_stock_news(stock_objects):
     options.add_argument('--headless')
     options.add_argument('--blink-settings=imagesEnabled=false')
 
-    # recent_news = utils.News()
-    # recent_news = utils.get_stock_new_from_db()
-
-    # args = ((symbol, options, recent_news) for symbol in symbols)
-
     for obj in stock_objects:
         scape_each_symbol(obj,options)
-
-    # starttime = time.time()
-    # pool = multiprocessing.Pool()
-    # pool.starmap(scape_each_symbol, args)
-    # pool.close()
-
-    # print('That tooks {} minutes'.format((time.time() - starttime)/60))
 
 def is_valid_url(url):
     regex = re.compile(
@@ -149,7 +147,6 @@ def delete_invalid_url(obj):
     if not is_active_url(obj.url): models.NewsModel.delete(obj)
 
 def check_all_url():
-    # all_urls = models.NewsModel.objects.values_list('url',flat=True)
     all_objects = models.NewsModel.objects.all()
 
     for obj in all_objects:
@@ -159,6 +156,12 @@ if __name__ == '__main__':
     start = time.time()
 
     stock_objects = models.StockModel.objects.filter(is_trending=True)
+    symbols = [obj.symbol for obj in stock_objects]
+    for symbol in symbols:
+        cache_pattern = f'*{symbol}_*'
+        # print(list(cache.keys(cache_pattern)))
+        cache.delete_many(keys=cache.keys(cache_pattern))
+        print('delete cache key for:', symbol)
 
     scrape_stock_news(stock_objects)
     print(f'That tooks: {(time.time()-start)/60} minutes to scrap the news')

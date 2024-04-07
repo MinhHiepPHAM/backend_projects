@@ -12,6 +12,15 @@ settings.configure(
         },
     },
     TIME_ZONE='Europe/Paris',
+    # CACHES = {
+    #     'default': {
+    #         'BACKEND': 'django_redis.cache.RedisCache',
+    #         'LOCATION': 'redis://localhost:6379/1',
+    #         'OPTIONS': {
+    #             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+    #         }
+    #     }
+    # }
 )
 django.setup()
 
@@ -21,6 +30,7 @@ import bs4
 import time
 from stock_price import models
 import yfinance as yf
+# from django.core.cache import cache
 
 def get_stock_info(version):
     url = 'https://finviz.com/screener.ashx?v={version}&r={page}&f=all'

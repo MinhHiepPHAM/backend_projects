@@ -2,8 +2,9 @@ import yfinance as yf
 # from matplotlib import pyplot as plt
 import pandas as pd
 import plotly.graph_objects as go 
-from datetime import datetime, timedelta
 from stock_price import models
+# from cache_mixin import *
+from django.core.cache import cache
 
 def get_time_span(data_frame, period):
     if period == '1d':
@@ -43,14 +44,17 @@ def plot_stock(symbols, period, title):
 
     return fig.to_html(full_html=False)
 
-def get_stock_new_from_db(ticker):
+def get_stock_news_from_db(ticker, limit=15):
+    cache_key = f'news_{ticker}_{limit}'
+    if news_objects := cache.get(cache_key): return news_objects[:limit]
+
     try:
         news_objects = models.StockModel.objects.get(symbol=ticker).related_news.all().order_by('-scrapped_date')
     except Exception:
-        print(f'Exception: there have been no news.')
-        news_objects = models.NewsModel.objects.none()
+        return models.NewsModel.objects.none()
+    cache.add(cache_key,news_objects, timeout=60*15)
 
-    return news_objects
+    return news_objects[:limit]
 
 def check_news_in_db(url):
     try:
@@ -58,4 +62,18 @@ def check_news_in_db(url):
         return news_objects.exists()
     except Exception:
         return False
+    
+def get_trending_stocks():
+    cache_key = 'trending_stock'
+    if objects := cache.get(cache_key):
+        print('in redis cache')
+        return objects
+
+    try:
+        objects = models.StockModel.objects.filter(is_trending=True)
+    except Exception:
+        return models.NewsModel.objects.none()
+    cache.add(cache_key,objects,timeout=60)
+
+    return objects
     
