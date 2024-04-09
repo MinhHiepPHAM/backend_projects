@@ -1,9 +1,12 @@
 from django.shortcuts import render, redirect
 from .utils import *
 from django.http import JsonResponse
-import csv
-from django.views.decorators.cache import cache_page
-from django.core.cache import cache
+# from django.views.decorators.cache import cache_page
+from rest_framework.decorators import api_view, renderer_classes
+from rest_framework.renderers import JSONRenderer, TemplateHTMLRenderer
+from rest_framework.response import Response
+# from django.core import serializers
+from .serializers import *
 
 # SYMBOLS = {'QCOM', 'AAPL', 'GOOGL'}
 PERIOD = '1mo'
@@ -22,6 +25,8 @@ def get_period_options():
     return options
 periods = get_period_options()
 
+@api_view(['GET'])
+@renderer_classes([JSONRenderer])
 def stock_price(request):
     global PERIOD
     if period:=period_selection(request):
@@ -41,20 +46,23 @@ def stock_price(request):
     top_five_plot_html = plot_stock(SYMBOLS[:5], PERIOD, "Top five trending tickers")
 
     recent_news = get_stock_news_from_db(SYMBOL)
+
+    recent_news_serilizers = NewsSerializer(recent_news, many=True)
+    stock_trending_serializers = StockSerializer(stock_trending_objs, many=True)
     
     context = {
-        'user':request.user,
+        'is_authenticated':request.user.is_authenticated,
         'options':periods,
         'plot_html':plot_html,
         'top_five_plot_html':top_five_plot_html,
         'plot_symbol':SYMBOL,
         'symbols': SYMBOLS,
-        'news': recent_news,
-        'trending': stock_trending_objs,
+        'news': recent_news_serilizers.data,
+        'trending': stock_trending_serializers.data,
         'period': PERIOD
     }
     
-    return render(request, 'stock/stock_price.html', context)
+    return Response(context)
 
 
 def add_new_stock(request):
@@ -80,29 +88,37 @@ def symbol_selection(request):
     else:
         return None
 
+@api_view(['GET'])
+@renderer_classes([JSONRenderer])
 def ticker_view(request,symbol):
     global PERIOD
     if period:=period_selection(request):
         PERIOD = period
-    print('ticker view:',symbol)
+    # print('ticker view:',symbol)
     stock_obj = models.StockModel.objects.get(symbol=symbol)
+    print(type(stock_obj))
+
+    stock_serializer = StockSerializer(stock_obj)
 
     plot_html = plot_stock([symbol],PERIOD, f'{stock_obj.symbol}: {stock_obj.company}')
 
     stock_news = get_stock_news_from_db(symbol)
+    news_serializers = NewsSerializer(stock_news, many=True)
 
     context = {
         'plot_html': plot_html,
         'period':PERIOD,
         'options':get_period_options(),
-        'stock': stock_obj,
-        'news': stock_news
+        'stock': stock_serializer.data,
+        'news': news_serializers.data,
     }
-    return render(request, 'stock/ticker.html',context)
+    return Response(context)
 
+@api_view(['GET'])
+@renderer_classes([JSONRenderer])
 def search_news(request):
     input_text = request, request.GET.get('search')
     results = models.NewsModel.objects.filter(context__search=input_text)
-    
-    context = {'results':results}
-    return render(request, 'stock/search_results.html', context)
+    results_serializers = NewsSerializer(results, many=True)
+    context = {'results':results_serializers.data}
+    return Response(context)

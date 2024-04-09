@@ -46,7 +46,7 @@ def plot_stock(symbols, period, title):
 
 def get_stock_news_from_db(ticker, limit=15):
     cache_key = f'news_{ticker}_{limit}'
-    if news_objects := cache.get(cache_key): return news_objects[:limit]
+    if news_objects := cache.get(cache_key): return news_objects#[:limit]
 
     try:
         news_objects = models.StockModel.objects.get(symbol=ticker).related_news.all().order_by('-scrapped_date')
@@ -54,7 +54,7 @@ def get_stock_news_from_db(ticker, limit=15):
         return models.NewsModel.objects.none()
     cache.add(cache_key,news_objects, timeout=60*15)
 
-    return news_objects[:limit]
+    return news_objects#[:limit]
 
 def check_news_in_db(url):
     try:

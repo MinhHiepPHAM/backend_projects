@@ -7,14 +7,9 @@ class NewsModel(models.Model):
     context = models.TextField()
     class Meta:
         app_label = 'stock_price'
-        # constraints = [
-        #     models.UniqueConstraint(fields=['url', 'symbol'], name='unique_field_pair')
-        # ]
 
     def __repr__(self):
         return f'{self.url}'
-    
-class StockManger(models.Manager): pass
     
 class StockModel(models.Model):
     symbol = models.CharField(max_length=10, primary_key=True)
@@ -30,14 +25,12 @@ class StockModel(models.Model):
     sector = models.CharField(max_length=250)
     industry = models.CharField(max_length=250)
     country = models.CharField(max_length=250)
-    
-    objects = StockManger()
 
     class Meta:
         app_label = 'stock_price'
 
     def __repr__(self) -> str:
-        return self.symbol
+        return self.symbol + ' - ' + self.company
     
     
     
