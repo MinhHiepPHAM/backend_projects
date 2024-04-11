@@ -26,7 +26,6 @@ def get_period_options():
 periods = get_period_options()
 
 @api_view(['GET'])
-@renderer_classes([JSONRenderer])
 def stock_price(request):
     global PERIOD
     if period:=period_selection(request):
@@ -39,11 +38,11 @@ def stock_price(request):
     if sym:= symbol_selection(request): SYMBOL = sym
 
     stock_obj = models.StockModel.objects.get(symbol=SYMBOL)
-    stock_change = float("{:.2f}".format(stock_obj.adj_close_price-stock_obj.open_price))
+    # stock_change = float("{:.2f}".format(stock_obj.adj_close_price-stock_obj.open_price))
     
-    plot_html = plot_stock([SYMBOL], PERIOD, f'Stock Price of {SYMBOL}: {stock_obj.company}({stock_change}$)')
+    # plot_html = plot_stock([SYMBOL], PERIOD, f'Stock Price of {SYMBOL}: {stock_obj.company}({stock_change}$)')
     
-    top_five_plot_html = plot_stock(SYMBOLS[:5], PERIOD, "Top five trending tickers")
+    # top_five_plot_html = plot_stock(SYMBOLS[:5], PERIOD, "Top five trending tickers")
 
     recent_news = get_stock_news_from_db(SYMBOL)
 
@@ -53,8 +52,8 @@ def stock_price(request):
     context = {
         'is_authenticated':request.user.is_authenticated,
         'options':periods,
-        'plot_html':plot_html,
-        'top_five_plot_html':top_five_plot_html,
+        # 'plot_html':plot_html,
+        # 'top_five_plot_html':top_five_plot_html,
         'plot_symbol':SYMBOL,
         'symbols': SYMBOLS,
         'news': recent_news_serilizers.data,
