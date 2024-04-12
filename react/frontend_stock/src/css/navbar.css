@@ -34,11 +34,11 @@ a:hover {
   
   /* logo  */
 .logo {
-    font-size: 22px;
+    font-size: 20px;
     font-family: Arial, Helvetica, sans-serif;
 }
 .logo:hover {
-    font-size: 25px;
+    font-size: 22px;
     /* font-family: Arial, Helvetica, sans-serif; */
 }
   
@@ -48,5 +48,12 @@ a:hover {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 30px;
+    gap: 40px;
+}
+
+.navHome {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 50px; 
 }

@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import '../css/navbar.css'
+import Searchbar from './Searchbar';
 
 function Navbar() {
     // const [isActive, setIsActive] = useState(false)
@@ -16,8 +17,18 @@ function Navbar() {
         <div className='App'>
             <header className='App-header'>
                 <nav className='navbar'>
-                    <a href='#home' className='logo'> Home </a>
+                    <ul className='navHome'>
+                        <li>
+                            <a href='#home' className='logo'> Home </a>
+                        </li>
+                        <li>
+                            <Searchbar />
+                        </li>
+                    </ul>
                     <ul className='navMenu'>
+                        <li>
+                            
+                        </li>
                         <li>
                             <a href='#aboutMe' className='navLink'>About me</a>
                         </li>
