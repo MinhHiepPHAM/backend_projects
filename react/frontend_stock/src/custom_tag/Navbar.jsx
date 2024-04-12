@@ -2,15 +2,15 @@ import { useState } from 'react'
 import '../css/navbar.css'
 
 function Navbar() {
-    const [isActive, setIsActive] = useState(false)
+    // const [isActive, setIsActive] = useState(false)
 
-    const toggleActive = () => {
-        setIsActive(!isActive);
-    };
+    // const toggleActive = () => {
+    //     setIsActive(!isActive);
+    // };
 
-    const disable = () => {
-        setIsActive(false);
-    };
+    // const disable = () => {
+    //     setIsActive(false);
+    // };
 
     return (
         <div className='App'>
@@ -18,13 +18,13 @@ function Navbar() {
                 <nav className='navbar'>
                     <a href='#home' className='logo'> Home </a>
                     <ul className='navMenu'>
-                        <li onClick={disable}>
+                        <li>
                             <a href='#aboutMe' className='navLink'>About me</a>
                         </li>
-                        <li onClick={disable}>
+                        <li>
                             <a href='#login' className='navLink'>Login</a>
                         </li>
-                        <li onClick={disable}>
+                        <li>
                             <a href='#register' className='navLink'>Register</a>
                         </li>
                     </ul>
