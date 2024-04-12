@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import Navbar from './custom_tag/Navbar';
 
 function Home() {
     const [data, setData] = useState('');
@@ -15,7 +16,7 @@ function Home() {
 
   return (
     <div>
-      <h1>Hello, World!</h1>
+      <Navbar />
       {data.period}
     </div>
   );
