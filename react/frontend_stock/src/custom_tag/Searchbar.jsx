@@ -4,7 +4,7 @@ function Searchbar() {
    return (
         <>
             <form action="">
-                <input type="search" required/><i class="fa fa-search"></i>
+                <input type="search" placeholder='Search...' required/><i class="fa fa-search"></i>
             </form>
         </>
    );

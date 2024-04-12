@@ -22,13 +22,17 @@ function Navbar() {
                             <a href='#home' className='logo'> Home </a>
                         </li>
                         <li>
+                            <a href='#aboutMe' className='navLink'>News</a>
+                        </li>
+                        <li>
+                            <a href='#aboutMe' className='navLink'>Trendings</a>
+                        </li>
+                        <li>
                             <Searchbar />
                         </li>
                     </ul>
                     <ul className='navMenu'>
-                        <li>
-                            
-                        </li>
+                        
                         <li>
                             <a href='#aboutMe' className='navLink'>About me</a>
                         </li>
