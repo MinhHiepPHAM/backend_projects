@@ -26,7 +26,7 @@ def get_period_options():
 periods = get_period_options()
 
 @api_view(['GET'])
-def stock_price(request):
+def trending_stock_view(request):
     global PERIOD
     if period:=period_selection(request):
         PERIOD = period
@@ -88,7 +88,6 @@ def symbol_selection(request):
         return None
 
 @api_view(['GET'])
-@renderer_classes([JSONRenderer])
 def ticker_view(request,symbol):
     global PERIOD
     if period:=period_selection(request):
@@ -114,7 +113,6 @@ def ticker_view(request,symbol):
     return Response(context)
 
 @api_view(['GET'])
-@renderer_classes([JSONRenderer])
 def search_news(request):
     input_text = request, request.GET.get('search')
     results = models.NewsModel.objects.filter(context__search=input_text)
