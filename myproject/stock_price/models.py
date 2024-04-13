@@ -1,9 +1,10 @@
 from django.db import models
+from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, UserManager
     
 class NewsModel(models.Model):
     url = models.URLField(primary_key=True)
     scrapped_date = models.DateField()
-    headline = models.CharField(max_length=250)
+    headline = models.CharField(max_length=255)
     context = models.TextField()
     class Meta:
         app_label = 'stock_price'
@@ -32,5 +33,32 @@ class StockModel(models.Model):
     def __repr__(self) -> str:
         return self.symbol + ' - ' + self.company
     
+
+class User(AbstractBaseUser, PermissionsMixin):
+    email = models.EmailField("email address", unique=True)
+    first_name = models.CharField(max_length=30)
+    last_name = models.CharField(max_length=30)
+    username = models.CharField(max_length=30,unique=True)
+    is_active = models.BooleanField(default=True)
+    bio = models.TextField()
+    
+    USERNAME_FIELD = "username"
+    REQUIRED_FIELDS = ['email'] 
+    objects = UserManager()
+
+    def __repr__(self) -> str:
+        return f'{self.email}, {self.username}'
+    
+class Post(models.Model):
+    created_time = models.DateTimeField()
+    title = models.CharField(max_length=255)
+    context = models.TextField()
+    user = models.ForeignKey(User, related_name='posts', on_delete=models.CASCADE)
+
+    def __repr__(self) -> str:
+        return f'{self.title} of {self.user.username}'
+    
+
+
     
     

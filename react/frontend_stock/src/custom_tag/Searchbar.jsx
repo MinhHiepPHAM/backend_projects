@@ -3,8 +3,8 @@ import '../css/searchbar.css'
 function Searchbar() {
    return (
         <>
-            <form action="">
-                <input type="search" placeholder='Search...' required/><i class="fa fa-search"></i>
+            <form className='search_form' action="">
+                <input className="search_input" type="search" placeholder='Search...' required/><i class="fa fa-search"></i>
             </form>
         </>
    );

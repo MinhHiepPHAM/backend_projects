@@ -39,11 +39,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'authentication',
     'stock_price',
     'django.contrib.postgres',
     'rest_framework',
     'corsheaders',
+    'rest_framework_simplejwt',
 ]
 
 AUTHENTICATION_BACKENDS = [
@@ -64,6 +64,17 @@ MIDDLEWARE = [
 ROOT_URLCONF = 'myproject.urls'
 
 CORS_ORIGIN_ALLOW_ALL = True
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
+}
+
+SIMPLE_JWT = {
+    'AUTH_HEADER_TYPES': ('JWT',),
+}
+
 
 TEMPLATES = [
     {
@@ -149,7 +160,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     # os.path.join(BASE_DIR, 'authentication/static'),
-    os.path.join(BASE_DIR, 'authentication/static'),
+    os.path.join(BASE_DIR,),
 ]
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
@@ -160,7 +171,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-AUTH_USER_MODEL = 'authentication.CustomUser'
+AUTH_USER_MODEL = 'stock_price.User'
 
 LOGOUT_REDIRECT_URL = "/home/"
 LOGIN_URL = '/login/'
