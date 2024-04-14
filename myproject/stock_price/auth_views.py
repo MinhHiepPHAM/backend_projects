@@ -2,11 +2,12 @@ from rest_framework.authentication import SessionAuthentication, BasicAuthentica
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .models import User
+from .models import CustomUser
 from .serializers import UserSerilalizer
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.views import TokenObtainPairView
+from rest_framework.permissions import AllowAny
 
 class LoginView(TokenObtainPairView): pass
     
@@ -22,9 +23,10 @@ class LogoutView(APIView):
 
 
 class RegisterUserView(APIView):
+    permission_classes = [AllowAny]
     def post(self, request):
         # if email is already in use
-        if User.objects.filter(email=request.data['email']).exists():
+        if CustomUser.objects.filter(email=request.data['email']).exists():
             return Response({'error': 'Email already registered'}, status=status.HTTP_400_BAD_REQUEST)
         else:
             serializer = UserSerilalizer(data=request.data)

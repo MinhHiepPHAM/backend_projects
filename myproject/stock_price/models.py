@@ -34,7 +34,7 @@ class StockModel(models.Model):
         return self.symbol + ' - ' + self.company
     
 
-class User(AbstractBaseUser, PermissionsMixin):
+class CustomUser(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField("email address", unique=True)
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
@@ -53,7 +53,7 @@ class Post(models.Model):
     created_time = models.DateTimeField()
     title = models.CharField(max_length=255)
     context = models.TextField()
-    user = models.ForeignKey(User, related_name='posts', on_delete=models.CASCADE)
+    user = models.ForeignKey(CustomUser, related_name='posts', on_delete=models.CASCADE)
 
     def __repr__(self) -> str:
         return f'{self.title} of {self.user.username}'
