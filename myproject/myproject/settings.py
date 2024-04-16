@@ -47,7 +47,7 @@ INSTALLED_APPS = [
 ]
 
 AUTHENTICATION_BACKENDS = [
-    'authentication.backends.CustomModelBackend',
+    # 'authentication.backends.CustomModelBackend',
     'django.contrib.auth.backends.ModelBackend',
 ]
 
@@ -69,6 +69,7 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
+    # 'TOKEN_OBTAIN_SERIALIZER': 'rest_framework_simplejwt.serializers.TokenObtainPairSerializer'
 }
 
 SIMPLE_JWT = {
