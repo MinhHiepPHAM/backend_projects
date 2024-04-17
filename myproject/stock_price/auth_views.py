@@ -37,3 +37,9 @@ class RegisterUserView(APIView):
             user.save()
 
             return Response({'username':username}, status=status.HTTP_201_CREATED)
+
+class HomeView(APIView):
+    def get(self, request):
+        print(request.data)
+        return Response(request.data)
+    

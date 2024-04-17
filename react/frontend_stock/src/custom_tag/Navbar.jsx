@@ -1,47 +1,62 @@
-import { useState } from 'react'
+// import { useState } from 'react'
 import '../css/navbar.css'
 import Searchbar from './Searchbar';
 
-function Navbar() {
-    // const [isActive, setIsActive] = useState(false)
+function LogoutBar() {
+    return (
+        <>
+            <li>
+                <a href='/logout' className='navLink'>Logout</a>
+            </li>
+            <li>
+                <a href='/dashboard' className='navLink'>Dashboard</a>
+            </li>
+        </>
+    )
+}
 
-    // const toggleActive = () => {
-    //     setIsActive(!isActive);
-    // };
+function LoginBar() {
+    return (
+        <>
+            <li>
+                <a href='/login' className='navLink'>Login</a>
+            </li>
+            <li>
+                <a href='/signup' className='navLink'>Register</a>
+            </li>
+        </>
+    )
+}
 
-    // const disable = () => {
-    //     setIsActive(false);
-    // };
-
+function Navbar({isAuth}) {
+    console.log(isAuth)
     return (
         <div className='App'>
             <header className='App-header'>
                 <nav className='navbar'>
                     <ul className='navHome'>
                         <li>
-                            <a href='#home' className='logo'> Home </a>
+                            <a href='/home' className='logo'> Home </a>
                         </li>
                         <li>
-                            <a href='#aboutMe' className='navLink'>News</a>
+                            <a href='/news' className='navLink'>News</a>
                         </li>
                         <li>
-                            <a href='#aboutMe' className='navLink'>Trendings</a>
+                            <a href='/trendings' className='navLink'>Trendings</a>
                         </li>
                         <li>
                             <Searchbar />
                         </li>
                     </ul>
                     <ul className='navMenu'>
-                        
                         <li>
-                            <a href='#aboutMe' className='navLink'>About me</a>
+                            <a href='/aboutMe' className='navLink'>About me</a>
                         </li>
-                        <li>
-                            <a href='#login' className='navLink'>Login</a>
-                        </li>
-                        <li>
-                            <a href='#register' className='navLink'>Register</a>
-                        </li>
+                        {isAuth
+                            ?  <LogoutBar/>
+                            :  <LoginBar/>
+                        }
+
                     </ul>
                 </nav>
 

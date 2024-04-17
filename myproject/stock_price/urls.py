@@ -10,6 +10,7 @@ urlpatterns = [
     path('login/', auth_views.LoginView.as_view(), name='login'),
     path('signup/', auth_views.RegisterUserView.as_view(), name='register'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
+    path('home/', auth_views.HomeView.as_view(), name='home'),
     # path('stock/<str:symbol>/', ticker_view, name='ticker_info'),
     # re_path('stock_news/$', search_news, name='search_result'),
 ]

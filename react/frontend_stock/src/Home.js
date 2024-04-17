@@ -16,8 +16,11 @@ function Home() {
 
 	return (
 		<div>
-			<Navbar />
-			{data.period}
+			<Navbar isAuth={false}/>
+			<div>
+				{JSON.stringify(data)}
+			</div>
+				
 		</div>
 	);
 }

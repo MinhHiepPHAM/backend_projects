@@ -2,11 +2,13 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import Navbar from './custom_tag/Navbar';
+import { useNavigate } from 'react-router-dom';
 
 const LoginForm = () => {
 	const [username, setUsername] = useState('');
 	const [password, setPassword] = useState('');
 	const [error, setError] = useState('');
+	const navigate = useNavigate();
 
 	const handleSubmit = async (e) => {	
 		e.preventDefault();
@@ -16,7 +18,7 @@ const LoginForm = () => {
 				password,
 			});
 			console.log(response.data); // assuming your backend sends back a token upon successful login
-			// Store the token securely (e.g., in local storage or a cookie) and redirect the user to the dashboard
+			navigate('/home');
 		} catch (error) {
 			console.error('Login failed:', error);
 			setError('Invalid username or password');
