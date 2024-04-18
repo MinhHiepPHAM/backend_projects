@@ -59,7 +59,7 @@ function LoginPage() {
 	return (
 		<>
 			<div>
-				<Navbar/>
+				<Navbar isAuth={false}/>
 			</div>
 
 			<div>

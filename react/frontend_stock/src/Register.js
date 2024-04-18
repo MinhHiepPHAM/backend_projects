@@ -68,7 +68,7 @@ function ReigistrationPage() {
 	return (
 		<>
 			<div>
-				<Navbar/>
+				<Navbar isAuth={false}/>
 			</div>
 
 			<div>
