@@ -52,4 +52,10 @@ class UserSerilalizer(serializers.ModelSerializer):
 #     def create(self, validated_data):
 #         return CustomUser.objects.create_user(**validated_data)
 
-class TokenObtainPairSerializer(jwt_serializer.TokenObtainPairSerializer): pass
+class LoginSerializer(jwt_serializer.TokenObtainPairSerializer):
+    def validate(self, attrs: jwt_serializer.Dict[str, jwt_serializer.Any]) -> jwt_serializer.Dict[str, str]:
+        data = super().validate(attrs)
+        data['username'] = self.user.username
+        print('pair:', data)
+        return data
+

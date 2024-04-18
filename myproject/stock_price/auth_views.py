@@ -5,11 +5,14 @@ from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.permissions import AllowAny
+from .serializers import LoginSerializer
+# from django.views.generic.base import View
+# from django.http import JsonResponse
 
 class LoginView(TokenObtainPairView):
     permission_classes = [AllowAny]
+    serializer_class = LoginSerializer
 
-    
 class LogoutView(APIView):
     def post(self, request):
         try:

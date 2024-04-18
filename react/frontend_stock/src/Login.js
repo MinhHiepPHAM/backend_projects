@@ -17,6 +17,7 @@ const LoginForm = () => {
 				username,
 				password,
 			});
+			localStorage.setItem('token', JSON.stringify(response.data))
 			console.log(response.data); // assuming your backend sends back a token upon successful login
 			navigate('/home');
 		} catch (error) {

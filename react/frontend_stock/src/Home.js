@@ -3,11 +3,24 @@ import axios from 'axios';
 import Navbar from './custom_tag/Navbar';
 
 function Home() {
-	const [data, setData] = useState('');
+	const [username, setUsername] = useState('');
+	const [authenticated, setAuthentication] = useState('');
+
 	useEffect(() => {
 	axios.get('http://localhost:8000/home/')
 		.then(response => {
-			setData(response.data)
+			// console.log(response.data)
+			const accessToken = localStorage.getItem('token');
+			// console.log('toto ' + accessToken.username)
+			// console.log(accessToken)
+	
+			// Decode access token to extract user information
+			if (accessToken) {
+				const user = JSON.parse(accessToken).username
+				setUsername(user);
+				setAuthentication(true)
+			}
+			
 		})
 		.catch(error => {
 			console.log(error);
@@ -16,9 +29,9 @@ function Home() {
 
 	return (
 		<div>
-			<Navbar isAuth={false}/>
+			<Navbar isAuth={authenticated}/>
 			<div>
-				{JSON.stringify(data)}
+				<h2>Wellcome {username}</h2>
 			</div>
 				
 		</div>

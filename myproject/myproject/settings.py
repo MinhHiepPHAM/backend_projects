@@ -69,7 +69,7 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
-    # 'TOKEN_OBTAIN_SERIALIZER': 'rest_framework_simplejwt.serializers.TokenObtainPairSerializer'
+    # 'TOKEN_OBTAIN_SERIALIZER': 'stock_price.serializers.TokenObtainPairSerializer'
 }
 
 SIMPLE_JWT = {
