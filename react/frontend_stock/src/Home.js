@@ -9,12 +9,7 @@ function Home() {
 	useEffect(() => {
 	axios.get('http://localhost:8000/home/')
 		.then(response => {
-			// console.log(response.data)
 			const accessToken = localStorage.getItem('token');
-			// console.log('toto ' + accessToken.username)
-			// console.log(accessToken)
-	
-			// Decode access token to extract user information
 			if (accessToken) {
 				const user = JSON.parse(accessToken).username
 				setUsername(user);
