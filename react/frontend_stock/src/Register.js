@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import Navbar from './custom_tag/Navbar';
+import './css/authentication.css'
 
 const RegistrationForm = () => {
 	const [username, setUsername] = useState('');
@@ -27,33 +28,29 @@ const RegistrationForm = () => {
 	};
 
 	return (
-		<div>
-            <h2>Register</h2>
+		<div className='login-container'>
             {error && <p>{error}</p>}
-            <form onSubmit={handleSubmit}>
+            <form className='auth-form' onSubmit={handleSubmit}>
                 <div>
-                    <label htmlFor="username">Username:</label>
                     <input
                         type="text"
-                        id="username"
+                        id="username" placeholder='Username'
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
                     />
                 </div>
                 <div>
-                    <label htmlFor="email">Email:</label>
                     <input
                         type="email"
-                        id="email"
+                        id="email" placeholder='Email'
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                     />
                 </div>
                 <div>
-                    <label htmlFor="password">Password:</label>
                     <input
                         type="password"
-                        id="password"
+                        id="password" placeholder='Password'
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                     />

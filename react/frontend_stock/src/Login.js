@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import Navbar from './custom_tag/Navbar';
 import { useNavigate } from 'react-router-dom';
+import './css/authentication.css'
 
 const LoginForm = () => {
 	const [username, setUsername] = useState('');
@@ -18,7 +19,7 @@ const LoginForm = () => {
 				password,
 			});
 			localStorage.setItem('token', JSON.stringify(response.data))
-			console.log(response.data); // assuming your backend sends back a token upon successful login
+			console.log(response.data);
 			navigate('/home');
 		} catch (error) {
 			console.error('Login failed:', error);
@@ -27,29 +28,26 @@ const LoginForm = () => {
 	};
 
 	return (
-		<div>
-			<h2>Login</h2>
+		<div className='login-container'>
 			{error && <p>{error}</p>}
-			<form onSubmit={handleSubmit}>
-			<div>
-				<label htmlFor="username">Username:</label>
-				<input
-					type="text"
-					id="username"
-					value={username}
-					onChange={(e) => setUsername(e.target.value)}
-				/>
-			</div>
-			<div>
-				<label htmlFor="password">Password:</label>
-				<input
-					type="password"
-					id="password"
-					value={password}
-					onChange={(e) => setPassword(e.target.value)}
-				/>
-			</div>
-			<button type="submit">Login</button>
+			<form className='auth-form' onSubmit={handleSubmit}>
+				<div>
+					<input
+						type="text"
+						id="username" placeholder='Username'
+						value={username}
+						onChange={(e) => setUsername(e.target.value)}
+					/>
+				</div>
+				<div>
+					<input
+						type="password"
+						id="password" placeholder='Password'
+						value={password}
+						onChange={(e) => setPassword(e.target.value)}
+					/>
+				</div>
+				<button type="submit">Login</button>
 			</form>
 		</div>
 	);
