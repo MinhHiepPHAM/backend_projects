@@ -21,7 +21,7 @@
     width: 100%;
     border: 0;
     margin: 0 0 15px;
-    padding: 15px;
+    padding: 16px;
     box-sizing: border-box;
     font-size: 16px;
     color: #0b2a80;
@@ -46,4 +46,21 @@
 
 .auth-form button:hover,.form button:active,.form button:focus {
     background: #114beb;
-  }
+}
+
+.auth-form .message {
+    margin: 15px 0 0;
+    color: #7a7878;
+    font-size: 13px;
+}
+
+.auth-form .message a {
+    color: #3667ee;
+    text-decoration: none;
+    font-size: 14px;
+    text-decoration: underline;
+}
+
+.auth-form .message a:hover {
+    color: #0a2cec;
+}

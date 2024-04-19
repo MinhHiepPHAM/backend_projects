@@ -56,6 +56,7 @@ const RegistrationForm = () => {
                     />
                 </div>
                 <button type="submit">Register</button>
+                <p class="message">Already registered? <a href="/login">Sign In</a></p>
             </form>
         </div>
 	);

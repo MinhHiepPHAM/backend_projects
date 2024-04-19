@@ -8,13 +8,13 @@ ul {
     list-style: none;
 }
   
-a {
+.navLink {
     text-decoration: none;
     color: white;
     font-size: 18px;
 }
 
-a:hover {
+.navLink:hover {
     background-color: #4494df;
     padding: 10px;
     border-radius: 8px;

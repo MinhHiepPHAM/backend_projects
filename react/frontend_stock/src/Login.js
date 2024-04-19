@@ -48,6 +48,7 @@ const LoginForm = () => {
 					/>
 				</div>
 				<button type="submit">Login</button>
+				<p class="message">Not registered? <a href="/signup">Create an account</a></p>
 			</form>
 		</div>
 	);
