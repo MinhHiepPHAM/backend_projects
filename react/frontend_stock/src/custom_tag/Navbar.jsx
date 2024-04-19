@@ -36,7 +36,7 @@ function Navbar({isAuth}) {
                 <nav className='navbar'>
                     <ul className='navHome'>
                         <li>
-                            <a href='/home' className='logo'> Home </a>
+                            <a href='/home' className='navLink'> Home </a>
                         </li>
                         <li>
                             <a href='/news' className='navLink'>News</a>
