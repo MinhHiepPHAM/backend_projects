@@ -1,12 +1,17 @@
 // import { useState } from 'react'
 import '../css/navbar.css'
 import Searchbar from './Searchbar';
+// import { useNavigate } from 'react-router-dom';
 
 function LogoutBar() {
+    // const navigate = useNavigate();
+    const handleLogout = () => {
+        localStorage.removeItem('token');
+    }
     return (
         <>
             <li>
-                <a href='/logout' className='navLink'>Logout</a>
+                <a href='/logout' className='navLink' onClick={handleLogout}>Logout</a>
             </li>
             <li>
                 <a href='/dashboard' className='navLink'>Dashboard</a>

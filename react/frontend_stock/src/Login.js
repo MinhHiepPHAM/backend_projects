@@ -17,9 +17,14 @@ const LoginForm = () => {
 			const response = await axios.post('http://localhost:8000/login/', {
 				username,
 				password,
-			});
-			localStorage.setItem('token', JSON.stringify(response.data))
-			console.log(response.data);
+			},{headers: {'Content-Type': 'application/json'}}, {withCredentials:true});
+			
+			console.log('logout')
+			localStorage.clear()
+			localStorage.setItem('access_token', response.data.access);
+			localStorage.setItem('refresh_token', response.data.refresh);
+			localStorage.setItem('username', response.data.username);
+			axios.defaults.headers.common['Authorization'] = `Bearer ${response.data['access']}`;
 			navigate('/home');
 		} catch (error) {
 			console.error('Login failed:', error);

@@ -3,12 +3,14 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import Navbar from './custom_tag/Navbar';
 import './css/authentication.css'
+import { useNavigate } from 'react-router-dom';
 
 const RegistrationForm = () => {
 	const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+    const navigate = useNavigate();
 
 	const handleSubmit = async (e) => {	
 		e.preventDefault();
@@ -19,7 +21,7 @@ const RegistrationForm = () => {
                 password,
 			});
 			console.log(response.data); // Assuming your backend sends back a token upon successful registration
-            // Redirect the user to the login page or automatically log them in
+            navigate('/login')
 			
 		} catch (error) {
 			console.error('Registration failed:', error);

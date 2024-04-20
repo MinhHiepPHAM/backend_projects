@@ -4,7 +4,7 @@ from .models import CustomUser
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.views import TokenObtainPairView
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from .serializers import LoginSerializer
 # from django.views.generic.base import View
 # from django.http import JsonResponse
@@ -14,9 +14,11 @@ class LoginView(TokenObtainPairView):
     serializer_class = LoginSerializer
 
 class LogoutView(APIView):
+    permission_classes = (IsAuthenticated,)
     def post(self, request):
         try:
-            refresh_token = request.data["refresh"]
+            # print(request.data)
+            refresh_token = request.data["refresh_token"]
             token = RefreshToken(refresh_token)
             token.blacklist() 
             return Response({"message": "Logout successful"}, status=status.HTTP_200_OK)
@@ -43,6 +45,6 @@ class RegisterUserView(APIView):
 
 class HomeView(APIView):
     def get(self, request):
-        print(request.data)
+        # print(request.data)
         return Response(request.data)
     

@@ -9,10 +9,10 @@ function Home() {
 	useEffect(() => {
 	axios.get('http://localhost:8000/home/')
 		.then(response => {
-			const accessToken = localStorage.getItem('token');
-			if (accessToken) {
-				const user = JSON.parse(accessToken).username
-				setUsername(user);
+			const name = localStorage.getItem('username');
+			if (name) {
+				// const user = JSON.parse(accessToken).username
+				setUsername(name);
 				setAuthentication(true)
 			}
 			
