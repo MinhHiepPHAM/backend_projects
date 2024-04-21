@@ -5,6 +5,13 @@
     text-align: center;
 }
 
+.logout-container {
+    width: 500px;
+    padding: 25px;
+    margin: auto;
+    text-align: center;
+}
+
 
 .auth-form {
     position: relative;

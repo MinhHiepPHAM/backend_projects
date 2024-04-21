@@ -5,13 +5,13 @@ import Searchbar from './Searchbar';
 
 function LogoutBar() {
     // const navigate = useNavigate();
-    const handleLogout = () => {
-        localStorage.removeItem('token');
-    }
+    // const handleLogout = () => {
+    //     navigate('/login')
+    // }
     return (
         <>
             <li>
-                <a href='/logout' className='navLink' onClick={handleLogout}>Logout</a>
+                <a href='/logout' className='navLink'>Logout</a>
             </li>
             <li>
                 <a href='/dashboard' className='navLink'>Dashboard</a>

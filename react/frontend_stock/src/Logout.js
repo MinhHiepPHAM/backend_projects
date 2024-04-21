@@ -1,12 +1,9 @@
-// import React, { useState } from 'react';
 import axios from 'axios';
 import Navbar from './custom_tag/Navbar';
-// import { useNavigate } from 'react-router-dom';
+import './css/authentication.css'
 
 
-const LogoutMess = () => {
-    // const navigate = useNavigate();
-
+const Logout = () => {
     try {
         axios.post('http://localhost:8000/logout/',
             {
@@ -17,13 +14,12 @@ const LogoutMess = () => {
         axios.defaults.headers.common['Authorization'] = null;
         localStorage.clear()
         return (
-            <>
-                <h2>Successfully logout</h2>
-            </>
+            <div className='logout-container'>
+                <h2 style={{color:'blue'}}>Successfully logout</h2>
+            </div>
         )
     } catch (error) {
         console.error('Logout failed:', error);
-        // setMessage('Logout failed: ');
         return error
     }
 }
@@ -36,7 +32,7 @@ function LogoutPage() {
 			</div>
 
 			<div>
-				<LogoutMess />
+				<Logout />
 			</div>
 		</>
 	)
