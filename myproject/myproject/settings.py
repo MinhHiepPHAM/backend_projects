@@ -33,7 +33,7 @@ ALLOWED_HOSTS = []
 
 # Application definition
 
-CORS_ALLOW_HEADERS = "*"
+# CORS_ALLOW_HEADERS = "*"
 
 INSTALLED_APPS = [
     # 'django.contrib.admin',

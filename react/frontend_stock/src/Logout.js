@@ -5,7 +5,6 @@ import Navbar from './custom_tag/Navbar';
 
 
 const LogoutMess = () => {
-    // console.log('refresh: ' + localStorage.getItem('refresh_token') )
     // const navigate = useNavigate();
 
     try {
@@ -15,17 +14,18 @@ const LogoutMess = () => {
                 access_token:localStorage.getItem('access_token')
             }, {headers: {'Content-Type': 'application/json'}}, {withCredentials:true});
 
-        // axios.defaults.headers.common['Authorization'] = null;
+        axios.defaults.headers.common['Authorization'] = null;
         localStorage.clear()
+        return (
+            <>
+                <h2>Successfully logout</h2>
+            </>
+        )
     } catch (error) {
         console.error('Logout failed:', error);
+        // setMessage('Logout failed: ');
+        return error
     }
-
-    return (
-        <>
-            <p>Logout successful</p>
-        </>
-    )
 }
 
 function LogoutPage() {

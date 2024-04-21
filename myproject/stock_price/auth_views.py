@@ -14,10 +14,10 @@ class LoginView(TokenObtainPairView):
     serializer_class = LoginSerializer
 
 class LogoutView(APIView):
-    permission_classes = (IsAuthenticated,)
+    # TODO: permission_classes = (IsAuthenticated,)
     def post(self, request):
         try:
-            # print(request.data)
+            # print('logout view', request.user)
             refresh_token = request.data["refresh_token"]
             token = RefreshToken(refresh_token)
             token.blacklist() 
