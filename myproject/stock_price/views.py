@@ -7,6 +7,9 @@ from rest_framework.renderers import JSONRenderer, TemplateHTMLRenderer
 from rest_framework.response import Response
 # from django.core import serializers
 from .serializers import *
+from rest_framework.views import APIView
+from rest_framework.viewsets import ModelViewSet
+from .pagination import HomePagination
 
 # SYMBOLS = {'QCOM', 'AAPL', 'GOOGL'}
 PERIOD = '1mo'
@@ -23,7 +26,7 @@ def get_period_options():
     ]
 
     return options
-periods = get_period_options()
+PERIODS = get_period_options()
 
 @api_view(['GET'])
 def trending_stock_view(request):
@@ -51,7 +54,7 @@ def trending_stock_view(request):
     
     context = {
         'is_authenticated':request.user.is_authenticated,
-        'options':periods,
+        'options':PERIODS,
         # 'plot_html':plot_html,
         # 'top_five_plot_html':top_five_plot_html,
         'plot_symbol':SYMBOL,
@@ -69,7 +72,7 @@ def add_new_stock(request):
 
 def search_symbol(request):
     query = request.GET.get('q', '')
-    results = models.StockModel.objects.filter(symbol__icontains=query).values()
+    results = StockModel.objects.filter(symbol__icontains=query).values()
 
     return JsonResponse(list(results), safe=False)
 
@@ -119,3 +122,9 @@ def search_news(request):
     results_serializers = NewsSerializer(results, many=True)
     context = {'results':results_serializers.data}
     return Response(context)
+
+
+class HomeView(ModelViewSet):
+    serializer_class = StockSerializer
+    queryset = StockModel.objects.all()
+    pagination_class = HomePagination

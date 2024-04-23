@@ -20,7 +20,19 @@ settings.configure(
                 'CLIENT_CLASS': 'django_redis.client.DefaultClient',
             }
         }
-    }
+    },
+
+    AUTH_USER_MODEL = 'stock_price.CustomUser',
+    INSTALLED_APPS = [
+        'django.contrib.admin',
+        'django.contrib.contenttypes',
+        'django.contrib.auth',
+        'django.contrib.sessions',
+        'django.contrib.messages',
+        'django.contrib.staticfiles',
+        'stock_price',
+        'django.contrib.postgres',
+    ]
 )
 django.setup()
 from bs4 import BeautifulSoup

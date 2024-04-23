@@ -12,15 +12,17 @@ settings.configure(
         },
     },
     TIME_ZONE='Europe/Paris',
-    # CACHES = {
-    #     'default': {
-    #         'BACKEND': 'django_redis.cache.RedisCache',
-    #         'LOCATION': 'redis://localhost:6379/1',
-    #         'OPTIONS': {
-    #             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
-    #         }
-    #     }
-    # }
+    AUTH_USER_MODEL = 'stock_price.CustomUser',
+    INSTALLED_APPS = [
+        'django.contrib.admin',
+        'django.contrib.contenttypes',
+        'django.contrib.auth',
+        'django.contrib.sessions',
+        'django.contrib.messages',
+        'django.contrib.staticfiles',
+        'stock_price',
+        'django.contrib.postgres',
+    ]
 )
 django.setup()
 
@@ -28,7 +30,7 @@ import pandas as pd
 import requests
 import bs4
 import time
-from stock_price import models
+from stock_price.models import StockModel
 import yfinance as yf
 # from django.core.cache import cache
 
@@ -59,7 +61,7 @@ def write_stock_info_to_db():
     
     for table in list(stock_data):
         for ticker, company, sector, industry, country in zip(table['Ticker'], table['Company'], table['Sector'], table['Industry'], table['Country']):  
-            obj = models.StockModel.objects.filter(symbol=ticker)
+            obj = StockModel.objects.filter(symbol=ticker)
             is_exist =  obj.exists()
             if is_exist:
                 obj.update(country=country, sector=sector, industry=industry)
@@ -71,7 +73,7 @@ def write_stock_info_to_db():
                     continue
                  
                 if stock_price.empty: continue
-                models.StockModel.objects.create(
+                StockModel.objects.create(
                     symbol = ticker,
                     company = company,
                     close_price = float("{:.2f}".format(stock_price['Close'][0])),
