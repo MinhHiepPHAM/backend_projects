@@ -132,6 +132,6 @@ class HomeView(ModelViewSet):
 
     def get_queryset(self):
         get_all_stock_objects.delay()
-        return StockModel.objects.all()
+        return StockModel.objects.all().order_by('symbol')
 
             

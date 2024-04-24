@@ -5,16 +5,17 @@ import Navbar from './custom_tag/Navbar';
 function Home() {
 	const [username, setUsername] = useState('');
 	const [authenticated, setAuthentication] = useState('');
+	// const [message, setMessage] = useState('');
 
 	useEffect(() => {
 	axios.get('http://localhost:8000/home/')
 		.then(response => {
 			const name = localStorage.getItem('username');
 			if (name) {
-				// const user = JSON.parse(accessToken).username
 				setUsername(name);
 				setAuthentication(true)
 			}
+			
 			
 		})
 		.catch(error => {
