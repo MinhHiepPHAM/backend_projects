@@ -10,6 +10,7 @@ from .serializers import *
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 from .pagination import HomePagination
+from .task import get_all_stock_objects
 
 # SYMBOLS = {'QCOM', 'AAPL', 'GOOGL'}
 PERIOD = '1mo'
@@ -126,5 +127,11 @@ def search_news(request):
 
 class HomeView(ModelViewSet):
     serializer_class = StockSerializer
-    queryset = StockModel.objects.all()
+    # queryset = StockModel.objects.all()
     pagination_class = HomePagination
+
+    def get_queryset(self):
+        get_all_stock_objects.delay()
+        return StockModel.objects.all()
+
+            

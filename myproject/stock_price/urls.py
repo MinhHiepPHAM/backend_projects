@@ -7,7 +7,7 @@ from rest_framework import routers
 from . import auth_views, views#trending_stock_view, search_symbol,period_selection, ticker_view, search_news
 
 router = routers.SimpleRouter()
-router.register(r'home', views.HomeView)
+router.register(r'home', views.HomeView, 'home_view')
 
 urlpatterns = [
     # path('stock/trendings', trending_stock_view, name='trending_stock'),
