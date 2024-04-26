@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import axios from 'axios';
 import Navbar from './custom_tag/Navbar';
 import Pagination from './custom_tag/Pagination';
@@ -13,24 +13,30 @@ function Home() {
 	const [count, setCount] = useState(0);
 
 	useEffect(() => {
-	axios.get('http://localhost:8000/home/')
-		.then(response => {
-			const name = localStorage.getItem('username');
-			if (name) {
-				setUsername(name);
-				setAuthentication(true)
-			}
-			setData(response.data.all_stock_data)
-			setPageSize(response.data.page_size)
-			setNumPages(response.data.num_pages)
-			setCount(response.data.count)
-			console.log(data)
-			
-		})
-		.catch(error => {
-			console.log(error);
-		});
-	}, []);
+		console.log('current page: ' + currentPage)
+		let url;
+		if (currentPage !== 1) {
+			url = 'http://localhost:8000/home/?p=' + currentPage;
+		} else {
+			url = 'http://localhost:8000/home/'
+		}
+		axios.get(url)
+			.then(response => {
+				const name = localStorage.getItem('username');
+				if (name) {
+					setUsername(name);
+					setAuthentication(true)
+				}
+				setData(response.data.all_stock_data)
+				setPageSize(response.data.page_size)
+				setNumPages(response.data.num_pages)
+				setCount(response.data.count)
+				
+			})
+			.catch(error => {
+				console.log(error);
+			});
+	}, [currentPage]);
 
 	return (
 		<div>
