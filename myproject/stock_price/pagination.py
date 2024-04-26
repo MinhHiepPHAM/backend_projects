@@ -12,6 +12,7 @@ class HomePagination(PageNumberPagination):
         return Response(OrderedDict([
             ('count', self.page.paginator.count),
             ('num_pages', self.page.paginator.num_pages),
+            ('page_size', self.get_page_size(self.request)),
             ('next', self.get_next_link()),
             ('previous', self.get_previous_link()),
             ('all_stock_data', data)
