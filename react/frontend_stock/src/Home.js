@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import axios from 'axios';
 import Navbar from './custom_tag/Navbar';
 import Pagination from './custom_tag/Pagination';
+import './css/table.css'
 
 function Home() {
 	const [username, setUsername] = useState('');
@@ -41,8 +42,38 @@ function Home() {
 	return (
 		<div>
 			<Navbar isAuth={authenticated}/>
-			<div>
-				<table>
+			<div className="table-container">
+				<h2 className='title'> Ticket Price Info <small> ({count} tickers)</small></h2>
+				<ul className="responsive-table">
+					<li className="table-header">
+						<div className="col col-symbol">Ticker</div>
+						<div className="col col-company">Company</div>
+						<div className="col col-country">Country</div>
+						<div className="col col-sector">Sector</div>
+						<div className="col col-industry">Industry</div>
+						<div className="col col-open">Open price</div>
+						<div className="col col-close">Close price</div>
+						<div className="col col-volume">Volume</div>
+					</li>
+					{data.map(item => {
+						return  (
+							<li className="table-row">
+								<div className="col col-symbol">{item.symbol}</div>
+								<div className="col col-company">{item.company}</div>
+								<div className="col col-country" >{item.country}</div>
+								<div className="col col-sector">{item.sector}</div>
+								<div className="col col-industry">{item.industry}</div>
+								<div className="col col-open">{item.open_price}</div>
+								<div className="col col-close" >{item.close_price}</div>
+								<div className="col col-volume">{item.volume}</div>
+							</li>
+						)
+					})}
+					
+					
+				</ul>
+			</div>
+				{/* <table>
 					<thead>
 					<tr>
 						<th>Symbol</th>
@@ -65,7 +96,7 @@ function Home() {
 						);
 					})}
 					</tbody>
-				</table>
+				</table> */}
 
 				<Pagination
 					currentPage={currentPage}
@@ -73,7 +104,6 @@ function Home() {
 					pageSize={pageSize}
 					onPageChange={page => setCurrentPage(page)}
 				/>
-			</div>
 				
 		</div>
 	);
