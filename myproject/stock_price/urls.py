@@ -8,6 +8,7 @@ from . import auth_views, views#trending_stock_view, search_symbol,period_select
 
 router = routers.SimpleRouter()
 router.register(r'home', views.HomeView, 'home_view')
+# router.register(r'tickers/<str:symbol>', views.TickerView.as_view({'get':'retrieve'}), name='ticker_detail')
 
 urlpatterns = [
     # path('stock/trendings', trending_stock_view, name='trending_stock'),
@@ -16,6 +17,7 @@ urlpatterns = [
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('signup/', auth_views.RegisterUserView.as_view(), name='register'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
+    path('tickers/<str:symbol>/<str:period>', views.TickerView.as_view({'get':'retrieve'}), name='ticker_detail'),
     # path('stock/<str:symbol>/', ticker_view, name='ticker_info'),
     # re_path('stock_news/$', search_news, name='search_result'),
 ] + router.urls

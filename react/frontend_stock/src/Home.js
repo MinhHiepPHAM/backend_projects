@@ -58,7 +58,7 @@ function Home() {
 					{data.map(item => {
 						return  (
 							<li className="table-row">
-								<div className="col col-symbol">{item.symbol}</div>
+								<div className="col col-symbol"><a href={'/tickers/'+item.symbol}>{item.symbol}</a></div>
 								<div className="col col-company">{item.company}</div>
 								<div className="col col-country" >{item.country}</div>
 								<div className="col col-sector">{item.sector}</div>
@@ -69,34 +69,8 @@ function Home() {
 							</li>
 						)
 					})}
-					
-					
 				</ul>
 			</div>
-				{/* <table>
-					<thead>
-					<tr>
-						<th>Symbol</th>
-						<th>Company</th>
-						<th>Industry</th>
-						<th>Country</th>
-						<th>Close price</th>
-					</tr>
-					</thead>
-					<tbody>
-					{data.map(item => {
-						return (
-						<tr>
-							<td>{item.symbol}</td>
-							<td>{item.company}</td>
-							<td>{item.industry}</td>
-							<td>{item.country}</td>
-							<td>{item.close_price}</td>
-						</tr>
-						);
-					})}
-					</tbody>
-				</table> */}
 
 				<Pagination
 					currentPage={currentPage}
