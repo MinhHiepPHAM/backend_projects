@@ -1,20 +1,20 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Navbar from './custom_tag/Navbar';
 import Pagination from './custom_tag/Pagination';
 import './css/table.css'
 
 function Home() {
-	const [username, setUsername] = useState('');
+	// const [username, setUsername] = useState('');
 	const [authenticated, setAuthentication] = useState('');
 	const [pageSize, setPageSize] = useState(20);
 	const [currentPage, setCurrentPage] = useState(1);
-	const [numPages, setNumPages] = useState(0);
+	// const [numPages, setNumPages] = useState(0);
 	const [data, setData] = useState([]);
 	const [count, setCount] = useState(0);
 
 	useEffect(() => {
-		console.log('current page: ' + currentPage)
+		// console.log('current page: ' + currentPage)
 		let url;
 		if (currentPage !== 1) {
 			url = 'http://localhost:8000/home/?p=' + currentPage;
@@ -25,12 +25,12 @@ function Home() {
 			.then(response => {
 				const name = localStorage.getItem('username');
 				if (name) {
-					setUsername(name);
+					// setUsername(name);
 					setAuthentication(true)
 				}
 				setData(response.data.all_stock_data)
 				setPageSize(response.data.page_size)
-				setNumPages(response.data.num_pages)
+				// setNumPages(response.data.num_pages)
 				setCount(response.data.count)
 				
 			})

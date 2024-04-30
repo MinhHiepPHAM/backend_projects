@@ -2,8 +2,7 @@ from django.shortcuts import render, redirect
 from .utils import *
 from django.http import JsonResponse
 # from django.views.decorators.cache import cache_page
-from rest_framework.decorators import api_view, renderer_classes
-from rest_framework.renderers import JSONRenderer, TemplateHTMLRenderer
+from rest_framework.decorators import api_view
 from rest_framework.response import Response
 # from django.core import serializers
 from .serializers import *
@@ -142,13 +141,12 @@ class TickerView(ModelViewSet):
         try:
             ticker_obj = StockModel.objects.get(symbol=symbol)
             serializer = StockSerializer(ticker_obj)
-            data = serializer.data
+            # data = serializer.data
             interval = '30m' if period == '1d' else '1d'
-
-            print(interval, period)
-                
+            # print(interval, period)
             stock_prices = yf.download(symbol, period=period, interval=interval)
-            data['stock_prices'] = stock_prices.to_json()
+            data = {'item':serializer.data}
+            data['stock_prices'] = stock_prices.to_json(orient ='table',double_precision=2)
             return Response(data)
         except StockModel.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)

@@ -34,7 +34,7 @@ function LoginBar() {
 }
 
 function Navbar({isAuth}) {
-    console.log(isAuth)
+    // console.log(isAuth)
     return (
         <div className='App'>
             <header className='App-header'>

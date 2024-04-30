@@ -10,8 +10,9 @@
     font-size: 26px;
     margin: 20px 0;
     text-align: center;
+    color: #0d37aa;
     small {
-        font-size: 12px;
+        font-size: 16px;
         font-style: normal;
     }
 }
@@ -28,6 +29,7 @@
         background-color: #6489ee;
         font-size: 14px;
         text-transform: uppercase;
+        color: white;
         padding: 25px 25px;
         /* letter-spacing: 0.03em; */
     }

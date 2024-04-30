@@ -3,6 +3,7 @@ import LogoutPage from './Logout'
 import Home from './Home';
 import { Route, Routes, BrowserRouter } from 'react-router-dom';
 import ReigistrationPage from './Register';
+import Ticker from './Ticker';
 
 function App() {
 	return (
@@ -14,6 +15,7 @@ function App() {
 						<Route path="/logout" element={<LogoutPage/>} />
 						<Route path="/signup" element={<ReigistrationPage/>} />
 						<Route path="/home" element={<Home/>} />
+						<Route path='tickers/:symbol' element={<Ticker/>} />
 					</Routes>
 				</main>
 			</div>
