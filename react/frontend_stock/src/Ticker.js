@@ -5,11 +5,12 @@ import './css/table.css'
 import { useParams } from 'react-router-dom';
 import CandleChart from './custom_tag/TickerChart';
 import './css/chart.css'
+import PeriodOptions from './custom_tag/Periods';
 
 function Ticker() {
     const [authenticated, setAuthentication] = useState('');
     // const [username, setUsername] = useState('');
-    const [period, setPeriod] = useState('3mo');
+    const [period, setPeriod] = useState('1d');
     const {symbol} = useParams();
     const [change, setChange] = useState(0);
     const [item, setItem] = useState([]);
@@ -36,7 +37,8 @@ function Ticker() {
                 // let close_price, prev_close_price;
                 // close_price = data[data.length-1]['close'];
                 // prev_close_price = data[data.length-2]['close'];
-                setTickerData(data)
+                setTickerData(data);
+                console.log('period:', period);
                 
                 // setChange( ((close_price-prev_close_price)*100/prev_close_price).toFixed(2) );
 			})
@@ -73,6 +75,7 @@ function Ticker() {
 					</li>
 				</ul>
 			</div>
+            <PeriodOptions setOption={setPeriod} defaultOption={period} />
             <div className='chart-container'>
                 <CandleChart stockData={tickerData}/>
                 <div></div>

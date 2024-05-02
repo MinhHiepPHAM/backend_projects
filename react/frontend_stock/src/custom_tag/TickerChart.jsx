@@ -45,6 +45,7 @@ const CandleChart = ({stockData}) => {
   };
 
   return (
+    <div>
     <ChartCanvas
       height={height}
       ratio={3}
@@ -75,6 +76,7 @@ const CandleChart = ({stockData}) => {
         <OHLCTooltip origin={[16, 30]}/>
       </Chart>
     </ChartCanvas>
+    </div>
   );
 };
 export default CandleChart
