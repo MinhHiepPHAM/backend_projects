@@ -3,7 +3,7 @@ from .models import StockModel
 import yfinance as yf
 
 @shared_task
-def get_all_stock_objects():
+def update_all_stock_objects():
     all_stock_objs = StockModel.objects.all()
     for obj in all_stock_objs:
         try:

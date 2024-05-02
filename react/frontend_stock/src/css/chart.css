@@ -1,0 +1,9 @@
+
+.chart-container {
+    max-width: 1600px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-top: 30px;
+    display: grid;
+    grid-template-columns: 47% 6% 47%;
+}

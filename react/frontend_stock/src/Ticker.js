@@ -3,14 +3,17 @@ import axios from 'axios';
 import Navbar from './custom_tag/Navbar';
 import './css/table.css'
 import { useParams } from 'react-router-dom';
+import CandleChart from './custom_tag/TickerChart';
+import './css/chart.css'
 
 function Ticker() {
     const [authenticated, setAuthentication] = useState('');
     // const [username, setUsername] = useState('');
-    const [period, setPeriod] = useState('1d');
+    const [period, setPeriod] = useState('3mo');
     const {symbol} = useParams();
     const [change, setChange] = useState(0);
     const [item, setItem] = useState([]);
+    const [tickerData, setTickerData] = useState([])
     // console.log('symbol: '+ symbol)
     
 
@@ -30,22 +33,23 @@ function Ticker() {
 
                 // console.log('data', data)
                 setItem(response.data.item);
-                let close_price, prev_close_price;
-                close_price = data[data.length-1]['Close'];
-                prev_close_price = data[data.length-2]['Close'];
+                // let close_price, prev_close_price;
+                // close_price = data[data.length-1]['close'];
+                // prev_close_price = data[data.length-2]['close'];
+                setTickerData(data)
                 
-                setChange( ((close_price-prev_close_price)*100/prev_close_price).toFixed(2) );
+                // setChange( ((close_price-prev_close_price)*100/prev_close_price).toFixed(2) );
 			})
 			.catch(error => {
 				console.log(error);
 			});
-	}, [period]);
+	}, [period, symbol]);
 
     return (
         <div>
             <Navbar isAuth={authenticated}/>
             <div className="table-container">
-				<h2 className='title'>{item.symbol + ': ' + item.company} (<small style={change>0?{color:'green'}:{color:'red'}}>{change + ' %'}</small>)</h2>
+				<h2 className='title'>{item.symbol + ': ' + item.company} </h2> {/* </div>(<small style={change>0?{color:'green'}:{color:'red'}}>{change + ' %'}</small>)</h2> */}
 				<ul className="responsive-table">
 					<li className="table-header">
 						<div className="col col-symbol">Ticker</div>
@@ -69,6 +73,11 @@ function Ticker() {
 					</li>
 				</ul>
 			</div>
+            <div className='chart-container'>
+                <CandleChart stockData={tickerData}/>
+                <div></div>
+                <CandleChart stockData={tickerData}/>
+            </div>
 
         </div>
     )

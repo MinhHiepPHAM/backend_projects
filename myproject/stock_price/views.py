@@ -9,7 +9,7 @@ from .serializers import *
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 from .pagination import HomePagination
-from .task import get_all_stock_objects
+from .task import update_all_stock_objects
 from rest_framework import status
 
 # SYMBOLS = {'QCOM', 'AAPL', 'GOOGL'}
@@ -131,7 +131,8 @@ class HomeView(ModelViewSet):
     pagination_class = HomePagination
 
     def get_queryset(self):
-        get_all_stock_objects.delay()
+        update_all_stock_objects.delay()
+        # period = self.request.query_params.get('period','1d')
         return StockModel.objects.all().order_by('symbol')
     
 class TickerView(ModelViewSet):
@@ -141,16 +142,12 @@ class TickerView(ModelViewSet):
         try:
             ticker_obj = StockModel.objects.get(symbol=symbol)
             serializer = StockSerializer(ticker_obj)
-            # data = serializer.data
             interval = '30m' if period == '1d' else '1d'
-            # print(interval, period)
             stock_prices = yf.download(symbol, period=period, interval=interval)
+            stock_prices = stock_prices.rename(columns={'Date':'date','Close': 'close', 'High':'high', 'Open':'open', 'Low':'low', 'Volume':'volume'})
+            # print(stock_prices)
             data = {'item':serializer.data}
             data['stock_prices'] = stock_prices.to_json(orient ='table',double_precision=2)
             return Response(data)
         except StockModel.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
-
-
-
-            
