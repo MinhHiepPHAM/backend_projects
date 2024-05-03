@@ -3,7 +3,7 @@ import axios from 'axios';
 import Navbar from './custom_tag/Navbar';
 import './css/table.css'
 import { useParams } from 'react-router-dom';
-import CandleChart from './custom_tag/TickerChart';
+import {CandleChart, VolumeChart} from './custom_tag/TickerChart';
 import './css/chart.css'
 import PeriodOptions from './custom_tag/Periods';
 
@@ -38,6 +38,7 @@ function Ticker() {
                 // close_price = data[data.length-1]['close'];
                 // prev_close_price = data[data.length-2]['close'];
                 setTickerData(data);
+                // setPeriod(period)
                 console.log('period:', period);
                 
                 // setChange( ((close_price-prev_close_price)*100/prev_close_price).toFixed(2) );
@@ -77,9 +78,9 @@ function Ticker() {
 			</div>
             <PeriodOptions setOption={setPeriod} defaultOption={period} />
             <div className='chart-container'>
-                <CandleChart stockData={tickerData}/>
+                <CandleChart stockData={tickerData} period={period}/>
                 <div></div>
-                <CandleChart stockData={tickerData}/>
+                <VolumeChart stockData={tickerData} period={period}/>
             </div>
 
         </div>

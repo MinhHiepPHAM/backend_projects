@@ -144,7 +144,7 @@ class TickerView(ModelViewSet):
             serializer = StockSerializer(ticker_obj)
             interval = '30m' if period == '1d' else '1d'
             stock_prices = yf.download(symbol, period=period, interval=interval)
-            stock_prices = stock_prices.rename(columns={'Date':'date','Close': 'close', 'High':'high', 'Open':'open', 'Low':'low', 'Volume':'volume'})
+            stock_prices = stock_prices.rename(columns={'Close': 'close', 'High':'high', 'Open':'open', 'Low':'low', 'Volume':'volume'})
             # print(stock_prices)
             data = {'item':serializer.data}
             data['stock_prices'] = stock_prices.to_json(orient ='table',double_precision=2)
