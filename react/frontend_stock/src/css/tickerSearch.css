@@ -1,0 +1,28 @@
+.search-container {
+    margin-left: 30px;
+    margin-bottom: 5px;
+    margin-top: 10px;
+}
+
+.query_form {
+    position: relative;
+    width: 500px;
+    height: 50px;
+    box-sizing: border-box;
+    border-radius: 8px;
+    border: 2px solid #1828b9;
+}
+
+.query_input{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;;
+    height: 46px;
+    outline: 0;
+    border: 0;
+    display: block;
+    border-radius: 8px;
+    padding: 0 20px;
+    font-size: 18px;
+}

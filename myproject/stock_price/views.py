@@ -133,8 +133,10 @@ class HomeView(ModelViewSet):
 
     def get_queryset(self):
         update_all_stock_objects.delay()
-        # period = self.request.query_params.get('period','1d')
-        return StockModel.objects.all().order_by('symbol')
+        search_query = self.request.query_params.get('search','')
+        print('search_query: ', search_query)
+        return StockModel.objects.filter(symbol__icontains=search_query).order_by('symbol')
+    
     
 class TickerView(ModelViewSet):
     serializer_class = StockSerializer

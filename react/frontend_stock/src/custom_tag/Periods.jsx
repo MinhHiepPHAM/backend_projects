@@ -9,7 +9,7 @@ const PeriodOptions = ({setOption, defaultOption}) => {
     const handleSelectChange = (event) => {
         setSelectedOption(event.target.value);
         setOption(event.target.value);
-      };
+    };
 
     return (
         <div className="period-container">

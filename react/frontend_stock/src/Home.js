@@ -3,6 +3,7 @@ import axios from 'axios';
 import Navbar from './custom_tag/Navbar';
 import Pagination from './custom_tag/Pagination';
 import './css/table.css'
+import TickerSearch from './custom_tag/TickerSearch';
 
 function Home() {
 	// const [username, setUsername] = useState('');
@@ -12,14 +13,15 @@ function Home() {
 	// const [numPages, setNumPages] = useState(0);
 	const [data, setData] = useState([]);
 	const [count, setCount] = useState(0);
+	const [searchQuery, setSearchQuery] = useState('');
 
 	useEffect(() => {
 		// console.log('current page: ' + currentPage)
 		let url;
 		if (currentPage !== 1) {
-			url = 'http://localhost:8000/home/?p=' + currentPage;
+			url = 'http://localhost:8000/home/?p=' + currentPage + '&' + searchQuery;
 		} else {
-			url = 'http://localhost:8000/home/'
+			url = 'http://localhost:8000/home/' + '?search=' + searchQuery;
 		}
 		axios.get(url)
 			.then(response => {
@@ -37,13 +39,14 @@ function Home() {
 			.catch(error => {
 				console.log(error);
 			});
-	}, [currentPage]);
+	}, [currentPage, searchQuery]);
 
 	return (
 		<div>
 			<Navbar isAuth={authenticated}/>
+			<TickerSearch setQuery={setSearchQuery}/>
 			<div className="table-container">
-				<h2 className='title'> Ticket Price Info <small> ({count} tickers)</small></h2>
+				{/* <h2 className='title'> Ticket Price Info <small> ({count} tickers)</small></h2> */}
 				<ul className="responsive-table">
 					<li className="table-header">
 						<div className="col col-symbol">Ticker</div>
