@@ -12,7 +12,9 @@ function Ticker() {
     // const [username, setUsername] = useState('');
     const [period, setPeriod] = useState('1d');
     const {symbol} = useParams();
-    const [change, setChange] = useState(0);
+    const [openPrice, setOpenPrice] = useState(0);
+    const [closePrice, setClosePrice] = useState(0);
+    const [volume, setVolume] = useState(0);
     const [item, setItem] = useState([]);
     const [tickerData, setTickerData] = useState([])
     // console.log('symbol: '+ symbol)
@@ -34,10 +36,11 @@ function Ticker() {
 
                 // console.log('data', data)
                 setItem(response.data.item);
-                // let close_price, prev_close_price;
-                // close_price = data[data.length-1]['close'];
-                // prev_close_price = data[data.length-2]['close'];
                 setTickerData(data);
+                setClosePrice(data[data.length-1]['close']);
+                setOpenPrice(data[data.length-1]['open'])
+                setVolume(data[data.length-1]['volume'])
+                
                 // setPeriod(period)
                 console.log('period:', period);
                 
@@ -70,17 +73,17 @@ function Ticker() {
                         <div className="col col-country" >{item.country}</div>
                         <div className="col col-sector">{item.sector}</div>
                         <div className="col col-industry">{item.industry}</div>
-                        <div className="col col-open">{item.open_price}</div>
-                        <div className="col col-close" >{item.close_price}</div>
-                        <div className="col col-volume">{item.volume}</div>
+                        <div className="col col-open">{openPrice}</div>
+                        <div className="col col-close" >{closePrice}</div>
+                        <div className="col col-volume">{volume}</div>
 					</li>
 				</ul>
 			</div>
             <PeriodOptions setOption={setPeriod} defaultOption={period} />
             <div className='chart-container'>
-                <CandleChart stockData={tickerData} period={period}/>
+                <CandleChart stockData={tickerData}/>
                 <div></div>
-                <VolumeChart stockData={tickerData} period={period}/>
+                <VolumeChart stockData={tickerData}/>
             </div>
 
         </div>

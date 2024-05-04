@@ -11,6 +11,7 @@ from rest_framework.viewsets import ModelViewSet
 from .pagination import HomePagination
 from .task import update_all_stock_objects
 from rest_framework import status
+import pprint
 
 # SYMBOLS = {'QCOM', 'AAPL', 'GOOGL'}
 PERIOD = '1mo'
@@ -144,10 +145,11 @@ class TickerView(ModelViewSet):
             serializer = StockSerializer(ticker_obj)
             interval = '30m' if period == '1d' else '1d'
             stock_prices = yf.download(symbol, period=period, interval=interval)
-            stock_prices = stock_prices.rename(columns={'Close': 'close', 'High':'high', 'Open':'open', 'Low':'low', 'Volume':'volume'})
-            # print(stock_prices)
+            stock_prices = stock_prices.rename(columns={'Close': 'close', 'High':'high', 'Open':'open', 'Low':'low', 'Volume':'volume', 'Date':'date'})
+            stock_prices.index.names = ['date']
             data = {'item':serializer.data}
             data['stock_prices'] = stock_prices.to_json(orient ='table',double_precision=2)
+            # pprint.pprint(data['stock_prices'])
             return Response(data)
         except StockModel.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)

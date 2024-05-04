@@ -4,19 +4,19 @@ import {
     discontinuousTimeScaleProviderBuilder,
     Chart,
     ChartCanvas,
+    BarSeries,
     CandlestickSeries,
     OHLCTooltip,
     XAxis,
     YAxis,
     EdgeIndicator,
     ZoomButtons,
-    BarSeries,
     HoverTooltip,
 } from "react-financial-charts";
 
-export const CandleChart = ({stockData, period}) => {
+export const CandleChart = ({stockData}) => {
     const ScaleProvider = discontinuousTimeScaleProviderBuilder().inputDateAccessor(
-        (d) => new Date(d[period === '1d'?'Datetime':'Date'])
+        (d) => new Date(d.date)
     );
     
     const height = 600;
@@ -89,9 +89,9 @@ export const CandleChart = ({stockData, period}) => {
 };
 
 
-export const VolumeChart = ({stockData, period}) => {
+export const VolumeChart = ({stockData}) => {
     const ScaleProvider = discontinuousTimeScaleProviderBuilder().inputDateAccessor(
-        (d) => new Date(d[period ==='1d'?'Datetime':'Date'])
+        (d) => new Date(d.date)
     );
     
     const height = 600;
@@ -107,10 +107,6 @@ export const VolumeChart = ({stockData, period}) => {
     const max = xAccessor(data[data.length - 1]);
     const min = xAccessor(0)
     const xExtents = [min, max];
-
-    // const gridHeight = height - margin.top - margin.bottom;
-
-    // const chartHeight = gridHeight;
 
     const volumeExtents = (d) => {
         return d.volume;
@@ -142,13 +138,14 @@ export const VolumeChart = ({stockData, period}) => {
                     
                     {/* <text x={width / 2} y={height-20} textAnchor="middle" fontSize="18" fill="#2f3235">Time</text> */}
                     
-                    <BarSeries yAccessor={volumeExtents} />
-                    {/* <HoverTooltip yAccessor={volumeExtents}/> */}
+                    <BarSeries fillStyle={openCloseColor} yAccessor={volumeExtents} />
+                    <HoverTooltip yAccessor={volumeExtents}/>
                     <EdgeIndicator
                         itemType="last"
                         rectWidth={margin.right}
                         fill={openCloseColor}
                         lineStroke={openCloseColor}
+                        displayFormat={format('d')}
                         yAccessor={volumeExtents}
                     />
 
