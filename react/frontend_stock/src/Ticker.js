@@ -58,24 +58,24 @@ function Ticker() {
 				<h2 className='title'>{item.symbol + ': ' + item.company} </h2> {/* </div>(<small style={change>0?{color:'green'}:{color:'red'}}>{change + ' %'}</small>)</h2> */}
 				<ul className="responsive-table">
 					<li className="table-header">
-						<div className="col col-symbol">Ticker</div>
-						<div className="col col-company">Company</div>
-						<div className="col col-country">Country</div>
-						<div className="col col-sector">Sector</div>
-						<div className="col col-industry">Industry</div>
-						<div className="col col-open">Open price</div>
-						<div className="col col-close">Close price</div>
-						<div className="col col-volume">Volume</div>
+						<div className="col-symbol">Ticker</div>
+						<div className="col-company">Company</div>
+						<div className="col-country">Country</div>
+						<div className="col-sector">Sector</div>
+						<div className="col-industry">Industry</div>
+						<div className="col-open">Open price</div>
+						<div className="col-close">Close price</div>
+						<div className="col-volume">Volume</div>
 					</li>
 					<li className="table-row">
-                        <div className="col col-symbol"><a href={'/tickers/'+item.symbol}>{item.symbol}</a></div>
-                        <div className="col col-company">{item.company}</div>
-                        <div className="col col-country" >{item.country}</div>
-                        <div className="col col-sector">{item.sector}</div>
-                        <div className="col col-industry">{item.industry}</div>
-                        <div className="col col-open">{openPrice}</div>
-                        <div className="col col-close" >{closePrice}</div>
-                        <div className="col col-volume">{volume}</div>
+                        <div className="col-symbol"><a href={'/tickers/'+item.symbol}>{item.symbol}</a></div>
+                        <div className="col-company">{item.company}</div>
+                        <div className="col-country" >{item.country}</div>
+                        <div className="col-sector">{item.sector}</div>
+                        <div className="col-industry">{item.industry}</div>
+                        <div className="col-open">{openPrice}</div>
+                        <div className="col-close" >{closePrice}</div>
+                        <div className="col-volume">{volume}</div>
 					</li>
 				</ul>
 			</div>

@@ -1,28 +1,49 @@
 .search-container {
-    margin-left: 30px;
-    margin-bottom: 5px;
-    margin-top: 10px;
+    max-width: 1800px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    display: grid;
+    grid-template-columns: 30% 6.5% 6% 5% 6%;
 }
 
 .query_form {
     position: relative;
-    width: 500px;
-    height: 50px;
+    max-width: 500px;
+    height: 46px;
     box-sizing: border-box;
     border-radius: 8px;
+    border: 2px solid #bdbaba;
+}
+
+.query_form:hover {
     border: 2px solid #1828b9;
 }
 
 .query_input{
     position: absolute;
-    top: 0;
-    left: 0;
     width: 100%;;
-    height: 46px;
+    height: 40px;
     outline: 0;
     border: 0;
     display: block;
     border-radius: 8px;
     padding: 0 20px;
     font-size: 18px;
+}
+
+.filter-checkbox {
+    transform: scale(1.5);
+    margin-right: 10px;
+}
+.checkbox {
+    padding-top: 15px;
+}
+.checkbox input {
+    transform: scale(1.5);
+    margin-right: 10px;
+    border-radius: 50%;
 }

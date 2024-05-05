@@ -12,6 +12,7 @@ from .pagination import HomePagination
 from .task import update_all_stock_objects
 from rest_framework import status
 import pprint
+from django.db.models import Q
 
 # SYMBOLS = {'QCOM', 'AAPL', 'GOOGL'}
 PERIOD = '1mo'
@@ -128,14 +129,34 @@ def search_news(request):
 
 class HomeView(ModelViewSet):
     serializer_class = StockSerializer
-    # queryset = StockModel.objects.all()
     pagination_class = HomePagination
 
     def get_queryset(self):
         update_all_stock_objects.delay()
+        checked = lambda query: query == 'true'
         search_query = self.request.query_params.get('search','')
-        print('search_query: ', search_query)
-        return StockModel.objects.filter(symbol__icontains=search_query).order_by('symbol')
+        checked_country = checked(self.request.query_params.get('country',''))
+        checked_company = checked(self.request.query_params.get('company',''))
+        checked_sector = checked(self.request.query_params.get('sector',''))
+        checked_industry = checked(self.request.query_params.get('industry',''))
+
+
+        query = Q(symbol__icontains=search_query)
+        print('check_company', checked_company)
+        if checked_company:
+            query |=  Q(company__icontains=search_query)# can also use  the add function: add(Q(company__icontains=search_query),'OR')
+        
+        if checked_country:
+            query |=  Q(country__icontains=search_query)
+
+        if checked_sector:
+            query |=  Q(sector__icontains=search_query)
+
+        if checked_industry:
+            query |=  Q(industry__icontains=search_query)
+
+        # print(query)
+        return StockModel.objects.filter(query).order_by('symbol')
     
     
 class TickerView(ModelViewSet):
