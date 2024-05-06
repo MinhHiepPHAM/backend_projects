@@ -9,7 +9,7 @@ from .serializers import *
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 from .pagination import HomePagination
-from .task import update_all_stock_objects
+from .task import update_all_stock_objects, update_db_with_trending_ticker
 from rest_framework import status
 import pprint
 from django.db.models import Q
@@ -176,3 +176,12 @@ class TickerView(ModelViewSet):
             return Response(data)
         except StockModel.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
+        
+class TrendingView(ModelViewSet):
+    serializer_class = StockSerializer
+
+    def get_queryset(self):
+        update_db_with_trending_ticker.delay()
+        return get_trending_stocks()
+
+        

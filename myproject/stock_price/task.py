@@ -1,6 +1,9 @@
 from celery import shared_task
 from .models import StockModel
 import yfinance as yf
+from stock_price import models
+from trending_tickes import get_trending_tickers
+# from django.core.cache import cache
 
 @shared_task
 def update_all_stock_objects():
@@ -19,3 +22,16 @@ def update_all_stock_objects():
             obj.delete()
 
     return all_stock_objs
+
+@shared_task
+def update_db_with_trending_ticker():
+    trending_tickers = get_trending_tickers()
+    # print(len(trending_tickers), trending_tickers)
+    old_trending_objs = models.StockModel.objects.filter(is_trending=True)
+    for obj in old_trending_objs:
+        obj.is_trending=False
+        obj.save()
+    # cache.delete('trending_stock')
+    for ticker in trending_tickers:
+        obj = models.StockModel.objects.filter(symbol=ticker)
+        obj.update(is_trending=True)

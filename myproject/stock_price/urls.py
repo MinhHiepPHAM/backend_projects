@@ -4,14 +4,13 @@ from django.urls import path,re_path
 from rest_framework_simplejwt.views import TokenRefreshView
 from rest_framework import routers
 
-from . import auth_views, views#trending_stock_view, search_symbol,period_selection, ticker_view, search_news
+from . import auth_views, views
 
 router = routers.SimpleRouter()
 router.register(r'home', views.HomeView, 'home_view')
-# router.register(r'tickers/<str:symbol>', views.TickerView.as_view({'get':'retrieve'}), name='ticker_detail')
+router.register(r'trendings', views.TrendingView, 'trending_stock')
 
 urlpatterns = [
-    # path('stock/trendings', trending_stock_view, name='trending_stock'),
     # re_path('search_symbol/$', search_symbol, name='search_symbol'),
     path('login/', auth_views.LoginView.as_view(), name='login'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),

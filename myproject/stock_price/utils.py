@@ -1,5 +1,4 @@
 import yfinance as yf
-# from matplotlib import pyplot as plt
 import pandas as pd
 import plotly.graph_objects as go 
 from stock_price import models
@@ -65,15 +64,16 @@ def check_news_in_db(url):
     
 def get_trending_stocks():
     cache_key = 'trending_stock'
-    if objects := cache.get(cache_key):
-        print('in redis cache')
-        return objects
+    # if objects := cache.get(cache_key):
+    #     print('in redis cache')
+    #     return objects
 
     try:
         objects = models.StockModel.objects.filter(is_trending=True)
+        print(len(objects))
     except Exception:
-        return models.NewsModel.objects.none()
-    cache.add(cache_key,objects,timeout=60)
+        return models.StockModel.objects.none()
+    # cache.add(cache_key,objects,timeout=60)
 
     return objects
     
