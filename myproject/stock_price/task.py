@@ -3,6 +3,9 @@ from .models import StockModel
 import yfinance as yf
 from stock_price import models
 from trending_tickes import get_trending_tickers
+from scrape_news import get_urls, get_news_content
+from .utils import check_news_in_db
+from datetime import date
 # from django.core.cache import cache
 
 @shared_task
@@ -35,3 +38,24 @@ def update_db_with_trending_ticker():
     for ticker in trending_tickers:
         obj = models.StockModel.objects.filter(symbol=ticker)
         obj.update(is_trending=True)
+
+def scrape_related_news():
+    for obj in models.StockModel.objects.all():
+        headlines, urls = get_urls(obj.symbol)
+
+        # cache_pattern = f'*{obj.symbol}_*'
+        # cache.delete_many(keys=cache.keys(cache_pattern))
+
+        for url, headline in zip(urls, headlines):
+            try:
+                if check_news_in_db(url):
+                    # print("Already exist in DB:",stock_object.symbol,headline)
+                    continue
+                url_context = get_news_content(url)
+                if not url_context: continue 
+
+                news = models.NewsModel(url=url,scrapped_date=date.today(),headline=headline,context=url_context)
+                news.save()
+                obj.related_news.add(news)
+            except:
+                pass

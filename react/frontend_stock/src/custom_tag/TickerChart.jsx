@@ -102,7 +102,7 @@ export const VolumeChart = ({stockData}) => {
         stockData
     );
 
-    console.log(xAccessor, displayXAccessor)
+    // console.log(xAccessor, displayXAccessor)
 
     const max = xAccessor(data[data.length - 1]);
     const min = xAccessor(0)
@@ -115,7 +115,7 @@ export const VolumeChart = ({stockData}) => {
     const openCloseColor = (d) => {
         return d.close > d.open ? "#26a69a" : "#ef5350";
     };
-    console.log(data)
+    // console.log(data)
 
     return (
         <div style={{paddingBottom:'40px'}}>

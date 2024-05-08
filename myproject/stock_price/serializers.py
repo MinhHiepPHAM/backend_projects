@@ -15,6 +15,13 @@ class StockSerializer(serializers.ModelSerializer):
             'adj_close_price', 'volume', 'sector', 'industry', 'country', 'related_news'
         ]
 
+class HomeStockSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = StockModel
+        fields = ['symbol', 'company', 'close_price', 'open_price', 'low_price', 'high_price',
+            'adj_close_price', 'volume', 'sector', 'industry', 'country'
+        ]
+
 class PostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post

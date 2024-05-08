@@ -4,22 +4,21 @@ import Navbar from './custom_tag/Navbar';
 import './css/table.css'
 import { useParams } from 'react-router-dom';
 import {CandleChart, VolumeChart} from './custom_tag/TickerChart';
-import './css/chart.css'
+import './css/chart.css'    
 import PeriodOptions from './custom_tag/Periods';
+import TickerNews from './custom_tag/TickerNews';
 
 function Ticker() {
     const [authenticated, setAuthentication] = useState('');
     // const [username, setUsername] = useState('');
-    const [period, setPeriod] = useState('1d');
+    const [period, setPeriod] = useState('1mo');
     const {symbol} = useParams();
     const [openPrice, setOpenPrice] = useState(0);
     const [closePrice, setClosePrice] = useState(0);
     const [volume, setVolume] = useState(0);
     const [item, setItem] = useState([]);
+    // const [news, setNews] = useState([])
     const [tickerData, setTickerData] = useState([])
-    // console.log('symbol: '+ symbol)
-    
-
 
     useEffect(() => {
         const url = 'http://localhost:8000/tickers/' + symbol + '/' + period
@@ -27,24 +26,21 @@ function Ticker() {
 			.then(response => {
                 const name = localStorage.getItem('username');
                 if (name) {
-					// setUsername(name);
 					setAuthentication(true);
 				}
-				// console.log('response: ' + typeof(response.data.stock_prices))
-                let data = JSON.parse(response.data.stock_prices)['data'];
-                // console.log('price:', JSON.parse(response.data.stock_prices)['data'])
+				
+                let stockPrices = JSON.parse(response.data.stock_prices)['data'];
 
-                // console.log('data', data)
                 setItem(response.data.item);
-                setTickerData(data);
-                setClosePrice(data[data.length-1]['close']);
-                setOpenPrice(data[data.length-1]['open'])
-                setVolume(data[data.length-1]['volume'])
-                
-                // setPeriod(period)
-                console.log('period:', period);
-                
-                // setChange( ((close_price-prev_close_price)*100/prev_close_price).toFixed(2) );
+                setTickerData(stockPrices);
+                setClosePrice(stockPrices[stockPrices.length-1]['close']);
+                setOpenPrice(stockPrices[stockPrices.length-1]['open'])
+                setVolume(stockPrices[stockPrices.length-1]['volume'])
+                // if (item.related_news !== undefined )
+                // setNews(item.related_news)
+            
+                console.log('item:', item);
+                console.log('news:', item.related_news)
 			})
 			.catch(error => {
 				console.log(error);
@@ -68,7 +64,7 @@ function Ticker() {
 						<div className="col-volume">Volume</div>
 					</li>
 					<li className="table-row">
-                        <div className="col-symbol"><a href={'/tickers/'+item.symbol}>{item.symbol}</a></div>
+                        <div className="col-symbol"><a href={'/tickers/?symbol='+item.symbol}>{item.symbol}</a></div>
                         <div className="col-company">{item.company}</div>
                         <div className="col-country" >{item.country}</div>
                         <div className="col-sector">{item.sector}</div>
@@ -85,6 +81,7 @@ function Ticker() {
                 <div></div>
                 <VolumeChart stockData={tickerData}/>
             </div>
+            <TickerNews news={item.related_news}/>
 
         </div>
     )

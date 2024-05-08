@@ -28,7 +28,7 @@ function Home() {
 		queryParams.append('industry', industry.toString());
 		queryParams.append('company', company.toString());
 		
-		console.log('query:', queryParams.toString())
+		// console.log('query:', queryParams.toString())
 		let url = `http://localhost:8000/home/?${queryParams.toString()}`;
 
 		axios.get(url)
