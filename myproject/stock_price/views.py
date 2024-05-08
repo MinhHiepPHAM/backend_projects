@@ -133,7 +133,6 @@ class HomeView(ModelViewSet):
 
     def get_queryset(self):
         update_all_stock_objects.delay()
-        # scrape_related_news.delay()
         checked = lambda query: query == 'true'
         search_query = self.request.query_params.get('search','')
         checked_country = checked(self.request.query_params.get('country',''))
