@@ -8,8 +8,9 @@ from rest_framework.response import Response
 from .serializers import *
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
-from .pagination import HomePagination
+from .pagination import HomePagination, NewsPagination
 from .task import update_all_stock_objects, update_db_with_trending_ticker, scrape_related_news
+# from .task import scrape_related_news
 from rest_framework import status
 import pprint
 from django.db.models import Q
@@ -132,7 +133,7 @@ class HomeView(ModelViewSet):
     pagination_class = HomePagination
 
     def get_queryset(self):
-        update_all_stock_objects.delay()
+        # update_all_stock_objects.delay()
         checked = lambda query: query == 'true'
         search_query = self.request.query_params.get('search','')
         checked_country = checked(self.request.query_params.get('country',''))
@@ -185,5 +186,17 @@ class TrendingView(ModelViewSet):
     def get_queryset(self):
         update_db_with_trending_ticker.delay()
         return get_trending_stocks()
+    
+class NewsView(ModelViewSet):
+    serializer_class = NewsSerializer
+    pagination_class = NewsPagination
+
+    def get_queryset(self):
+        scrape_related_news.delay()
+        search_query = self.request.query_params.get('search','')
+        query = Q(headline__icontains=search_query)
+        query |= Q(context__icontains=search_query)
+        return NewsModel.objects.filter(query).order_by('scrapped_date').order_by('headline')
+
 
         

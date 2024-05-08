@@ -17,3 +17,16 @@ class HomePagination(PageNumberPagination):
             ('previous', self.get_previous_link()),
             ('all_stock_data', data)
         ]))
+    
+class NewsPagination(PageNumberPagination):
+    page_size = 20
+    max_page_size = 1000
+    page_query_param = 'p'
+    page_size_query_param = 'page_size'
+    
+    def get_paginated_response(self, data):
+        return Response(OrderedDict([
+            ('count', self.page.paginator.count),
+            ('page_size', self.get_page_size(self.request)),
+            ('news', data)
+        ]))

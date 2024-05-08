@@ -5,6 +5,7 @@ import Trendings from './Trendings';
 import { Route, Routes, BrowserRouter } from 'react-router-dom';
 import ReigistrationPage from './Register';
 import Ticker from './Ticker';
+import News from './News';
 
 function App() {
 	return (
@@ -17,7 +18,8 @@ function App() {
 						<Route path="/signup" element={<ReigistrationPage/>} />
 						<Route path="/home" element={<Home/>} />
 						<Route path="/trendings" element={<Trendings/>} />
-						<Route path='tickers/:symbol' element={<Ticker/>} />
+						<Route path="/news" element={<News/>} />
+						<Route path='/tickers/:symbol' element={<Ticker/>} />
 					</Routes>
 				</main>
 			</div>

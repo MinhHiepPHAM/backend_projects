@@ -6,6 +6,7 @@ const TickerNews = ({news}) => {
     if (news === undefined) return (<></>)
     return (
         <div className='news-container'>
+            <h2>News</h2>
             {news.map(item => { 
                 return (
                     <div >

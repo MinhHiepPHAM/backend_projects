@@ -9,7 +9,7 @@ import PeriodOptions from './custom_tag/Periods';
 import TickerNews from './custom_tag/TickerNews';
 
 function Ticker() {
-    const [authenticated, setAuthentication] = useState('');
+    const [authenticated, setAuthentication] = useState(false);
     // const [username, setUsername] = useState('');
     const [period, setPeriod] = useState('1mo');
     const {symbol} = useParams();
@@ -45,7 +45,7 @@ function Ticker() {
 			.catch(error => {
 				console.log(error);
 			});
-	}, [period, symbol]);
+	}, [period, symbol]); //item
 
     return (
         <div>

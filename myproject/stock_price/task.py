@@ -38,7 +38,7 @@ def update_db_with_trending_ticker():
     for ticker in trending_tickers:
         obj = models.StockModel.objects.filter(symbol=ticker)
         obj.update(is_trending=True)
-
+@shared_task
 def scrape_related_news():
     for obj in models.StockModel.objects.all():
         headlines, urls = get_urls(obj.symbol)

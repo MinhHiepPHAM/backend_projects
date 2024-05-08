@@ -8,6 +8,7 @@ from . import auth_views, views
 
 router = routers.SimpleRouter()
 router.register(r'home', views.HomeView, 'home_view')
+router.register(r'news', views.NewsView, 'news_view')
 router.register(r'trendings', views.TrendingView, 'trending_stock')
 
 urlpatterns = [
