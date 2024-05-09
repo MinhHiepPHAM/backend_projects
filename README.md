@@ -4,5 +4,4 @@
 3. stock price app
 
 # TODO:
-- Create the in-memory cache using Redis for caching
 - Deploy the application in Docker then AWS
