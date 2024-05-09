@@ -1,17 +1,11 @@
-from django.shortcuts import render, redirect
 from .utils import *
-from django.http import JsonResponse
-# from django.views.decorators.cache import cache_page
-from rest_framework.decorators import api_view
 from rest_framework.response import Response
-# from django.core import serializers
 from .serializers import *
-from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 from .pagination import HomePagination, NewsPagination
 from .task import update_all_stock_objects, update_db_with_trending_ticker, scrape_related_news
 from rest_framework import status
-import pprint
+import yfinance as yf
 from django.db.models import Q
 
 class HomeView(ModelViewSet):
@@ -22,14 +16,22 @@ class HomeView(ModelViewSet):
         update_all_stock_objects.delay()
         checked = lambda query: query == 'true'
         search_query = self.request.query_params.get('search','')
+        if search_query == '':
+            cache_key = f'all_stock'
+            if queryset := cache.get(cache_key):
+                print(f'{cache_key} is already redis cache')
+            else:
+                print('not in')
+                queryset = StockModel.objects.all().order_by('symbol')
+                cache.add(cache_key, queryset, 60*15)
+            return queryset
+
         checked_country = checked(self.request.query_params.get('country',''))
         checked_company = checked(self.request.query_params.get('company',''))
         checked_sector = checked(self.request.query_params.get('sector',''))
         checked_industry = checked(self.request.query_params.get('industry',''))
 
-
         query = Q(symbol__icontains=search_query)
-        # print('check_company', checked_company)
         if checked_company:
             query |=  Q(company__icontains=search_query)# can also use  the add function: add(Q(company__icontains=search_query),'OR')
         
@@ -41,9 +43,15 @@ class HomeView(ModelViewSet):
 
         if checked_industry:
             query |=  Q(industry__icontains=search_query)
+        
+        cache_key = f'all_stock_{search_query}' + '_'.join( str(check) for check in [checked_country, checked_company, checked_sector, checked_industry])
+        if queryset := cache.get(cache_key):
+            print(f'{cache_key} is already redis cache')
+        else:
+            queryset = StockModel.objects.filter(query).order_by('symbol')
+            cache.add(cache_key, queryset, 60*2)
 
-        # print(query)
-        return StockModel.objects.filter(query).order_by('symbol')
+        return queryset
     
     
 class TickerView(ModelViewSet):

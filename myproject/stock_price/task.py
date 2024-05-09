@@ -6,7 +6,7 @@ from trending_tickes import get_trending_tickers
 from scrape_news import get_urls, get_news_content
 from .utils import check_news_in_db
 from datetime import date
-# from django.core.cache import cache
+from django.core.cache import cache
 
 @shared_task
 def update_all_stock_objects():
@@ -32,7 +32,7 @@ def update_db_with_trending_ticker():
     for obj in old_trending_objs:
         obj.is_trending=False
         obj.save()
-    # cache.delete('trending_stock')
+    cache.delete('trending_stock')
     for ticker in trending_tickers:
         obj = models.StockModel.objects.filter(symbol=ticker)
         obj.update(is_trending=True)
