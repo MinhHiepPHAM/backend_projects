@@ -29,7 +29,7 @@ function News() {
 				setCount(response.data.count);
                 setPageSize(response.data.page_size);
                 setNews(response.data.news);
-                console.log(news);
+                // console.log(news);
 			})
 			.catch(error => {
 				console.log(error);

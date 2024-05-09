@@ -24,8 +24,6 @@ def update_all_stock_objects():
         except:
             obj.delete()
 
-    return all_stock_objs
-
 @shared_task
 def update_db_with_trending_ticker():
     trending_tickers = get_trending_tickers()
@@ -40,7 +38,7 @@ def update_db_with_trending_ticker():
         obj.update(is_trending=True)
 @shared_task
 def scrape_related_news():
-    for obj in models.StockModel.objects.all():
+    for obj in models.StockModel.objects.all().order_by('symbol'):
         headlines, urls = get_urls(obj.symbol)
 
         # cache_pattern = f'*{obj.symbol}_*'
