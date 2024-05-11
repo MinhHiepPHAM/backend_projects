@@ -29,7 +29,7 @@
 
 ## Ticker page:
 
-<img src="myproject/photos/qcom_chart.png" width="480" /> &nbsp;&nbsp;&nbsp;&nbsp; <img src="myproject/photos/qcom_news.png" width="480" />
+<img src="myproject/photos/qcom_chart.png" width="450" /> &nbsp;&nbsp;&nbsp;&nbsp; <img src="myproject/photos/qcom_news.png" width="450" />
 
 ## News page:
 
