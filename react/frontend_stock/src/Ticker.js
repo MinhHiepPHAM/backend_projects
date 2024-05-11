@@ -36,8 +36,6 @@ function Ticker() {
                 setClosePrice(stockPrices[stockPrices.length-1]['close']);
                 setOpenPrice(stockPrices[stockPrices.length-1]['open'])
                 setVolume(stockPrices[stockPrices.length-1]['volume'])
-                // if (item.related_news !== undefined )
-                // setNews(item.related_news)
             
                 console.log('item:', item);
                 console.log('news:', item.related_news)

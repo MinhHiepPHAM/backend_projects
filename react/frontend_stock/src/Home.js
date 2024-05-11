@@ -8,7 +8,7 @@ import TickerFilter from './custom_tag/TickerSearch';
 function Home() {
 	// const [username, setUsername] = useState('');
 	const [authenticated, setAuthentication] = useState('');
-	const [pageSize, setPageSize] = useState(20);
+	const [pageSize, setPageSize] = useState(15);
 	const [currentPage, setCurrentPage] = useState(1);
 	const [data, setData] = useState([]);
 	const [count, setCount] = useState(0);
