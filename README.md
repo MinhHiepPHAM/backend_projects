@@ -15,11 +15,11 @@
 
 <img src="myproject/photos/home.png" width="750" />
 
-*Search by ticker name (QCO)*
+*Search by country name (USA)*
 
 <img src="myproject/photos/search_USA.png" width="750" />
 
-*Search by country name (USA)*
+*Search by ticker name (QCO)*
 
 <img src="myproject/photos/searchQCOM.png" width="750" />
 
