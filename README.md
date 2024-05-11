@@ -15,11 +15,11 @@
 
 <img src="myproject/photos/home.png" width="750" />
 
-**Search by ticker name (QCO)**
+*Search by ticker name (QCO)*
 
 <img src="myproject/photos/search_USA.png" width="750" />
 
-**Search by country name (USA)**
+*Search by country name (USA)*
 
 <img src="myproject/photos/searchQCOM.png" width="750" />
 
@@ -29,7 +29,13 @@
 
 ## Ticker page:
 
-<img src="myproject/photos/qcom_chart.png" width="450" /> &nbsp;&nbsp;&nbsp;&nbsp; <img src="myproject/photos/qcom_news.png" width="450" />
+*chart*
+
+<img src="myproject/photos/qcom_chart.png" width="750" />
+
+*related news*
+
+<img src="myproject/photos/qcom_news.png" width="750" />
 
 ## News page:
 
