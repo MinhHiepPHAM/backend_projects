@@ -3,8 +3,8 @@
 2. Simple HTTP web server
 3. Stock price app
 * The stock price has the following pages:
-   - Home page contains the pagignation of info of more than 4000 ticker (ticker name, company, country, industry, prices). You can search the ticker by ticker name, industry, company, industry or its sector.
-   - Trending page show the ticker trending scrapped from yahoo finance website.
+   - Home page contains the pagignation of info of more than 4000 tickers (ticker name, company, country, industry, prices). You can search the ticker by ticker name, industry, company, industry or its sector.
+   - Trending page shows the ticker trending scrapped from yahoo finance website.
    - Ticker page includes the related news, volume and price changing charts.
    - News page contains all news of all tickers that are displayed with the pagignation. You can search the news with the filter box at the top of the page.
    - Login and Register pages.
