@@ -19,7 +19,6 @@ const LoginForm = () => {
 				password,
 			},{headers: {'Content-Type': 'application/json'}}, {withCredentials:true});
 			
-			console.log('logout')
 			localStorage.clear()
 			localStorage.setItem('access_token', response.data.access);
 			localStorage.setItem('refresh_token', response.data.refresh);

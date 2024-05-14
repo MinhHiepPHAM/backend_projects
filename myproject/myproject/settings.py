@@ -119,7 +119,7 @@ DATABASES = {
         'NAME': 'mydb',
         'USER': 'minh_hiep',
         'HOST': 'localhost',
-        'PASSWORD': 'minh-hiep123',
+        'PASSWORD': config('DB_PASSWORD'),
         'port': 5432
     }
 }

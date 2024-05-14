@@ -3,7 +3,7 @@ from rest_framework.views import APIView
 from .models import CustomUser
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
-from rest_framework_simplejwt.views import TokenObtainPairView
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from .serializers import LoginSerializer
 # from django.views.generic.base import View
