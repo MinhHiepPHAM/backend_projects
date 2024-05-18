@@ -14,8 +14,10 @@
     "@mantine/hooks": "^7.9.1",
     "@mantinex/mantine-logo": "^1.0.1",
     "@tabler/icons-react": "^3.4.0",
+    "axios": "^1.6.8",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.23.1"
   },
   "devDependencies": {
     "@types/react": "^18.2.66",

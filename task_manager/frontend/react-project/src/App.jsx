@@ -1,9 +1,11 @@
 // Import styles of packages that you've installed.
 // All packages except `@mantine/hooks` require styles imports
 import '@mantine/core/styles.css';
+import { Route, Routes, BrowserRouter } from 'react-router-dom';
 import {DEFAULT_THEME, MantineProvider, createTheme, mergeThemeOverrides } from '@mantine/core';
 import classes from './css/active.module.css'
 import Home from './Home';
+import Login from './Login';
 
 
 
@@ -19,7 +21,19 @@ const themeOverride = createTheme({
 const myTheme = mergeThemeOverrides(DEFAULT_THEME, themeOverride);
 
 export default function App() {
-  return <MantineProvider theme={myTheme}>{
-      <Home/>
+  return <MantineProvider theme={myTheme}>
+    {
+      <BrowserRouter>
+        <div className="App">
+          <main>
+            <Routes>
+              <Route path="/login" element={<Login/>} />
+              {/* <Route path="/logout" element={<LogoutPage/>} />
+              <Route path="/signup" element={<ReigistrationPage/>} /> */}
+              <Route path="/home" element={<Home/>} />
+            </Routes>
+          </main>
+        </div>
+		  </BrowserRouter>
     }</MantineProvider>;
 }
