@@ -1,7 +1,6 @@
 import {
   Group,
   Button,
-  useMantineTheme,
   Image,
   useMantineColorScheme,
   ActionIcon,
@@ -18,6 +17,7 @@ import { IconSun, IconMoon } from '@tabler/icons-react';
 import actClasses from './css/actionToggle.module.css';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 
 function NotLoggedIn() {
@@ -26,18 +26,14 @@ function NotLoggedIn() {
       <Button
         href="/login"
         component='a'
-        variant="outline"
-        radius={15}
-        size='md'
+        className={classes.authButton}
       >
         Log In
       </Button>
       <Button
         href="/signup"
-        color='rgba(48, 127, 230, 1)'
+        className={classes.authButton}
         component='a'
-        radius={15}
-        size='md' 
       >
         Register
       </Button>
@@ -47,6 +43,24 @@ function NotLoggedIn() {
 
 function LoggedIn({username}) {
   const displayName = username.slice(0,2).toUpperCase()
+  const navigate = useNavigate()
+  const logoutHandle = (e) =>{
+    try {
+			axios.post('http://localhost:8000/logout/', {
+				token : localStorage.getItem('token')
+			},{
+				headers: {'Content-Type': 'application/json'}
+			});
+			// console.log('logout response: ',response.data)
+      // console.log('token = ', localStorage.getItem('token'))
+			
+			localStorage.removeItem('username')
+      localStorage.removeItem('token')
+      navigate('/login')
+		} catch (error) {
+			console.error('Login failed:', error);
+		}
+  }
   return (
     <>
       <Group gap="sm">
@@ -56,11 +70,8 @@ function LoggedIn({username}) {
         </Text>
       </Group>
       <Button
-        href="/logout"
-        component='a'
-        variant="outline"
-        radius={15}
-        size='md'
+        className={classes.authButton}
+        onClick={logoutHandle}
       >
         Log Out
       </Button>
@@ -113,8 +124,8 @@ export function HeaderMegaMenu({page=''}) {
           <ActionIcon
             onClick={() => setColorScheme(computedColorScheme === 'light' ? 'dark' : 'light')}
             variant="outline"
-            h={41} w={41}
-            radius={21}
+            h={38} w={38}
+            radius={19}
             aria-label="Toggle color scheme"
           >
             <IconSun className={cx(actClasses.icon, actClasses.light)} stroke={1.5} />

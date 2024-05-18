@@ -34,7 +34,7 @@ function LoginForm() {
 			},{
 				headers: {'Content-Type': 'application/json'}
 			});
-			console.log(response.data)
+			// console.log(response.data)
 			
 			localStorage.clear()
 			localStorage.setItem('token', response.data.token);

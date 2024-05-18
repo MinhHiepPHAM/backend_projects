@@ -38,4 +38,15 @@
 .text {
   color: light-dark(var(--mantine-color-blue-7), var(--mantine-color-white));
 }
+
+.authButton {
+  font-weight: 500;
+  background-color: light-dark(var(--mantine-color-blue-5), var(--mantine-color-gray-6));
+  border-radius: 15px;
+  color: var(--mantine-color-white);
+
+  @mixin hover {
+    background-color: light-dark(var(--mantine-color-blue-7), var(--mantine-color-gray-5));
+  }
+}
   

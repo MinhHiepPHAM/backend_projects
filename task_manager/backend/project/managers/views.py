@@ -41,11 +41,14 @@ class LoginView(APIView):
             return Response({'error': 'Invalid user or password'}, status=401)
         
 class LogoutView(APIView):
-    permission_classes = (permissions.IsAuthenticated)
+    permission_classes = [permissions.AllowAny]
     def post(self, request):
         try:
-            print('logout view', request.user)
-            request.user.auth_token.delete()
+            # print('logout view', request.data)
+            # request.user = CustomUser.objects.get(username=request.data['username'])
+            # print('user:', request.user)
+            token = Token.objects.get(pk=request.data['token'])
+            token.delete()
             return Response({"message": "Logout successful"}, status=status.HTTP_200_OK)
         except KeyError:
             return Response({"error": "Refresh token is required"}, status=status.HTTP_400_BAD_REQUEST)
