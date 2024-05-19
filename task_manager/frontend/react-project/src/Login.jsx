@@ -40,8 +40,8 @@ function LoginForm() {
 			localStorage.setItem('token', response.data.token);
 			localStorage.setItem('username', username);
 			navigate('/home');
-		} catch (error) {
-			console.error('Login failed:', error);
+		} catch (e) {
+			// console.error('Login failed:', e);
 			setError('Invalid username or password');
 		}
 	};
@@ -58,6 +58,11 @@ function LoginForm() {
 			</Text>
 
 			<Paper withBorder shadow="md" p={30} mt={30} radius="md">
+				{	error === undefined || error === '' ||
+					<Text c='red' size='md' ta="left" mb='md'>
+						{error}
+					</Text>
+				}
 				<TextInput
 					label="Username" placeholder="Your username" required
 					onChange={(e) => setUsername(e.target.value)}
