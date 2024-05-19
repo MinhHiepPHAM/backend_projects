@@ -6,6 +6,7 @@ import {DEFAULT_THEME, MantineProvider, createTheme, mergeThemeOverrides } from 
 import classes from './css/active.module.css'
 import Home from './Home';
 import Login from './Login';
+import Register from './Register';
 
 
 
@@ -28,8 +29,7 @@ export default function App() {
           <main>
             <Routes>
               <Route path="/login" element={<Login/>} />
-              {/* <Route path="/logout" element={<LogoutPage/>} />
-              <Route path="/signup" element={<ReigistrationPage/>} /> */}
+              <Route path="/signup" element={<Register/>} />
               <Route path="/home" element={<Home/>} />
             </Routes>
           </main>
