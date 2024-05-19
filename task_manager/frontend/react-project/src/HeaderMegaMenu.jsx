@@ -49,7 +49,10 @@ function LoggedIn({username}) {
 			axios.post('http://localhost:8000/logout/', {
 				token : localStorage.getItem('token')
 			},{
-				headers: {'Content-Type': 'application/json'}
+				headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Token ' + localStorage.getItem('token')
+        }
 			});
 			// console.log('logout response: ',response.data)
       // console.log('token = ', localStorage.getItem('token'))
@@ -58,7 +61,7 @@ function LoggedIn({username}) {
       localStorage.removeItem('token')
       navigate('/login')
 		} catch (error) {
-			console.error('Login failed:', error);
+			console.error('Logout failed:', error);
 		}
   }
   return (

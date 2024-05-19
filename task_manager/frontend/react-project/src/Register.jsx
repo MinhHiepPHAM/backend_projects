@@ -62,7 +62,7 @@ function RegisterForm() {
 			<Paper withBorder shadow="md" p={30} mt={30} radius="md">
 				{	error === undefined || error === '' ||
 					<Text c='red' size='md' ta="left" mb='md'>
-					{error}
+						{error}
 					</Text>
 				}
 				
