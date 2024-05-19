@@ -66,9 +66,9 @@ function LoggedIn({username}) {
   }
   return (
     <>
-      <Group gap="sm">
-        <Avatar color="cyan" h={41} w={41} radius="xl">{displayName}</Avatar>
-        <Text className={classes.text} fz="lg" fw={500} >
+      <Group gap="sm" className={classes.avatar} component='a' href={'/users/'+username}>
+        <Avatar color="cyan" h={41} w={41} ml={'10px'} radius="xl">{displayName}</Avatar>
+        <Text className={classes.text} fz="lg" fw={500} mr={'10px'} >
           {username}
         </Text>
       </Group>

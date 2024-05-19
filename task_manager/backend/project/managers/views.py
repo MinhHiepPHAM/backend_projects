@@ -9,8 +9,6 @@ from .models import CustomUser
 import re
 
 
-
-
 class RegistrationView(generics.CreateAPIView):
     serializer_class = RegisterSerializer
     permission_classes = [permissions.AllowAny]
