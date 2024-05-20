@@ -7,6 +7,7 @@ import classes from './css/active.module.css'
 import Home from './Home';
 import Login from './Login';
 import Register from './Register';
+import UserProfile from './UserProfile';
 
 
 
@@ -31,6 +32,7 @@ export default function App() {
               <Route path="/login" element={<Login/>} />
               <Route path="/signup" element={<Register/>} />
               <Route path="/home" element={<Home/>} />
+              <Route path='/users/:username' element={<UserProfile/>} />
             </Routes>
           </main>
         </div>

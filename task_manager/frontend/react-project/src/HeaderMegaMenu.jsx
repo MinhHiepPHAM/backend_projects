@@ -7,6 +7,7 @@ import {
   useComputedColorScheme,
   Avatar,
   Text,
+  Anchor,
 } from '@mantine/core';;
 
 
@@ -116,7 +117,9 @@ export function HeaderMegaMenu({page=''}) {
   return (
     <header className={classes.header}>
       <Group justify="space-between" h="100%">
-        <Image src={pageLogo} h={65} w={65} onClick={(e)=> navigate('/home')}/>
+        <Anchor href='/home'>
+          <Image src={pageLogo} h={65} w={65} radius={'50%'}/>
+        </Anchor>
 
         <Group h="100%" gap={0} visibleFrom="sm">
           {headerItems}
