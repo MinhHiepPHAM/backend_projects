@@ -1,6 +1,7 @@
 .mainContainer {
 	display: flex;
 	height: fit-content;
+	border-right: rem(1px) solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
 }
 .navbar {
 	/* background-color: var(--mantine-color-body); */
@@ -64,13 +65,7 @@
 }
 
 .userContainer {
-	justify-items: center;
-	margin-left: auto;
-	margin-right: auto;
 	margin-top: 25px;
-	height: fit-content;
-	width: fit-content;
-	display: block;
 }
 
 .userInfo {
@@ -82,25 +77,11 @@
   align-items: left;
 }
 
-.mainUserProfileContainer {
-	margin-left: 70px;
-	/* margin-right: 25px; */
-	margin-top: 20px;
-	display: grid;
-	grid-template-columns: 40%	40%;
-}
-.userProfileInfo {
-	display: flex;
-}
-
-.profileFieldName {
+.profileAbout {
 	color: light-dark(var(--mantine-color-gray-9), var(--mantine-color-white));
-	padding: 10px;
-	width: 150px;
+	font-style: italic;
 }
 
 .profileFieldValue {
 	color: light-dark(var(--mantine-color-gray-9), var(--mantine-color-white));
-	padding: 10px;
-	width: 400px;
 }

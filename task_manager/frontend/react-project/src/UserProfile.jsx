@@ -1,4 +1,4 @@
-import { Avatar, Badge, Box, Button, Divider, Paper, Table, Text, UnstyledButton, useMantineColorScheme } from "@mantine/core";
+import { Avatar, Badge, Box, Button, Divider, Flex, Grid, Paper, Table, Text, UnstyledButton, useMantineColorScheme } from "@mantine/core";
 import { IconSettings, IconUser, IconActivity, IconMessage, IconMessageCircle } from "@tabler/icons-react";
 import classes from './css/userProfile.module.css'
 import { useParams } from "react-router-dom";
@@ -12,7 +12,7 @@ export function UserInfoAction({username}) {
 	return (
 		<Paper withBorder p='lg' radius='md' className={classes.userInfo}>
 			<Avatar
-				size={120}
+				size={150}
 				radius={120}
 				mx="auto"
 			>
@@ -61,7 +61,7 @@ const NavbarUser = (props) => {
 	return mainLinks;
 }
 
-const UserInfo = () =>{
+const UserInfo = () => {
 
 	const profileData = [
 		{ name: 'First Name', value: 'Minh Hiep'},
@@ -69,27 +69,23 @@ const UserInfo = () =>{
 		{ name: 'Email', value: 'minh-hiep@gmail.com'},
 		{ name: 'Telephone', value: '0123456789'},
 		{ name: 'Address', value: 'Versailles, 78000 France'},
-		{ name: 'About', value: 'I am currently a software engineer at Qualcomm France'},
+		// { name: 'About', value: 'I am currently a software engineer at Qualcomm France'},
 		
 	]
 
-	const profile = profileData.map((data) => (
-		<div className={classes.userProfileInfo}>
-			<div className={classes.profileFieldName}>
-				<Text>{data.name}</Text>
-			</div>
-			<div className={classes.profileFieldValue}>
-				<Text>{data.value}</Text>
-			</div>
-		</div>
-	));
 	return (
-		<>
-		<Button variant="default" ml={'70px'} fw={'normal'} mt={'40px'}>Edit profile</Button>
-		<div className={classes.mainUserProfileContainer}>
-			{profile}
-		</div>
-		</>
+		<Table ml={'50px'}>
+			{
+				profileData.map((data) => (
+				<Table.Tbody key={data.name}>
+					<Table.Tr>
+						<Table.Td maw={'50px'} className={classes.profileFieldValue}>{data.name}</Table.Td>
+						<Table.Td className={classes.profileFieldValue}>{data.value}</Table.Td>
+					</Table.Tr>
+				</Table.Tbody>
+				))
+			}
+		</Table>
 	)
 }
 
@@ -99,31 +95,39 @@ function UserProfile() {
 	// console.log('theme:', colorScheme)
 
 	const { height, width } = useViewportSize();
+
 	return (
 		<>
 			<Box w={width} h={height}>
-					<HeaderMegaMenu/>
+				
+				<HeaderMegaMenu/>
+				<Box ml={'200px'} mr={'200px'} >
 					<div className={classes.mainContainer} >
-						<nav className={classes.navbar} style={{height: height-66}} > {/* 66 is height of header bar */}
-							<div className={classes.section}>
-								<NavbarUser numAct={5} numMess={6} />
-							</div>
-						</nav>
+	 					<nav className={classes.navbar} style={{height: height-66}} > {/* 66 is height of header bar */}
+	 						<div className={classes.section}>
+	 							<NavbarUser numAct={5} numMess={6} />
+	 						</div>
+	 					</nav>
 						<div style={{width:'100%'}}>
-							<div className={classes.userContainer}>
+							<Flex direction={'row'} gap={'md'} align={'center'} justify={'center'}>
+								<div className={classes.userContainer}>
 									<UserInfoAction username={username}/>
-							</div>
-							<div>
-								<Divider my="xs" labelPosition="center" mt={'30px'}
-									label={<span style={{color: colorScheme === 'light' ? "var(--mantine-color-dark-2)" : "var(--mantine-color-dark-1)"}}>Profile Summary</span>}
+								</div>
+								<Flex direction={'column'} align="flex-start">
+									<Text ta={'center'}  mt={'40px'} mb={'25px'} maw={'700px'} className={classes.profileAbout}>
+										{'"' + 'I am currently a software engineer at Qualcomm France. I am learning django, restful framework for backend and react framework for frontend.' + '"'}
+									</Text>
+									<UserInfo/>
+									<Button variant="default" fw={'normal'} mt={'20px'} ml={'50px'}>Edit profile</Button>
+								</Flex>
+							</Flex>
+							<Divider my="xs" labelPosition="center" mt={'30px'}
+									label={<span style={{color: colorScheme === 'light' ? "var(--mantine-color-dark-2)" : "var(--mantine-color-dark-1)"}}>Summary</span>}
 									color={colorScheme === 'light' ? "var(--mantine-color-gray-3)": "var(--mantine-color-dark-4)"}
-								/>
-							</div>
-							<div>
-								<UserInfo/>
-							</div>
+							/>
 						</div>
-					</div>		
+					</div>
+				</Box>	
 			</Box>
 					
 		</>
@@ -131,3 +135,5 @@ function UserProfile() {
 }
 
 export default UserProfile
+
+
