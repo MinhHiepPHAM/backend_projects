@@ -5,7 +5,67 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CustomUser
-        fields = ['email', 'first_name', 'last_name', 'username', 'is_active', 'bio']
+        fields = [
+            'email', 'first_name', 'last_name', 'username', 'is_active', 'bio', 
+            'telephone', 'street', 'street_number', 'city', 'country', 'avatar'
+        ]
+
+class ProfileEditingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUser
+        fields = [
+            'first_name', 'last_name', 'avatar', 'telephone', 'bio',
+            'street', 'street_number', 'city', 'country',
+        ]
+
+    def handle_update_field(self, instance, validated_data, name):
+        value = validated_data.get(name, None)
+        if value:
+            setattr(instance,name,value)
+
+    def update(self, instance, validated_data):
+        print(self.context)
+        fields = [
+            'first_name', 'last_name', 'avatar', 'telephone', 'bio',
+            'street', 'street_number', 'city', 'country',
+        ]
+        for name in fields:
+            self.handle_update_field(instance, validated_data, name)
+
+        instance.save()
+        return instance
+    
+
+class GroupSerializer(serializers.ModelSerializer):
+    members = UserSerializer(many=True)
+    admins = UserSerializer(many=True)
+    
+    class Meta:
+        model = GroupUser
+        fields = ['members', 'admins', 'name']
+
+class ActivitySerializer(serializers.ModelSerializer):
+    users = UserSerializer(many=True)
+    createdby = UserSerializer()
+
+    class Meta:
+        model = Activity
+        fields = ['type', 'title', 'users', 'createdby', 'distance', 'created_time']
+
+class ActionSerializer(serializers.ModelSerializer):
+    in_activity = ActivitySerializer()
+
+    class Meta:
+        model = Action
+        fields = ['start_time', 'end_time', 'distance', 'in_activity']
+
+class AwardSerializer(serializers.ModelSerializer):
+    users = UserSerializer(many=True)
+    activity = ActionSerializer()
+
+    class Meta:
+        model = Award
+        fields = ['title', 'medal', 'activity', 'users']
 
 class RegisterSerializer(serializers.ModelSerializer):
     password1 = serializers.CharField(write_only=True, required=True)

@@ -7,16 +7,17 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField("email address", unique=True)
     username = models.CharField(max_length=30,unique=True)
 
-    first_name = models.CharField(max_length=30)
-    last_name = models.CharField(max_length=30)
+    first_name = models.CharField(max_length=30, blank=True)
+    last_name = models.CharField(max_length=30, blank=True)
     
     is_active = models.BooleanField(default=True)
-    telephone = models.CharField(max_length=20)
-    street = models.CharField(max_length=250)
-    street_number = models.CharField(max_length=10)
-    city = models.CharField(max_length=50)
-    country = models.CharField(max_length=50)
-    bio = models.TextField()
+    telephone = models.CharField(max_length=20, blank=True)
+    street = models.CharField(max_length=250, blank=True)
+    street_number = models.CharField(max_length=10, blank=True)
+    city = models.CharField(max_length=50, blank=True)
+    country = models.CharField(max_length=50, blank=True)
+    bio = models.TextField(blank=True)
+    avatar = models.CharField(max_length=250, blank=True)
     
     USERNAME_FIELD = "username"
     REQUIRED_FIELDS = ['email'] 
@@ -58,7 +59,7 @@ class Award(models.Model):
     title = models.CharField(max_length=250)
     medal = models.CharField(max_length=6, choices=Medal.choices, default=Medal.PARITCIPANT)
     activity = models.ForeignKey(Activity, on_delete=models.CASCADE)
-    user = models.ManyToManyField(CustomUser, related_name='awards')
+    users = models.ManyToManyField(CustomUser, related_name='awards')
     
 
 

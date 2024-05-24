@@ -1,9 +1,10 @@
 from rest_framework import generics, permissions
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.viewsets import ModelViewSet
 from rest_framework.authtoken.models import Token
 from django.contrib.auth import authenticate
-from .serializers import UserSerializer, RegisterSerializer
+from .serializers import UserSerializer, RegisterSerializer, ProfileEditingSerializer
 from rest_framework import status
 from .models import CustomUser
 import re
@@ -60,5 +61,10 @@ class LogoutView(APIView):
             return Response({"message": "Logout successful"}, status=status.HTTP_200_OK)
         except KeyError:
             return Response({"error": "Refresh token is required"}, status=status.HTTP_400_BAD_REQUEST)
+
+class ProfileEditingView(generics.UpdateAPIView):
+    serializer_class = ProfileEditingSerializer
+    permission_classes = [permissions.AllowAny,]
+    queryset = CustomUser.objects.all()
 
 
