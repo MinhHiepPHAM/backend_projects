@@ -7,7 +7,7 @@ import { HeaderMegaMenu } from "./HeaderMegaMenu";
 import { GiPositionMarker } from "react-icons/gi";
 import { IoPersonCircle } from "react-icons/io5";
 
-export function UserInfoAction({username}) {
+export function UserInfoHeader({username}) {
 	const displayName = username.slice(0,2).toUpperCase()
 	return (
 		<Paper withBorder p='lg' radius='md' className={classes.userInfo}>
@@ -36,7 +36,7 @@ export function UserInfoAction({username}) {
 	);
 }
 
-const NavbarUser = (props) => {
+export const NavbarUser = (props) => {
 	const {numAct, numMess} = props;
 	const links = [
 		{ icon: IconUser, label: 'Profile'},
@@ -90,7 +90,8 @@ const UserInfo = () => {
 }
 
 function UserProfile() {
-	const {username} = useParams();
+	const {uid} = useParams();
+	const username = localStorage.getItem('username')
 	const {colorScheme} = useMantineColorScheme()
 	// console.log('theme:', colorScheme)
 
@@ -111,14 +112,19 @@ function UserProfile() {
 						<div style={{width:'100%'}}>
 							<Flex direction={'row'} gap={'md'} align={'center'} justify={'center'}>
 								<div className={classes.userContainer}>
-									<UserInfoAction username={username}/>
+									<UserInfoHeader username={username}/>
 								</div>
 								<Flex direction={'column'} align="flex-start">
 									<Text ta={'center'}  mt={'40px'} mb={'25px'} maw={'700px'} className={classes.profileAbout}>
 										{'"' + 'I am currently a software engineer at Qualcomm France. I am learning django, restful framework for backend and react framework for frontend.' + '"'}
 									</Text>
 									<UserInfo/>
-									<Button variant="default" fw={'normal'} mt={'20px'} ml={'50px'}>Edit profile</Button>
+									<Button
+										href={'/users/' + uid.toString() + '/editprofile'} component="a"
+										variant="default" fw={'normal'} mt={'20px'} ml={'50px'}
+									>
+										Edit profile
+									</Button>
 								</Flex>
 							</Flex>
 							<Divider my="xs" labelPosition="center" mt={'30px'}

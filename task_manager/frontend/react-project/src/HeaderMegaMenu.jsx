@@ -42,7 +42,7 @@ function NotLoggedIn() {
   )
 }
 
-function LoggedIn({username}) {
+function LoggedIn({username, uid}) {
   const displayName = username.slice(0,2).toUpperCase()
   const navigate = useNavigate()
   const logoutHandle = (e) =>{
@@ -60,6 +60,7 @@ function LoggedIn({username}) {
 			
 			localStorage.removeItem('username')
       localStorage.removeItem('token')
+      localStorage.removeItem('uid')
       navigate('/login')
 		} catch (error) {
 			console.error('Logout failed:', error);
@@ -67,7 +68,7 @@ function LoggedIn({username}) {
   }
   return (
     <>
-      <Group gap="sm" className={classes.avatar} component='a' href={'/users/'+username}>
+      <Group gap="sm" className={classes.avatar} component='a' href={'/users/'+uid}>
         <Avatar color="cyan" h={41} w={41} ml={'10px'} radius="xl">{displayName}</Avatar>
         <Text className={classes.text} fz="lg" fw={500} mr={'10px'} >
           {username}
@@ -95,6 +96,7 @@ export function HeaderMegaMenu({page=''}) {
   const [activedPage, setActivedPage] = useState(page);
   const navigate = useNavigate();
   const username = localStorage.getItem('username')
+  const uid = localStorage.getItem('uid')
   // console.log('localstorage:', username, localStorage)
   const isAuthenticated = localStorage.getItem('token') !== null
 
@@ -126,7 +128,7 @@ export function HeaderMegaMenu({page=''}) {
         </Group>
 
         <Group visibleFrom="sm">
-          {isAuthenticated ? <LoggedIn username={username}/> : <NotLoggedIn/>}
+          {isAuthenticated ? <LoggedIn username={username} uid={uid}/> : <NotLoggedIn/>}
           <ActionIcon
             onClick={() => setColorScheme(computedColorScheme === 'light' ? 'dark' : 'light')}
             variant="outline"

@@ -1,5 +1,6 @@
 // Import styles of packages that you've installed.
 // All packages except `@mantine/hooks` require styles imports
+import '@mantine/tiptap/styles.css';
 import '@mantine/core/styles.css';
 import { Route, Routes, BrowserRouter } from 'react-router-dom';
 import {DEFAULT_THEME, MantineProvider, createTheme, mergeThemeOverrides } from '@mantine/core';
@@ -8,6 +9,7 @@ import Home from './Home';
 import Login from './Login';
 import Register from './Register';
 import UserProfile from './UserProfile';
+import EditProfile from './EditProfile';
 
 
 
@@ -32,7 +34,8 @@ export default function App() {
               <Route path="/login" element={<Login/>} />
               <Route path="/signup" element={<Register/>} />
               <Route path="/home" element={<Home/>} />
-              <Route path='/users/:username' element={<UserProfile/>} />
+              <Route path='/users/:uid' element={<UserProfile/>} />
+              <Route path='/users/:uid/editprofile' element={<EditProfile/>} />
             </Routes>
           </main>
         </div>

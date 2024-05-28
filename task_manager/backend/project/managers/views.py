@@ -48,7 +48,8 @@ class LoginView(APIView):
         user = authenticate(username=username, password=password)
         if user:
             token,_ = Token.objects.get_or_create(user=user)
-            return Response({'token': token.key})
+            uid = CustomUser.objects.get(username=username).pk
+            return Response({'token': token.key, 'uid':uid})
         else:
             return Response({'error': 'Invalid user or password'}, status=401)
         
@@ -62,7 +63,7 @@ class LogoutView(APIView):
         except KeyError:
             return Response({"error": "Refresh token is required"}, status=status.HTTP_400_BAD_REQUEST)
 
-class ProfileEditingView(generics.UpdateAPIView):
+class ProfileEditingView(generics.UpdateAPIView, generics.RetrieveAPIView):
     serializer_class = ProfileEditingSerializer
     permission_classes = [permissions.AllowAny,]
     queryset = CustomUser.objects.all()

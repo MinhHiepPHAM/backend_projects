@@ -36,9 +36,10 @@ function LoginForm() {
 			});
 			// console.log(response.data)
 			
-			localStorage.clear()
+			localStorage.clear();
 			localStorage.setItem('token', response.data.token);
 			localStorage.setItem('username', username);
+			localStorage.setItem('uid',response.data.uid)
 			navigate('/home');
 		} catch (e) {
 			// console.error('Login failed:', e);
