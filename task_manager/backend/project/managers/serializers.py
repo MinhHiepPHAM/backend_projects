@@ -1,5 +1,6 @@
 from .models import *
 from rest_framework import serializers
+import pprint
 
 class UserSerializer(serializers.ModelSerializer):
 
@@ -25,6 +26,7 @@ class ProfileEditingSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         # print(self.context)
+        pprint.pprint(validated_data)
         fields = [
             'first_name', 'last_name', 'avatar', 'telephone', 'bio',
             'street', 'street_number', 'city', 'country', 'job_title'

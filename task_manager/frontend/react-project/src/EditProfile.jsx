@@ -7,7 +7,7 @@ import {
 import { HeaderMegaMenu } from "./HeaderMegaMenu";
 import { NavbarUser } from "./UserProfile";
 import classes from './css/userProfile.module.css'
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useViewportSize } from "@mantine/hooks";
 import axios from "axios";
 import { useEffect, useRef, useState } from "react";
@@ -20,6 +20,7 @@ import jobTitles from "./assets/jobTitle";
 function EditProfile() {
 	const {uid} = useParams();
 	const username = localStorage.getItem('username');
+    const token = localStorage.getItem('token')
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [avatar, setAvatar] = useState('');
@@ -29,12 +30,14 @@ function EditProfile() {
     const [streetNumber, setStreetNumber] = useState('');
     const [city, setCity] = useState('');
     const [country, setCountry] = useState('');
+    const [title, setJobTilte] = useState('');
     const [success, setSuccess] = useState(false);
     // const [data, setData] = useState({});
+    const navigate = useNavigate();
 
     const headers = {
         'Content-Type': 'application/json',
-        'Authorization': 'Token ' + localStorage.getItem('token')
+        'Authorization': 'Token ' + token
     };
 
     useEffect(()=> {
@@ -52,6 +55,7 @@ function EditProfile() {
                 setStreetNumber(response.data['street_number']);
                 setCity(response.data['city']);
                 setCountry(response.data['country']);
+                setJobTilte(response.data['job_title']);
                 setSuccess(true);
             }).catch (error => {
                 console.log(error);
@@ -80,8 +84,10 @@ function EditProfile() {
             mt={'md'} ml={'xl'}
             w={'350px'}
             data={jobTitles}
+            value={title}
             withScrollArea={false}
             styles={{ dropdown: { maxHeight: 200, overflow: 'auto' } }}
+            onChange={setJobTilte}
         />
     );
     
@@ -164,14 +170,14 @@ function EditProfile() {
         </Flex>
     );
 
-    console.log(avatar)
+    // console.log(avatar)
 
     if (!success) return (<div></div>) // waiting for fetching data
 
     editor.commands.setContent(bio);
 
     editor.on('update', ({editor}) => {
-        setBio(editor.getHTML())
+        setBio(editor.getHTML());
     });
     
     const aboutInput = (
@@ -180,14 +186,39 @@ function EditProfile() {
         </RichTextEditor>
     );
 
+    const handleSaveProfileButton = async (e) =>{
+        e.preventDefault();
+        try {
+			const response = await axios.put(`http://localhost:8000/users/${uid}/editprofile/`, {
+                
+                    first_name: firstName,
+                    last_name:lastName,
+                    avatar: avatar,
+                    telephone: telephone,
+                    bio: bio,
+                    street: street,
+                    street_number: streetNumber,
+                    city:city,
+                    country:country,
+                    job_title: title
+			},{
+				headers: headers
+			});
+            navigate(`/users/${uid}`);
+        } catch (e) {
+            console.error('Login failed:', e);
+        }
+    };
+
     const saveButton = (
         <Button
             variant="default"
             mt={'md'} ml={'xl'}
+            onClick={handleSaveProfileButton}
         >
             Save
         </Button>
-    )
+    );
     return (
         <div>
             <Box w={width} h={height}>
@@ -217,12 +248,8 @@ function EditProfile() {
                                 </Flex>
                                 <Flex direction={'column'} align={'flex-end'}>
                                     {avatarInput}
-                                    
                                 </Flex>
-
                             </Flex>
-                            
-                            
                         </div>
                     </div>
                 </Box>

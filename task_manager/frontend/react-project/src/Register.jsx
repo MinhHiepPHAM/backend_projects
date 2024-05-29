@@ -39,12 +39,12 @@ function RegisterForm() {
 			},{
 				headers: {'Content-Type': 'application/json'}
 			});
-			console.log(response.data);
+			// console.log(response.data);
 			navigate('/login');
 		} catch (e) {
 			console.error('Login failed:', e);
 			setError(e.response.data.error)
-			console.log(error)
+			// console.log(error)
 		}
 	};
 	return (

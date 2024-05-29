@@ -9,7 +9,7 @@ import {
     Container,
     Group,
     Button,
-		Box,
+	Box,
   } from '@mantine/core';
 import classes from './css/authentication.module.css';
 import React, { useState } from 'react';
