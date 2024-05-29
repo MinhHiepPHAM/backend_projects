@@ -18,6 +18,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     country = models.CharField(max_length=50, blank=True)
     bio = models.TextField(blank=True)
     avatar = models.CharField(max_length=250, blank=True)
+    job_title = models.CharField(max_length=250, default='')
     
     USERNAME_FIELD = "username"
     REQUIRED_FIELDS = ['email'] 

@@ -1,4 +1,9 @@
-import { Box, Button, Divider, Flex, InputBase, Text, TextInput, Textarea } from "@mantine/core";
+import { 
+    Box, Button, Divider, FileInput, Flex,
+    InputBase, Text, TextInput, Autocomplete, 
+    FileButton,
+    Avatar
+} from "@mantine/core";
 import { HeaderMegaMenu } from "./HeaderMegaMenu";
 import { NavbarUser } from "./UserProfile";
 import classes from './css/userProfile.module.css'
@@ -10,10 +15,11 @@ import { IMaskInput } from 'react-imask';
 import { EditorContent, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import { RichTextEditor } from '@mantine/tiptap';
+import jobTitles from "./assets/jobTitle";
 
 function EditProfile() {
 	const {uid} = useParams();
-	// const username = localStorage.getItem('username');
+	const username = localStorage.getItem('username');
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [avatar, setAvatar] = useState('');
@@ -57,22 +63,35 @@ function EditProfile() {
         {setFunction: setLastName, label:'Last Name', value: lastName}, 
     ];
 
-    const editInputFields = textInputs.map((input) => (
+    const nameInputs = textInputs.map((input) => (
             <TextInput key={input.label}
-                mt={'xl'} ml={'xl'}
+                mt={'md'} ml={'xl'}
                 label={input.label}
-                w={'300px'}
+                w={'350px'}
                 value={input.value}
                 onChange={(e)=> {input.setFunction(e.target.value);}}
             />
     ));
+
+    const jobtitles = (
+        <Autocomplete
+            label="Job Title"
+            placeholder="Enter your job title"
+            mt={'md'} ml={'xl'}
+            w={'350px'}
+            data={jobTitles}
+            withScrollArea={false}
+            styles={{ dropdown: { maxHeight: 200, overflow: 'auto' } }}
+        />
+    );
+    
 
     const telephoneInput = (
         <InputBase 
             label='Your Phone'
             component={IMaskInput}
             mask="(+33) 00-00-00-00-00 "
-            mt={'xl'} ml={'xl'}
+            mt={'md'} ml={'xl'}
             w={'200px'}
             value={telephone}
             onChange={(e)=> {input.setTelephone(e.target.value);}}
@@ -89,7 +108,7 @@ function EditProfile() {
             {
                 streetFields.map((input) => (
                     <TextInput key={input.label}
-                        mt={'xl'} ml={'xl'}
+                        mt={'md'} ml={'xl'}
                         label={input.label}
                         w={input.width}
                         value={input.value}
@@ -110,7 +129,7 @@ function EditProfile() {
             {
                 cityFields.map((input) => (
                     <TextInput key={input.label}
-                        mt={'xl'} ml={'xl'}
+                        mt={'md'} ml={'xl'}
                         label={input.label}
                         w={input.width}
                         value={input.value}
@@ -129,6 +148,24 @@ function EditProfile() {
 
 	const { height, width } = useViewportSize();
 
+    const avatarInput = (
+        <Flex direction={'row'} align={'center'} >
+            {avatar!=='' && <Avatar src={avatar} size={250} radius={120} mx="auto" mt={'lg'}/>}
+            {avatar==='' && <Avatar src={avatar} size={250} radius={120} mx="auto" mt={'lg'}>{username.slice(0,2).toUpperCase()}</Avatar>}
+            <Flex direction={'column'} align={'flex-start'}>
+                <FileInput onChange={(e)=>setAvatar(URL.createObjectURL(e))} accept="image/png,image/jpeg"
+                    maw={'120px'} ml={'xl'} placeholder='Upload Avatar' mt={'xs'}
+                    variant="default"
+                />
+                <TextInput onChange={(e)=> setAvatar(e.target.value)}
+                    w={'350px'} ml={'xl'} placeholder='Enter Image URL' mt={'xs'} mr={'xl'}
+                />
+            </Flex>
+        </Flex>
+    );
+
+    console.log(avatar)
+
     if (!success) return (<div></div>) // waiting for fetching data
 
     editor.commands.setContent(bio);
@@ -146,7 +183,7 @@ function EditProfile() {
     const saveButton = (
         <Button
             variant="default"
-            mt={'xl'} ml={'xl'}
+            mt={'md'} ml={'xl'}
         >
             Save
         </Button>
@@ -163,17 +200,28 @@ function EditProfile() {
                                 </div>
                             </nav>
                         <div>
-                            <Text mt='xl' ml='xl' fw={'bold'} size="xl">
+                            <Text mt='xs' ml='xl' fw={'bold'} size="xl">
                                 Edit your profile
                             </Text>
                             <Divider my="xs" mt={'10px'} w={'auto'}/>
-                            {editInputFields}
-                            {telephoneInput}
-                            {streetInput}
-                            {cityInput}
-                            <Text mt={'xl'} ml={'xl'}>About me <span style={{fontSize:'12px'}}>(using markdown to style the text)</span></Text>
-                            {aboutInput}
-                            {saveButton}
+                            <Flex direction={'row'}>
+                                <Flex direction={'column'} align={'flex-start'}>
+                                    {jobtitles}
+                                    {nameInputs}
+                                    {telephoneInput}
+                                    {streetInput}
+                                    {cityInput}
+                                    <Text mt={'md'} ml={'xl'}>About me <span style={{fontSize:'12px'}}>(using markdown to style the text)</span></Text>
+                                    {aboutInput}
+                                    {saveButton}
+                                </Flex>
+                                <Flex direction={'column'} align={'flex-end'}>
+                                    {avatarInput}
+                                    
+                                </Flex>
+
+                            </Flex>
+                            
                             
                         </div>
                     </div>

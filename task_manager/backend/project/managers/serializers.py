@@ -15,7 +15,7 @@ class ProfileEditingSerializer(serializers.ModelSerializer):
         model = CustomUser
         fields = [
             'first_name', 'last_name', 'avatar', 'telephone', 'bio',
-            'street', 'street_number', 'city', 'country',
+            'street', 'street_number', 'city', 'country', 'job_title'
         ]
 
     def handle_update_field(self, instance, validated_data, name):
@@ -24,10 +24,10 @@ class ProfileEditingSerializer(serializers.ModelSerializer):
             setattr(instance,name,value)
 
     def update(self, instance, validated_data):
-        print(self.context)
+        # print(self.context)
         fields = [
             'first_name', 'last_name', 'avatar', 'telephone', 'bio',
-            'street', 'street_number', 'city', 'country',
+            'street', 'street_number', 'city', 'country', 'job_title'
         ]
         for name in fields:
             self.handle_update_field(instance, validated_data, name)
