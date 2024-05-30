@@ -9,39 +9,37 @@
   
 ## Home page:
 
-<img src="myproject/photos/home.png" width="750" />
+<img src="photos/home.png" width="750" />
 
 *Search by country name (USA)*
 
-<img src="myproject/photos/search_USA.png" width="750" />
+<img src="photos/search_USA.png" width="750" />
 
 *Search by ticker name (QCO)*
 
-<img src="myproject/photos/searchQCOM.png" width="750" />
+<img src="photos/searchQCOM.png" width="750" />
 
 ## Trending page:
 
-<img src="myproject/photos/trending.png" width="750"/>
+<img src="photos/trending.png" width="750"/>
 
 ## Ticker page:
 
 *chart*
 
-<img src="myproject/photos/qcom_chart.png" width="750" />
+<img src="photos/qcom_chart.png" width="750" />
 
 *related news*
 
-<img src="myproject/photos/qcom_news.png" width="750" />
+<img src="photos/qcom_news.png" width="750" />
 
 ## News page:
 
-<img src="myproject/photos/news.png" width="750"/>
+<img src="photos/news.png" width="750"/>
 
 ## Login/Register page:
 
-<img src="myproject/photos/login.png" width="480" /> &nbsp;&nbsp;&nbsp;&nbsp; <img src="myproject/photos/register.png" width="480" />
-
-
+<img src="photos/login.png" width="480" /> &nbsp;&nbsp;&nbsp;&nbsp; <img src="myproject/photos/register.png" width="480" />
 
 
 # TODO:
