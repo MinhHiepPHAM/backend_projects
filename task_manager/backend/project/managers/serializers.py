@@ -8,7 +8,7 @@ class UserSerializer(serializers.ModelSerializer):
         model = CustomUser
         fields = [
             'email', 'first_name', 'last_name', 'username', 'is_active', 'bio', 
-            'telephone', 'street', 'street_number', 'city', 'country', 'avatar'
+            'telephone', 'street', 'street_number', 'city', 'country', 'avatar', 'job_title'
         ]
 
 class ProfileEditingSerializer(serializers.ModelSerializer):

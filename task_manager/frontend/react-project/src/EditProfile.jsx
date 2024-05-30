@@ -181,7 +181,7 @@ function EditProfile() {
     });
     
     const aboutInput = (
-        <RichTextEditor editor={editor} ml={'xl'} maw={'600px'}>
+        <RichTextEditor editor={editor} ml={'xl'} w={'600px'}>
             <RichTextEditor.Content/>
         </RichTextEditor>
     );

@@ -65,7 +65,14 @@ class LogoutView(APIView):
 
 class ProfileEditingView(generics.UpdateAPIView, generics.RetrieveAPIView):
     serializer_class = ProfileEditingSerializer
+    permission_classes = [permissions.IsAuthenticated,]
+    queryset = CustomUser.objects.all()
+
+class UserProfileView(ModelViewSet):
     permission_classes = [permissions.AllowAny,]
     queryset = CustomUser.objects.all()
+    serializer_class = UserSerializer
+
+
 
 

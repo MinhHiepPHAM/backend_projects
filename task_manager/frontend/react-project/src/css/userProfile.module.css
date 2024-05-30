@@ -79,7 +79,7 @@
 
 .profileAbout {
 	color: light-dark(var(--mantine-color-gray-9), var(--mantine-color-white));
-	font-style: italic;
+	/* font-style: italic; */
 }
 
 .profileFieldValue {

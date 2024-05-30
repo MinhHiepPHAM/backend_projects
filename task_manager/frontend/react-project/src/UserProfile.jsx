@@ -1,4 +1,4 @@
-import { Avatar, Badge, Box, Button, Divider, Flex, Grid, Paper, Table, Text, UnstyledButton, useMantineColorScheme } from "@mantine/core";
+import { Avatar, Badge, Box, Button, Divider, Flex, Grid, Paper, Table, Text, UnstyledButton, em, useMantineColorScheme } from "@mantine/core";
 import { IconSettings, IconUser, IconActivity, IconMessage, IconMessageCircle } from "@tabler/icons-react";
 import classes from './css/userProfile.module.css'
 import { useParams } from "react-router-dom";
@@ -6,30 +6,46 @@ import { useViewportSize } from "@mantine/hooks";
 import { HeaderMegaMenu } from "./HeaderMegaMenu";
 import { GiPositionMarker } from "react-icons/gi";
 import { IoPersonCircle } from "react-icons/io5";
+import axios from "axios";
+import { useEffect, useState } from "react";
 
-export function UserInfoHeader({username}) {
-	const displayName = username.slice(0,2).toUpperCase()
-	return (
-		<Paper withBorder p='lg' radius='md' className={classes.userInfo}>
+export function UserInfoHeader(props) {
+	const {username, firstName, lastName, avatar, city, country, title} = props;
+	const displayName = username.slice(0,2).toUpperCase();
+	let avatarPhoto;
+	if (avatar==='') {
+		avatarPhoto = (
 			<Avatar
 				size={150}
 				radius={120}
-				mx="auto"
+				// mx="auto"
 			>
 				{displayName}
 			</Avatar>
+		)
+	} else {
+		avatarPhoto = (<Avatar
+			size={150}
+			radius={120}
+			src={avatar}
+		/>)
+	}
+
+	return (
+		<Paper withBorder p='lg' radius='md' className={classes.userInfo}>
+			{avatarPhoto}
 			<Text ta="center" fz="lg" fw={500} mt="md">
-				Minh Hiep Pham
+			{firstName} {lastName}
 			</Text>
 				<div className={classes.mainUserInner}>
-					<IoPersonCircle size={18} stroke={1.5} className={classes.mainLinkIcon} /><Text ta="left" c="var(--mantine-color-gray-6)" fz="sm">Software Engineer - Qualcomm</Text>
+					<IoPersonCircle size={18} className={classes.mainLinkIcon} /><Text ta="left" c="var(--mantine-color-gray-6)" fz="sm">{title}</Text>
 				</div>
 				<div className={classes.mainUserInner}>
-					<GiPositionMarker size={18} stroke={1.5} className={classes.mainLinkIcon}/><Text ta="left" c="var(--mantine-color-gray-6)" fz="sm">Ile-de-France, France</Text>
+					<GiPositionMarker size={18} className={classes.mainLinkIcon}/><Text ta="left" c="var(--mantine-color-gray-6)" fz="sm">{city}, {country}</Text>
 				</div>
 
 			<Button variant="default" fullWidth mt="md">
-				<IconMessageCircle size={22} className={classes.messIcon} stroke={1.5} />
+				<IconMessageCircle size={22} className={classes.messIcon} />
 					<span style={{fontWeight:"normal"}}>Send Message</span>
 			</Button>
 		</Paper>
@@ -48,7 +64,7 @@ export const NavbarUser = (props) => {
 	const mainLinks = links.map((link) => (
 		<UnstyledButton key={link.label} className={classes.mainLink}>
 			<div className={classes.mainLinkInner}>
-				<link.icon size={22} className={classes.mainLinkIcon} stroke={1.5} />
+				<link.icon size={22} className={classes.mainLinkIcon} />
 				<span>{link.label}</span>
 			</div>
 			{link.num && (
@@ -61,17 +77,22 @@ export const NavbarUser = (props) => {
 	return mainLinks;
 }
 
-const UserInfo = () => {
+const UserInfo = (props) => {
+
+	const {
+		email, firstName, lastName,
+		telephone, street, streetNumber,
+		city, country
+	} = props;
 
 	const profileData = [
-		{ name: 'First Name', value: 'Minh Hiep'},
-		{ name: 'Last Name', value: 'Pham'},
-		{ name: 'Email', value: 'minh-hiep@gmail.com'},
-		{ name: 'Telephone', value: '0123456789'},
-		{ name: 'Address', value: 'Versailles, 78000 France'},
-		// { name: 'About', value: 'I am currently a software engineer at Qualcomm France'},
+		{ name: 'First Name', value: firstName},
+		{ name: 'Last Name', value: lastName},
+		{ name: 'Email', value: email},
+		{ name: 'Telephone', value: telephone},
+		{ name: 'Address', value: `${streetNumber}, ${street} ${city}, ${country}`},
 		
-	]
+	];
 
 	return (
 		<Table ml={'50px'}>
@@ -79,7 +100,7 @@ const UserInfo = () => {
 				profileData.map((data) => (
 				<Table.Tbody key={data.name}>
 					<Table.Tr>
-						<Table.Td maw={'50px'} className={classes.profileFieldValue}>{data.name}</Table.Td>
+						<Table.Td maw={'150px'} miw={'100px'} className={classes.profileFieldValue}>{data.name}</Table.Td>
 						<Table.Td className={classes.profileFieldValue}>{data.value}</Table.Td>
 					</Table.Tr>
 				</Table.Tbody>
@@ -94,13 +115,55 @@ function UserProfile() {
 	const username = localStorage.getItem('username')
 	const {colorScheme} = useMantineColorScheme()
 	// console.log('theme:', colorScheme)
+    const token = localStorage.getItem('token')
+	const [email, setEmail] = useState('');
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
+    const [avatar, setAvatar] = useState('');
+    const [telephone, setTelephone] = useState('');
+    const [bio, setBio] = useState('');
+    const [street, setStreet] = useState('');
+    const [streetNumber, setStreetNumber] = useState('');
+    const [city, setCity] = useState('');
+    const [country, setCountry] = useState('');
+    const [title, setJobTilte] = useState('');
+	// const [isActive, setActive] = useState(true);
+    // const [success, setSuccess] = useState(false);
+
+	const headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Token ' + token
+    };
+
+    useEffect(()=> {
+        axios.get(`http://localhost:8000/users/${uid}/`, {headers:headers})
+            .then(response => {
+                // setData(response.data)
+                setFirstName(response.data['first_name']);
+                setLastName(response.data['last_name']);
+                setAvatar(response.data['avatar']);
+				setCountry(response.data['country']);
+                setJobTilte(response.data['job_title']);
+                setTelephone(response.data['telephone']);
+                setBio(response.data['bio']);
+                setStreet(response.data['street']);
+                setStreetNumber(response.data['street_number']);
+                setCity(response.data['city']);
+                setCountry(response.data['country']);
+                setJobTilte(response.data['job_title']);
+				setActive(response.data['is_active']);
+				setEmail(response.data['email']);
+                // setSuccess(true);
+            }).catch (error => {
+                console.log(error);
+            });
+		},[]);  
 
 	const { height, width } = useViewportSize();
 
 	return (
 		<>
 			<Box w={width} h={height}>
-				
 				<HeaderMegaMenu/>
 				<Box ml={'200px'} mr={'200px'} >
 					<div className={classes.mainContainer} >
@@ -112,13 +175,21 @@ function UserProfile() {
 						<div style={{width:'100%'}}>
 							<Flex direction={'row'} gap={'md'} align={'center'} justify={'center'}>
 								<div className={classes.userContainer}>
-									<UserInfoHeader username={username}/>
+									<UserInfoHeader
+										username={username} firstName={firstName} lastName={lastName}
+										avatar={avatar} city={city} country={country} title={title}
+									/>
 								</div>
 								<Flex direction={'column'} align="flex-start">
-									<Text ta={'center'}  mt={'40px'} mb={'25px'} maw={'700px'} className={classes.profileAbout}>
-										{'"' + 'I am currently a software engineer at Qualcomm France. I am learning django, restful framework for backend and react framework for frontend.' + '"'}
+									<Text ml={'50px'} mt={'10px'} mb={'25px'} maw={'700px'} className={classes.profileAbout}>
+										<div dangerouslySetInnerHTML={{ __html: bio }} />
 									</Text>
-									<UserInfo/>
+									<UserInfo
+										email={email} firstName={firstName}
+										lastName={lastName}
+										telephone={telephone} street={street} streetNumber={streetNumber}
+										city={city} country={country}
+									/>
 									<Button
 										href={'/users/' + uid.toString() + '/editprofile'} component="a"
 										variant="default" fw={'normal'} mt={'20px'} ml={'50px'}
