@@ -162,52 +162,49 @@ function UserProfile() {
 	const { height, width } = useViewportSize();
 
 	return (
-		<>
-			<Box w={width} h={height}>
-				<HeaderMegaMenu/>
-				<Box ml={'200px'} mr={'200px'} >
-					<div className={classes.mainContainer} >
-	 					<nav className={classes.navbar} style={{height: height-66}} > {/* 66 is height of header bar */}
-	 						<div className={classes.section}>
-	 							<NavbarUser numAct={5} numMess={6} />
-	 						</div>
-	 					</nav>
-						<div style={{width:'100%'}}>
-							<Flex direction={'row'} gap={'md'} align={'center'} justify={'center'}>
-								<div className={classes.userContainer}>
-									<UserInfoHeader
-										username={username} firstName={firstName} lastName={lastName}
-										avatar={avatar} city={city} country={country} title={title}
-									/>
-								</div>
-								<Flex direction={'column'} align="flex-start">
-									<Text ml={'50px'} mt={'10px'} maw={'700px'} className={classes.profileAbout}>
-										<div dangerouslySetInnerHTML={{ __html: bio }} />
-									</Text>
-									<UserInfo
-										email={email} firstName={firstName}
-										lastName={lastName}
-										telephone={telephone} street={street} streetNumber={streetNumber}
-										city={city} country={country}
-									/>
-									<Button
-										href={'/users/' + uid.toString() + '/editprofile'} component="a"
-										variant="default" fw={'normal'} mt={'10px'} ml={'50px'}
-									>
-										Edit profile
-									</Button>
-								</Flex>
-							</Flex>
-							<Divider my="xs" labelPosition="center" mt={'30px'}
-									label={<span style={{color: colorScheme === 'light' ? "var(--mantine-color-dark-2)" : "var(--mantine-color-dark-1)"}}>Summary</span>}
-									color={colorScheme === 'light' ? "var(--mantine-color-gray-3)": "var(--mantine-color-dark-4)"}
-							/>
+		<Box>
+			<HeaderMegaMenu/>
+			<Box ml={'200px'} mr={'200px'} >
+				<div className={classes.mainContainer} >
+					<nav className={classes.navbar} >
+						<div className={classes.section}>
+							<NavbarUser numAct={5} numMess={6} />
 						</div>
+					</nav>
+					<div>
+						<Flex direction={'row'} ml={'xl'} gap={'md'} align={'center'} justify={'center'}>
+							<div className={classes.userContainer}>
+								<UserInfoHeader
+									username={username} firstName={firstName} lastName={lastName}
+									avatar={avatar} city={city} country={country} title={title}
+								/>
+							</div>
+							<Flex direction={'column'} align="flex-start" w='100%'>
+								<Text ml={'50px'} mt={'10px'}  className={classes.profileAbout}>
+									<div dangerouslySetInnerHTML={{ __html: bio }} />
+								</Text>
+								<UserInfo
+									email={email} firstName={firstName}
+									lastName={lastName}
+									telephone={telephone} street={street} streetNumber={streetNumber}
+									city={city} country={country}
+								/>
+								<Button
+									href={'/users/' + uid.toString() + '/editprofile'} component="a"
+									variant="default" fw={'normal'} mt={'10px'} ml={'50px'}
+								>
+									Edit profile
+								</Button>
+							</Flex>
+						</Flex>
+						<Divider my="xs" labelPosition="center" mt={'30px'}
+								label={<span style={{color: colorScheme === 'light' ? "var(--mantine-color-dark-2)" : "var(--mantine-color-dark-1)"}}>Summary</span>}
+								color={colorScheme === 'light' ? "var(--mantine-color-gray-3)": "var(--mantine-color-dark-4)"}
+						/>
 					</div>
-				</Box>	
-			</Box>
-					
-		</>
+				</div>
+			</Box>	
+		</Box>
 	);
 }
 

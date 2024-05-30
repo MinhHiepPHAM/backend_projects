@@ -164,7 +164,7 @@ function EditProfile() {
                     variant="default"
                 />
                 <TextInput onChange={(e)=> setAvatar(e.target.value)}
-                    w={'350px'} ml={'xl'} placeholder='Enter Image URL' mt={'xs'} mr={'xl'}
+                    maw={'350px'} ml={'xl'} placeholder='Enter Image URL' mt={'xs'} mr={'xs'}
                 />
             </Flex>
         </Flex>
@@ -181,7 +181,7 @@ function EditProfile() {
     });
     
     const aboutInput = (
-        <RichTextEditor editor={editor} ml={'xl'} w={'600px'}>
+        <RichTextEditor editor={editor} ml={'xl'} w={'85%'} >
             <RichTextEditor.Content/>
         </RichTextEditor>
     );
@@ -220,42 +220,45 @@ function EditProfile() {
         </Button>
     );
     return (
-        <div>
-            <Box w={width} h={height}>
-                <HeaderMegaMenu/>
-                <Box ml={'200px'} mr={'200px'} >
-                    <div className={classes.mainContainer} >
-                            <nav className={classes.navbar} style={{height: height-66}} > {/* 66 is height of header bar */}
-                                <div className={classes.section}>
-                                    <NavbarUser numAct={5} numMess={6} />
-                                </div>
-                            </nav>
-                        <div>
-                            <Text mt='xs' ml='xl' fw={'bold'} size="xl">
-                                Edit your profile
-                            </Text>
-                            <Divider my="xs" mt={'10px'} w={'auto'}/>
-                            <Flex direction={'row'}>
+        <Box>
+            <HeaderMegaMenu/>
+            <Box ml={'200px'} mr={'200px'} >
+                <div className={classes.mainContainer} >
+                    <nav className={classes.navbar}  >
+                        <div className={classes.section}>
+                            <NavbarUser numAct={5} numMess={6} />
+                        </div>
+                    </nav>
+                    <div>
+                        <Text mt='xl' ml='xl' fw={'bold'} size="xl">
+                            Edit your profile
+                        </Text>
+                        <Divider my="xs" mt={'10px'}/>
+                        <Flex direction={'row'}>
+                            <Flex direction={'column'} align={'flex-start'}>
                                 <Flex direction={'column'} align={'flex-start'}>
                                     {jobtitles}
                                     {nameInputs}
                                     {telephoneInput}
                                     {streetInput}
                                     {cityInput}
-                                    <Text mt={'md'} ml={'xl'}>About me <span style={{fontSize:'12px'}}>(using markdown to style the text)</span></Text>
-                                    {aboutInput}
-                                    {saveButton}
                                 </Flex>
-                                <Flex direction={'column'} align={'flex-end'}>
-                                    {avatarInput}
-                                </Flex>
+                                
                             </Flex>
-                        </div>
+                            <Flex direction={'column'} align={'flex-end'}>
+                                {avatarInput}
+                            </Flex>
+                        </Flex>
+                        <Flex direction={'column'} align={'flex-start'}>
+                            <Text mt={'md'} ml={'xl'}>About me <span style={{fontSize:'12px'}}>(using markdown to style the text)</span></Text>
+                            {aboutInput}
+                            {saveButton}
+                        </Flex>
                     </div>
-                </Box>
+                </div>
+                {/* <Divider my="xs" mt={'0px'} w={'auto'}/> */}
             </Box>
-                    
-        </div>
+        </Box>        
     );
 	
 }

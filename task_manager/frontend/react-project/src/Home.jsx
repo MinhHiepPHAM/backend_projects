@@ -5,7 +5,7 @@ import { useViewportSize } from "@mantine/hooks";
 function Home() {
     const { height, width } = useViewportSize();
     return (
-        <Box w={width} h={height}>
+        <Box>
             <HeaderMegaMenu page='Home'/>
         </Box>
     )

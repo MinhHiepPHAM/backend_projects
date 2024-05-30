@@ -1,11 +1,11 @@
 .mainContainer {
 	display: flex;
-	height: fit-content;
-	border-right: rem(1px) solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
+	height: 100vh;
+	/* border-right: rem(1px) solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4)); */
 }
 .navbar {
 	/* background-color: var(--mantine-color-body); */
-	width: rem(250px);
+	max-width: rem(300px);
 	padding: var(--mantine-spacing-md);
 	display: flex;
 	flex-direction: column;
@@ -21,7 +21,7 @@
 	margin-top: var(--mantine-spacing-xl);
 
 	&:not(:last-of-type) {
-			border-bottom: rem(1px) solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
+		border-bottom: rem(1px) solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
 	}
 }
 
@@ -61,6 +61,7 @@
 	padding: 0;
 	width: rem(20px);
 	height: rem(20px);
+	margin-left: rem(100px);
 	pointer-events: none;
 }
 
