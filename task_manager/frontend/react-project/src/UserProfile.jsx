@@ -81,9 +81,9 @@ const UserInfo = (props) => {
 
 	const {
 		email, firstName, lastName,
-		telephone, street, streetNumber,
-		city, country
+		telephone, street, streetNumber, city, country
 	} = props;
+	console.log(props)
 
 	const profileData = [
 		{ name: 'First Name', value: firstName},
@@ -151,7 +151,7 @@ function UserProfile() {
                 setCity(response.data['city']);
                 setCountry(response.data['country']);
                 setJobTilte(response.data['job_title']);
-				setActive(response.data['is_active']);
+				// setActive(response.data['is_active']);
 				setEmail(response.data['email']);
                 // setSuccess(true);
             }).catch (error => {
