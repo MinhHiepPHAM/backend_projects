@@ -39,7 +39,7 @@
 
 ## Login/Register page:
 
-<img src="photos/login.png" width="480" /> &nbsp;&nbsp;&nbsp;&nbsp; <img src="myproject/photos/register.png" width="480" />
+<img src="photos/login.png" width="480" /> &nbsp;&nbsp;&nbsp;&nbsp; <img src="photos/register.png" width="480" />
 
 
 # TODO:
