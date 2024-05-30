@@ -83,7 +83,7 @@ const UserInfo = (props) => {
 		email, firstName, lastName,
 		telephone, street, streetNumber, city, country
 	} = props;
-	console.log(props)
+	// console.log(props)
 
 	const profileData = [
 		{ name: 'First Name', value: firstName},
@@ -181,7 +181,7 @@ function UserProfile() {
 									/>
 								</div>
 								<Flex direction={'column'} align="flex-start">
-									<Text ml={'50px'} mt={'10px'} mb={'25px'} maw={'700px'} className={classes.profileAbout}>
+									<Text ml={'50px'} mt={'10px'} maw={'700px'} className={classes.profileAbout}>
 										<div dangerouslySetInnerHTML={{ __html: bio }} />
 									</Text>
 									<UserInfo
@@ -192,7 +192,7 @@ function UserProfile() {
 									/>
 									<Button
 										href={'/users/' + uid.toString() + '/editprofile'} component="a"
-										variant="default" fw={'normal'} mt={'20px'} ml={'50px'}
+										variant="default" fw={'normal'} mt={'10px'} ml={'50px'}
 									>
 										Edit profile
 									</Button>
