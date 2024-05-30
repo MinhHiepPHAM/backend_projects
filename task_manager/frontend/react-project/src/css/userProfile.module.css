@@ -86,3 +86,11 @@
 .profileFieldValue {
 	color: light-dark(var(--mantine-color-gray-9), var(--mantine-color-white));
 }
+
+.activityTitle {
+	display: flex;
+	align-items: left;
+	/* margin-left: 20px; */
+	color: var(--mantine-color-blue-5);
+	/* margin-bottom: 15px; */
+}

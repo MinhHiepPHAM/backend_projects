@@ -1,13 +1,17 @@
-import { Avatar, Badge, Box, Button, Divider, Flex, Grid, Paper, Table, Text, UnstyledButton, em, useMantineColorScheme } from "@mantine/core";
+import { Avatar, Badge, Box, Button, Divider, Flex, Grid, Group, Paper, Table, Text, UnstyledButton, em, useMantineColorScheme } from "@mantine/core";
 import { IconSettings, IconUser, IconActivity, IconMessage, IconMessageCircle } from "@tabler/icons-react";
 import classes from './css/userProfile.module.css'
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useViewportSize } from "@mantine/hooks";
 import { HeaderMegaMenu } from "./HeaderMegaMenu";
 import { GiPositionMarker } from "react-icons/gi";
 import { IoPersonCircle } from "react-icons/io5";
+import { BsBagDash } from "react-icons/bs";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { FaRunning } from "react-icons/fa";
+import { FaSwimmer } from "react-icons/fa";
+import { MdDirectionsBike } from "react-icons/md";
 
 export function UserInfoHeader(props) {
 	const {username, firstName, lastName, avatar, city, country, title} = props;
@@ -38,7 +42,7 @@ export function UserInfoHeader(props) {
 			{firstName} {lastName}
 			</Text>
 				<div className={classes.mainUserInner}>
-					<IoPersonCircle size={18} className={classes.mainLinkIcon} /><Text ta="left" c="var(--mantine-color-gray-6)" fz="sm">{title}</Text>
+					<BsBagDash size={18} className={classes.mainLinkIcon} /><Text ta="left" c="var(--mantine-color-gray-6)" fz="sm">{title}</Text>
 				</div>
 				<div className={classes.mainUserInner}>
 					<GiPositionMarker size={18} className={classes.mainLinkIcon}/><Text ta="left" c="var(--mantine-color-gray-6)" fz="sm">{city}, {country}</Text>
@@ -78,7 +82,6 @@ export const NavbarUser = (props) => {
 }
 
 const UserInfo = (props) => {
-
 	const {
 		email, firstName, lastName,
 		telephone, street, streetNumber, city, country
@@ -95,7 +98,7 @@ const UserInfo = (props) => {
 	];
 
 	return (
-		<Table ml={'50px'}>
+		<Table ml={'42px'}>
 			{
 				profileData.map((data) => (
 				<Table.Tbody key={data.name}>
@@ -108,6 +111,58 @@ const UserInfo = (props) => {
 			}
 		</Table>
 	)
+}
+
+function ActivitiesView(props) {
+	const {uid} = props;
+	const activities = [
+		{id: 1, icon: FaRunning, type: 'Running', title: 'Daily Running from 01/01/2024', distance: '100km', calories: '70000 Kcal'},
+		{id: 2, icon: FaSwimmer, type: 'Swimming', title: 'Swimming 2024', distance: '50km', calories: '70000 Kcal'},
+		{id: 3, icon: MdDirectionsBike, type: 'Bicycle', title: 'Bicycle 2024', distance: '50km', calories: '70000 Kcal'}
+	];
+
+	const activityRows = activities.map((act) => (
+		<Table.Tr id={act.id}>
+			<Table.Td>
+				<div className={classes.mainUserInner}>
+					<act.icon size={18} className={classes.mainLinkIcon}/><Text ta="left" fz="md">{act.type}</Text>
+				</div>
+			</Table.Td>
+			<Table.Td>{act.title}</Table.Td>
+			<Table.Td>{act.distance}</Table.Td>
+			<Table.Td>{act.calories}</Table.Td>
+		</Table.Tr>
+	));
+
+	const recentActivities = (
+		<Paper withBorder p='lg' radius='md' ml='md' className={classes.userInfo}>
+			<Group justify="space-between" mb={'md'}>
+				<div className={classes.activityTitle}>
+					<IconActivity size={22} className={classes.mainLinkIcon}/>
+					<Text ta="left" fz="lg" c='var(--mantine-color-blue-6)'>Recent Activities:</Text>
+				</div>
+				<a color='var(--mantine-color-blue-5)' href={`/users/${uid}/activities/`}>view all</a>
+			</Group>
+			<Table ml={'xl'} withRowBorders={false} >						
+				<Table.Thead>
+					<Table.Tr justify='center'>
+						<Table.Th>Type</Table.Th>
+						<Table.Th>Title</Table.Th>
+						<Table.Th>Distance</Table.Th>
+						<Table.Th>calories</Table.Th>
+					</Table.Tr>
+				</Table.Thead>
+				<Table.Tbody>
+					{activityRows}
+				</Table.Tbody>
+			</Table>
+			
+		</Paper>
+		
+	);
+
+	return recentActivities;
+
 }
 
 function UserProfile() {
@@ -159,7 +214,7 @@ function UserProfile() {
             });
 		},[]);  
 
-	const { height, width } = useViewportSize();
+	// const { height, width } = useViewportSize();
 
 	return (
 		<Box>
@@ -201,6 +256,8 @@ function UserProfile() {
 								label={<span style={{color: colorScheme === 'light' ? "var(--mantine-color-dark-2)" : "var(--mantine-color-dark-1)"}}>Summary</span>}
 								color={colorScheme === 'light' ? "var(--mantine-color-gray-3)": "var(--mantine-color-dark-4)"}
 						/>
+
+						<ActivitiesView uid={uid}/>
 					</div>
 				</div>
 			</Box>	

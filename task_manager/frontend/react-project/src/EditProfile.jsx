@@ -1,7 +1,6 @@
 import { 
     Box, Button, Divider, FileInput, Flex,
     InputBase, Text, TextInput, Autocomplete, 
-    FileButton,
     Avatar
 } from "@mantine/core";
 import { HeaderMegaMenu } from "./HeaderMegaMenu";
@@ -10,7 +9,7 @@ import classes from './css/userProfile.module.css'
 import { useNavigate, useParams } from "react-router-dom";
 import { useViewportSize } from "@mantine/hooks";
 import axios from "axios";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { IMaskInput } from 'react-imask';
 import { EditorContent, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
@@ -152,7 +151,7 @@ function EditProfile() {
     }, );
     
 
-	const { height, width } = useViewportSize();
+	// const { height, width } = useViewportSize();
 
     const avatarInput = (
         <Flex direction={'row'} align={'center'} >
