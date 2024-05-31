@@ -61,6 +61,13 @@ function EditProfile() {
             });
     },[]);    
 
+    const editor = useEditor({
+        extensions: [StarterKit,],
+        content: bio
+    }, );
+
+    if (!success) return (<div></div>) // waiting for fetching data
+
     const textInputs = [
         {setFunction: setFirstName, label:'First Name', value: firstName}, 
         {setFunction: setLastName, label:'Last Name', value: lastName}, 
@@ -95,11 +102,11 @@ function EditProfile() {
         <InputBase 
             label='Your Phone'
             component={IMaskInput}
-            mask="(+33) 00-00-00-00-00 "
+            mask="(+33) 00-00-00-00-00"
             mt={'md'} ml={'xl'}
             w={'200px'}
             value={telephone}
-            onChange={(e)=> {input.setTelephone(e.target.value);}}
+            onChange={(e)=> {setTelephone(e.target.value);}}
         />
     )
 
@@ -117,7 +124,7 @@ function EditProfile() {
                         label={input.label}
                         w={input.width}
                         value={input.value}
-                        onChange={(e)=> {input.setFunction(e.target.value);}}
+                        onChange={(e)=> {input.setFunction(e.target.value)}}
                     />
                 ))
             }
@@ -144,11 +151,6 @@ function EditProfile() {
             }
         </Flex>
     )
-
-    const editor = useEditor({
-        extensions: [StarterKit,],
-        content: bio
-    }, );
     
 
 	// const { height, width } = useViewportSize();
@@ -171,7 +173,6 @@ function EditProfile() {
 
     // console.log(avatar)
 
-    if (!success) return (<div></div>) // waiting for fetching data
 
     editor.commands.setContent(bio);
 
@@ -219,7 +220,7 @@ function EditProfile() {
         </Button>
     );
     return (
-        <Box>
+        <Box h={'100vh'}>
             <HeaderMegaMenu/>
             <Box ml={'200px'} mr={'200px'} >
                 <div className={classes.mainContainer} >

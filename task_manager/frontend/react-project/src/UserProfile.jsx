@@ -12,6 +12,8 @@ import { useEffect, useState } from "react";
 import { FaRunning } from "react-icons/fa";
 import { FaSwimmer } from "react-icons/fa";
 import { MdDirectionsBike } from "react-icons/md";
+import { FaAward } from "react-icons/fa6";
+import { GiTrophyCup } from "react-icons/gi";
 
 export function UserInfoHeader(props) {
 	const {username, firstName, lastName, avatar, city, country, title} = props;
@@ -116,16 +118,16 @@ const UserInfo = (props) => {
 function ActivitiesView(props) {
 	const {uid} = props;
 	const activities = [
-		{id: 1, icon: FaRunning, type: 'Running', title: 'Daily Running from 01/01/2024', distance: '100km', calories: '70000 Kcal'},
-		{id: 2, icon: FaSwimmer, type: 'Swimming', title: 'Swimming 2024', distance: '50km', calories: '70000 Kcal'},
-		{id: 3, icon: MdDirectionsBike, type: 'Bicycle', title: 'Bicycle 2024', distance: '50km', calories: '70000 Kcal'}
+		{id: 1, icon: FaRunning, type: 'Running', title: 'Daily Running from 01/01/2024', distance: '100km', calories: '70000 Kcal', color:'brown'},
+		{id: 2, icon: FaSwimmer, type: 'Swimming', title: 'Swimming 2024', distance: '50km', calories: '70000 Kcal', color: 'blue'},
+		{id: 3, icon: MdDirectionsBike, type: 'Bicycle', title: 'Bicycle 2024', distance: '50km', calories: '70000 Kcal', color: 'orange'}
 	];
 
 	const activityRows = activities.map((act) => (
-		<Table.Tr id={act.id}>
+		<Table.Tr key={act.id}>
 			<Table.Td>
 				<div className={classes.mainUserInner}>
-					<act.icon size={18} className={classes.mainLinkIcon}/><Text ta="left" fz="md">{act.type}</Text>
+					<act.icon size={18} className={classes.mainLinkIcon} color={act.color}/><Text ta="left" fz="md">{act.type}</Text>
 				</div>
 			</Table.Td>
 			<Table.Td>{act.title}</Table.Td>
@@ -162,6 +164,84 @@ function ActivitiesView(props) {
 	);
 
 	return recentActivities;
+}
+
+function AwardView(props) {
+	const {uid} = props;
+	const goldAward = [
+		{title: 'Company running challenge in 2024', type: 'RUN', distance: '100km', icon: FaRunning},
+		{title: 'Software team swimming challenge in 2023', type: 'SWIM', distance:'25km', icon: FaSwimmer},
+	];
+
+	const silverAward = [
+		{title: 'Company Bicycle', type: 'BIKE', distance: '150km', icon: MdDirectionsBike},
+		{title: 'January Running', type: 'SWIM', distance:'25km', icon: FaSwimmer},
+	];
+
+	const copperAward = [
+		{title: 'Juine running', type: 'RUN', distance: '100km', icon: FaRunning},
+		{title: 'September Swimming', type: 'SWIM', distance:'25km', icon: FaSwimmer},
+	];
+
+	const iconColor = (level) => {
+		let color;
+		switch(level) {
+			case 'GOLD':
+				color = 'gold';
+				break;
+			case 'SILVER':
+				color = 'silver';
+				break;
+			case 'COPPER':
+				color = 'brown'
+				break;
+			default:
+				console.log('level error:', level);
+		}
+		return color;
+	}
+
+	const allAwards = [
+		{level:'GOLD', awards: goldAward}, 
+		{level:'SILVER', awards: silverAward}, 
+		{level:'COPPER', awards: copperAward}, 
+	];
+
+	const awardViews = (
+		allAwards.map((awards,key)=> (
+			<Paper key={key} withBorder p='lg' radius='md' ml='md' w={'30%'} h={'200px'} className={classes.recentAward}>
+				<div style={{justifyContent: 'center', display:'flex', marginBottom:'15px'}}>
+					<GiTrophyCup color={iconColor(awards.level)} size={30}/>
+				</div>
+				{awards.awards.map((award) => (
+					<Flex key={award.title} direction={'row'}>
+						<award.icon size={18} color={iconColor(awards.level)}/>
+						<Text ta="left" ml={'xs'} maw={'90%'} style={{overflow:'auto'}}>{award.title}: {award.distance}</Text>
+					</Flex>
+				))}
+
+			</Paper>
+		))	
+	);
+
+	const recentAwards = (
+		<div>
+			<Paper withBorder p='lg' radius='md' ml='md' mt='md' className={classes.userInfo}>
+				<Group justify="space-between" h="85%">
+					<Flex direction={'row'}>
+						<FaAward size={22} className={classes.mainLinkIcon}/>
+						<Text ta="left" fz="lg" mb={'md'} c='var(--mantine-color-blue-6)'>Recent Awards:</Text>
+					</Flex>
+					<a color='var(--mantine-color-blue-5)' href={`/users/${uid}/awards/`}>view all</a>
+				</Group>
+				<Group justify="space-between">
+					{awardViews}
+				</Group>
+			</Paper>
+		</div>
+	);
+
+	return recentAwards;
 
 }
 
@@ -217,7 +297,7 @@ function UserProfile() {
 	// const { height, width } = useViewportSize();
 
 	return (
-		<Box>
+		<Box h={'100%'}>
 			<HeaderMegaMenu/>
 			<Box ml={'200px'} mr={'200px'} >
 				<div className={classes.mainContainer} >
@@ -235,9 +315,16 @@ function UserProfile() {
 								/>
 							</div>
 							<Flex direction={'column'} align="flex-start" w='100%'>
-								<Text ml={'50px'} mt={'10px'}  className={classes.profileAbout}>
-									<div dangerouslySetInnerHTML={{ __html: bio }} />
-								</Text>
+								{(bio !== '<p></p>') &&
+									<Paper withBorder p='md' radius='md' ml='xl' mt='md' v={'100%'} className={classes.userInfo}>
+										<div className={classes.profileAbout} dangerouslySetInnerHTML={{ __html: bio }} />
+									</Paper>
+								}
+								{(bio === '<p></p>') && 
+									<Paper ml='md' mb='md' align='center' w={'100%'}>
+										<Text>Add your bio</Text>
+									</Paper>
+								}
 								<UserInfo
 									email={email} firstName={firstName}
 									lastName={lastName}
@@ -258,6 +345,7 @@ function UserProfile() {
 						/>
 
 						<ActivitiesView uid={uid}/>
+						<AwardView/>
 					</div>
 				</div>
 			</Box>	

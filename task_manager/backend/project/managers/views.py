@@ -69,7 +69,7 @@ class ProfileEditingView(generics.UpdateAPIView, generics.RetrieveAPIView):
     queryset = CustomUser.objects.all()
 
 class UserProfileView(ModelViewSet):
-    permission_classes = [permissions.AllowAny,]
+    permission_classes = [permissions.IsAuthenticated,]
     queryset = CustomUser.objects.all()
     serializer_class = UserSerializer
 

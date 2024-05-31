@@ -1,6 +1,6 @@
 .mainContainer {
 	display: flex;
-	height: 100vh;
+	height: 100%;
 	/* border-right: rem(1px) solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4)); */
 }
 .navbar {
@@ -80,7 +80,8 @@
 
 .profileAbout {
 	color: light-dark(var(--mantine-color-gray-9), var(--mantine-color-white));
-	/* font-style: italic; */
+	/* margin-left: 50px; */
+	margin-top: 10px;
 }
 
 .profileFieldValue {
@@ -90,7 +91,10 @@
 .activityTitle {
 	display: flex;
 	align-items: left;
-	/* margin-left: 20px; */
 	color: var(--mantine-color-blue-5);
 	/* margin-bottom: 15px; */
+}
+
+.recentAward {
+	background-color: light-dark(var(--mantine-color-white), var(--mantine-color-dark-5));
 }
