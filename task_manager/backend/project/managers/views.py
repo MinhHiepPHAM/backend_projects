@@ -88,6 +88,7 @@ class CreateActivityView(generics.CreateAPIView):
         createdby = CustomUser.objects.get(username=data.get['createdby'])
         start = data.get('start')
         end = data.get('end')
+        description = data.get('description')
 
         activity = Activity.objects.create(
             type = type,
@@ -97,7 +98,8 @@ class CreateActivityView(generics.CreateAPIView):
             distance = 0,
             created_time = datetime.now(),
             start = start,
-            end = end
+            end = end,
+            description = description
         )
         activity.save()
         return Response({'activity': title, 'createdby': data.get['createdby'], 'type': type}, status=status.HTTP_201_CREATED) 

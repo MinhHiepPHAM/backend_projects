@@ -19,7 +19,7 @@ import jobTitles from "./assets/jobTitle";
 function EditProfile() {
 	const {uid} = useParams();
 	const username = localStorage.getItem('username');
-    const token = localStorage.getItem('token')
+    const token = localStorage.getItem('token');
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [avatar, setAvatar] = useState('');

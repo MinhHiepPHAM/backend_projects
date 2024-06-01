@@ -46,6 +46,7 @@ class Activity(models.Model):
     created_time = models.DateTimeField()
     start = models.DateTimeField()
     end = models.DateTimeField()
+    description = models.CharField(max_length=255)
 
 class Action(models.Model):
     start_time = models.DateTimeField()
