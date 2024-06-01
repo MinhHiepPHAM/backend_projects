@@ -4,10 +4,11 @@ from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.authtoken.models import Token
 from django.contrib.auth import authenticate
-from .serializers import UserSerializer, RegisterSerializer, ProfileEditingSerializer
+from .serializers import UserSerializer, RegisterSerializer, ProfileEditingSerializer, ActivitySerializer, ActionSerializer
 from rest_framework import status
-from .models import CustomUser
+from .models import *
 import re
+from datetime import datetime
 
 
 class RegistrationView(generics.CreateAPIView):
@@ -72,6 +73,37 @@ class UserProfileView(ModelViewSet):
     permission_classes = [permissions.IsAuthenticated,]
     queryset = CustomUser.objects.all()
     serializer_class = UserSerializer
+
+class CreateActivityView(generics.CreateAPIView):
+    serializer_class = ActivitySerializer
+    permission_classes = [permissions.AllowAny] # will be changed to IsAuthenticated
+
+    def post(self, request, *args, **kwargs):
+        #fields = ['type', 'title', 'users', 'createdby', 'distance', 'created_time', 'start', 'end']
+        data = request.data
+        type = data.get('type')
+        title = data.get('title')
+        usernames = data.get('users')
+        user_objs = [CustomUser.objects.get(username=name) for name in usernames]
+        createdby = CustomUser.objects.get(username=data.get['createdby'])
+        start = data.get('start')
+        end = data.get('end')
+
+        activity = Activity.objects.create(
+            type = type,
+            title = title,
+            users = user_objs,
+            createdby = createdby,
+            distance = 0,
+            created_time = datetime.now(),
+            start = start,
+            end = end
+        )
+        activity.save()
+        return Response({'activity': title, 'createdby': data.get['createdby'], 'type': type}, status=status.HTTP_201_CREATED) 
+        
+
+
 
 
 

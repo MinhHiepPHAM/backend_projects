@@ -44,6 +44,8 @@ class Activity(models.Model):
     createdby = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     distance = models.IntegerField(default=0)
     created_time = models.DateTimeField()
+    start = models.DateTimeField()
+    end = models.DateTimeField()
 
 class Action(models.Model):
     start_time = models.DateTimeField()
