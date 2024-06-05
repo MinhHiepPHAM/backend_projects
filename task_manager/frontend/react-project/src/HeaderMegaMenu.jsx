@@ -84,12 +84,6 @@ function LoggedIn({username, uid}) {
   )
 }
 
-const links = [
-  { link: '/home', label: 'Home' },
-  { link: '/dashboard', label: 'Dashboard' },
-  { link: '/aboutme', label: 'About me' },
-]
-
 export function HeaderMegaMenu({page=''}) {
   const { setColorScheme } = useMantineColorScheme();
   const computedColorScheme = useComputedColorScheme('light', { getInitialValueInEffect: true });
@@ -99,6 +93,12 @@ export function HeaderMegaMenu({page=''}) {
   const uid = localStorage.getItem('uid')
   // console.log('localstorage:', username, localStorage)
   const isAuthenticated = localStorage.getItem('token') !== null
+
+  const links = [
+    { link: '/home', label: 'Home' },
+    { link: '/dashboard', label: 'Dashboard' },
+    { link: '/aboutme', label: 'About me' },
+  ]
 
   const headerItems = links.map((link)=> (
     <a

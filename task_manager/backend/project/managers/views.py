@@ -74,35 +74,75 @@ class UserProfileView(ModelViewSet):
     queryset = CustomUser.objects.all()
     serializer_class = UserSerializer
 
-class CreateActivityView(generics.CreateAPIView):
+class CreateActivityView(generics.CreateAPIView, generics.RetrieveAPIView):
     serializer_class = ActivitySerializer
     permission_classes = [permissions.AllowAny] # will be changed to IsAuthenticated
 
     def post(self, request, *args, **kwargs):
-        #fields = ['type', 'title', 'users', 'createdby', 'distance', 'created_time', 'start', 'end']
-        data = request.data
-        type = data.get('type')
-        title = data.get('title')
-        usernames = data.get('users')
-        user_objs = [CustomUser.objects.get(username=name) for name in usernames]
-        createdby = CustomUser.objects.get(username=data.get['createdby'])
-        start = data.get('start')
-        end = data.get('end')
-        description = data.get('description')
+        try:
+            data = request.data
+            type = {'Running':'RUN', 'Swimming':'SWIM', 'Bicycle':'BIKE'}[data.get('type')]
+            
+            title = data.get('title')
+            if not title:
+                return Response({'error': 'Title can not be empty'}, status=status.HTTP_404_NOT_FOUND)
+        
+            usernames = data.get('users')
+            for username in usernames:
+                if not CustomUser.objects.filter(username=username).exists():
+                    return Response({'error': f'user: {username} does not exist'}, status=status.HTTP_404_NOT_FOUND)
 
-        activity = Activity.objects.create(
-            type = type,
-            title = title,
-            users = user_objs,
-            createdby = createdby,
-            distance = 0,
-            created_time = datetime.now(),
-            start = start,
-            end = end,
-            description = description
-        )
-        activity.save()
-        return Response({'activity': title, 'createdby': data.get['createdby'], 'type': type}, status=status.HTTP_201_CREATED) 
+            user_objs = [CustomUser.objects.get(username=name) for name in usernames]
+            user = data.get('createdby')
+            if user not in usernames:
+                user_objs.append(CustomUser.objects.get(username=user))
+            createdby = CustomUser.objects.get(username=user)
+            start = data.get('start')
+            if not start:
+                return Response({'error': 'Need to set the start date of the activity'}, status=status.HTTP_404_NOT_FOUND)
+            start = datetime.strptime(start, "%a, %d %b %Y %H:%M:%S %Z")
+            end = data.get('end')
+            end = datetime.strptime(end, "%a, %d %b %Y %H:%M:%S %Z")
+            description = data.get('description')
+
+            activity = Activity.objects.create(
+                type = type,
+                title = title,
+                createdby = createdby,
+                distance = 0,
+                created_time = datetime.now(),
+                start = start,
+                end = end,
+                description = description
+            )
+            for user in user_objs:
+                activity.users.add(user)
+
+            activity.save()
+            return Response({'activity': title, 'createdby': data.get('createdby'), 'type': type}, status=status.HTTP_201_CREATED) 
+        except Exception as e:
+            return Response({'Create failed': str(e)}, status=status.HTTP_404_NOT_FOUND)
+    
+class ActivityView(ModelViewSet):
+    permission_classes = [permissions.AllowAny]
+    serializer_class = ActivitySerializer
+    queryset = Activity.objects.all()
+
+    def retrieve(self, request, *args, **kwargs):
+        try:
+            if Activity.objects.all().exists():
+                # for obj in Activity.objects.all():
+                #     obj.delete()
+                data = super().retrieve(request, *args, **kwargs)
+                print(data)
+            else:
+                data = {}
+            usernames = [obj.username for obj in CustomUser.objects.all().order_by('username')]
+            data['usernames'] = usernames
+            return Response(data, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({'Error': str(e)}, status=status.HTTP_404_NOT_FOUND)
+
         
 
 

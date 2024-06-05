@@ -59,10 +59,10 @@ export function UserInfoHeader(props) {
 }
 
 export const NavbarUser = (props) => {
-	const {numAct, numMess} = props;
+	const {numAct, numMess, uid} = props;
 	const links = [
-		{ icon: IconUser, label: 'Profile'},
-		{ icon: IconActivity, label: 'Activities', num: numAct },
+		{ icon: IconUser, label: 'Profile', href:`/users/${uid}/`},
+		{ icon: IconActivity, label: 'Activities', num: numAct, href:`/users/${uid}/activities/`},
 		{ icon: IconMessage, label: 'Message', num: numMess },
 		{ icon: IconSettings, label: 'Settings' },
 	];
@@ -303,7 +303,7 @@ function UserProfile() {
 				<div className={classes.mainContainer} >
 					<nav className={classes.navbar} >
 						<div className={classes.section}>
-							<NavbarUser numAct={5} numMess={6} />
+							<NavbarUser numAct={5} numMess={6}  uid={uid}/>
 						</div>
 					</nav>
 					<div>

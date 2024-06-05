@@ -102,7 +102,7 @@ function EditProfile() {
         <InputBase 
             label='Your Phone'
             component={IMaskInput}
-            mask="(+33) 00-00-00-00-00"
+            mask="00-00-00-00-00"
             mt={'md'} ml={'xl'}
             w={'200px'}
             value={telephone}
@@ -226,7 +226,7 @@ function EditProfile() {
                 <div className={classes.mainContainer} >
                     <nav className={classes.navbar}  >
                         <div className={classes.section}>
-                            <NavbarUser numAct={5} numMess={6} />
+                            <NavbarUser numAct={5} numMess={6} uid={uid}/>
                         </div>
                     </nav>
                     <div>
