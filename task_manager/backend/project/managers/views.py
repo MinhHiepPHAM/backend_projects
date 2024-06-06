@@ -129,20 +129,18 @@ class ActivityView(ModelViewSet):
     queryset = Activity.objects.all()
 
     def retrieve(self, request, *args, **kwargs):
-        try:
-            if Activity.objects.all().exists():
-                # for obj in Activity.objects.all():
-                #     obj.delete()
-                data = super().retrieve(request, *args, **kwargs)
-                print(data)
-            else:
-                data = {}
-            usernames = [obj.username for obj in CustomUser.objects.all().order_by('username')]
-            data['usernames'] = usernames
-            return Response(data, status=status.HTTP_200_OK)
-        except Exception as e:
-            return Response({'Error': str(e)}, status=status.HTTP_404_NOT_FOUND)
-
+        response = {}
+        usernames = [obj.username for obj in CustomUser.objects.all().order_by('username')]
+        response['usernames'] = usernames
+        activities = Activity.objects.all()
+        if activities.exists():
+            # for obj in activities:
+            #     obj.delete()
+            data = self.serializer_class(activities,many=True).data
+            response['activity'] = data
+        
+        
+        return Response(response, status=status.HTTP_200_OK)
         
 
 

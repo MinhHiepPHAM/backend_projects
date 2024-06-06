@@ -1,7 +1,7 @@
 import { Box, Button, Container, Group, Modal, MultiSelect, NativeSelect, Paper, Text, TextInput, Textarea, filterProps } from "@mantine/core";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import {DateTimePicker} from "@mantine/dates"
+import {DateInput, DatePicker, DateTimePicker} from "@mantine/dates"
 import { useDisclosure } from "@mantine/hooks";
 import { HeaderMegaMenu } from "./HeaderMegaMenu";
 import axios from "axios";
@@ -20,8 +20,8 @@ function CreateNewActivity(props) {
     const [title, setTitle] = useState('');
     const [type, setType] = useState('Running');
     const [description, setDescription] = useState('');
-    const [start, setStart] = useState('');
-    const [end, setEnd] = useState('');
+    const [start, setStart] = useState(null);
+    const [end, setEnd] = useState(null);
     const [users, setUsers] = useState([]);
     const [opened, { open, close }] = useDisclosure(false);
     const createdby = username
@@ -51,11 +51,9 @@ function CreateNewActivity(props) {
             const resetFields = [
                 {id: 'activity_title', value: ''},
                 {id: 'act_type', value: 'Running'},
-                // {id: 'act_start', value: ''},
-                // {id: 'act_end', value: ''},
                 {id: 'act_description', value: ''},
                 {id: 'user_participate', value: []},
-            ]
+            ];
 
             resetFields.map((field) => {
                 document.getElementById(field.id).value = field.value;
@@ -64,8 +62,6 @@ function CreateNewActivity(props) {
             setTitle('');
             setType('Running');
             setDescription('');
-            // setStart('');
-            // setEnd('');
             setUsers([]);
 
             setHasError(false);
@@ -76,7 +72,7 @@ function CreateNewActivity(props) {
 
             setHasError(true)
             title === '' && setErrorTitle(true);
-            start === '' && setErrorStart(true);
+            start === null && setErrorStart(true);
             // setLoaded(true)
 		}
 	};
@@ -105,20 +101,29 @@ function CreateNewActivity(props) {
                     error={emptyTitle}
 				/>
 				<Group justify="space-between" mt="md">
-                    <DateTimePicker id="act_start"
+                    <DateInput id="act_start"
                         clearable
                         label='Start' w={'40%'} required 
+                        valueFormat="DD/MM/YYYY"
                         onChange={(e)=>{
-                            setStart(e.toUTCString());
-                            console.log(e)
-                            setErrorStart(e === '')
+                            if (e!==null) {
+                                setStart(e.toUTCString());
+                                setErrorStart(false)
+                            } else {
+                                setStart(null);
+                                setErrorStart(true)
+                            }  
                         }}
                         error={startNotSet}
-                        defaultValue={''}
                     />
-                    <DateTimePicker id='act_end'
+                    <DateInput id='act_end'
                         clearable
-                        label='End' w={'40%'} onChange={(e)=>setEnd(e.toUTCString())}
+                        valueFormat="DD/MM/YYYY"
+                        label='End' w={'40%'}
+                        onChange={(e)=>{
+                            if (e!==null) setEnd(e.toUTCString());
+                            else setEnd(null);
+                        }}
                     />
 				</Group>
                 <Textarea id="act_description"
@@ -130,6 +135,7 @@ function CreateNewActivity(props) {
                     data={usernames}
                     limit={6}
                     searchable
+                    clearable
                     onChange={setUsers}
                 />
 				<Button fullWidth mt="xl" type='submit' onClick={handleCreateButton}>
@@ -153,13 +159,16 @@ function CreateNewActivity(props) {
 function ActivityPage() {
     const {uid} = useParams();
     const [usernames, setUsernames] = useState([]);
+    const [activities, setActivities] = useState([]);
     
     useEffect(()=>{
         try {
             axios.get(`http://localhost:8000/users/${uid}/activities/`, {headers:headers})
             .then(response => {
-                console.log(response.data);
-                setUsernames(response.data['usernames'])
+                // console.log(response.data);
+                setUsernames(response.data['usernames']);
+                setActivities(response.data['activity']);
+                // console.log(usernames, activities)
             }).catch (error => {
                 console.log(error);
             });
