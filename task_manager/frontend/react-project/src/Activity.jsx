@@ -1,10 +1,17 @@
-import { Box, Button, Container, Group, Modal, MultiSelect, NativeSelect, Paper, Text, TextInput, Textarea, filterProps } from "@mantine/core";
+import {
+    Box, Button, Container, Divider, Flex, Group, Modal, MultiSelect,
+    NativeSelect, Paper, Table, Text, TextInput, Textarea,
+    Title
+} from "@mantine/core";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import {DateInput, DatePicker, DateTimePicker} from "@mantine/dates"
+import { DateInput, DatePicker, DateTimePicker } from "@mantine/dates"
 import { useDisclosure } from "@mantine/hooks";
 import { HeaderMegaMenu } from "./HeaderMegaMenu";
 import axios from "axios";
+import { FaRunning } from "react-icons/fa";
+import classes from './css/activity.module.css'
+import { MdDirectionsBike } from "react-icons/md";
 
 const username = localStorage.getItem('username');
 const token = localStorage.getItem('token');
@@ -156,6 +163,82 @@ function CreateNewActivity(props) {
 
 };
 
+function RunningActivity(props) {
+    const {uid} = props
+
+    const ActTitle = ({type}) => {
+        let ActIcon;
+        switch(type) {
+            case 'Running':
+                ActIcon = FaRunning;
+                break;
+            case 'Bicycle':
+                ActIcon = MdDirectionsBike;
+                break;
+            default:
+                console.log('type error:', type);
+
+        }
+
+        return (
+            <Group justify="space-between" mb={'md'}>
+                <Flex direction={'row'}>
+                    <ActIcon size={22} color="var(--mantine-color-blue-6)" className={classes.activityIcon}/>
+                    <Text ta="left" fz="xl" c='var(--mantine-color-blue-6)'>{type} Activities:</Text>
+                </Flex>
+                <a color='var(--mantine-color-blue-5)' href={`/users/${uid}/activities/running`}>view all</a>
+            </Group>
+        );
+    };
+
+    const activitiesInfo = [
+        {title: 'Dailly running 2024', distance: '200', calories: '4523', start:'01/01/2024', end: '31/12/2024', description:'This is running record for 2024 running activities'},
+        {title: 'Qualcomm French running 2024', distance: '100', calories: '2523', start:'01/01/2024', end: '31/03/2024', description:'This is running record for 2024 running activities.'},
+    ];
+
+    const runnings = activitiesInfo.map((act,i) => (
+    <div key={i}>
+        <div style={{textAlign: 'center', marginBottom: '10px'}}>
+            <Title order={4} c='var(--mantine-color-blue-4)'>
+                {act.title}
+            </Title>
+            <Divider></Divider>
+        </div>
+        <Table ml={'xl'} withRowBorders={false} mt={'md'} mb={'md'}>						
+            <Table.Thead>
+                <Table.Tr justify='center'>
+                    <Table.Th w={'10%'}>Start</Table.Th>
+                    <Table.Th w={'10%'}>End</Table.Th>
+                    <Table.Th w={'10%'}>Distance</Table.Th>
+                    <Table.Th w={'10%'}>Calories</Table.Th>
+                    <Table.Th>Description</Table.Th>
+                </Table.Tr>
+            </Table.Thead>
+            <Table.Tbody>
+                <Table.Tr>
+                    <Table.Td>{act.start}</Table.Td>
+                    <Table.Td>{act.end}</Table.Td>
+                    <Table.Td>{act.distance} Km</Table.Td>
+                    <Table.Td>{act.calories} Kcals</Table.Td>
+                    <Table.Td><Text lineClamp={1}>{act.description}</Text></Table.Td>
+                </Table.Tr>
+            </Table.Tbody>
+        </Table>
+    </div>
+    ));
+
+    return (
+        <>
+        {/* <Title c={'var(--mantine-color-blue-8)'}>Running Activities</Title> */}
+        <Paper withBorder shadow="md" p={30} radius="md" mt={'md'} className={classes.activityBackground}>
+            <ActTitle type='Running' />
+            {runnings}
+        </Paper>
+        </>
+        
+    )
+}
+
 function ActivityPage() {
     const {uid} = useParams();
     const [usernames, setUsernames] = useState([]);
@@ -184,6 +267,7 @@ function ActivityPage() {
             <HeaderMegaMenu/>
             <Box ml={'200px'} mr={'200px'} >
                 <CreateNewActivity usernames={usernames}/>
+                <RunningActivity uid={uid} />
             </Box>
             
         </Box>
