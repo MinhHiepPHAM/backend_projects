@@ -9,7 +9,7 @@ import { DateInput, DatePicker, DateTimePicker } from "@mantine/dates"
 import { useDisclosure } from "@mantine/hooks";
 import { HeaderMegaMenu } from "./HeaderMegaMenu";
 import axios from "axios";
-import { FaRunning } from "react-icons/fa";
+import { FaRunning, FaSwimmer } from "react-icons/fa";
 import classes from './css/activity.module.css'
 import { MdDirectionsBike } from "react-icons/md";
 
@@ -166,14 +166,35 @@ function CreateNewActivity(props) {
 function RunningActivity(props) {
     const {uid} = props
 
+    const runningActivities = [
+        {title: 'Daily running 2024', distance: '200', calories: '4523', start:'01/01/2024', end: '31/12/2024', description:'This is running record for 2024 running activities'},
+        {title: 'Qualcomm French running 2024', distance: '100', calories: '2523', start:'01/01/2024', end: '31/03/2024', description:'This is running record for 2024 running activities.'},
+    ];
+
+    const bicycleActivities = [
+        {title: 'Daily Activity with bicycle 2024', distance: '250', calories: '5523', start:'01/01/2024', end: '31/12/2024', description:'This is record for my daily activity with the bicycle in 2024'},
+        {title: 'Qualcomm French bike group 2024', distance: '300', calories: '6223', start:'01/01/2024', end: '31/03/2024', description:'The bike tracking in Qualcomm French in 2024'},
+    ];
+
+    const swimActivities = [
+        {title: 'Daily Swimming 2024', distance: '100', calories: '5232', start:'01/01/2024', end: '31/12/2024', description:'This is record for my swimming in 2024'},
+        {title: 'Family event in July 2024', distance: '25', calories: '1123', start:'01/07/2024', end: '31/07/2024', description:'This is event created for family vacation in July 2024'},
+    ];
+
     const ActTitle = ({type}) => {
-        let ActIcon;
+        let ActIcon, viewLink;
         switch(type) {
             case 'Running':
                 ActIcon = FaRunning;
+                viewLink = 'running';
                 break;
             case 'Bicycle':
                 ActIcon = MdDirectionsBike;
+                viewLink = 'bicycle';
+                break;
+            case 'Swimming':
+                ActIcon = FaSwimmer;
+                viewLink = 'swimming';
                 break;
             default:
                 console.log('type error:', type);
@@ -186,57 +207,59 @@ function RunningActivity(props) {
                     <ActIcon size={22} color="var(--mantine-color-blue-6)" className={classes.activityIcon}/>
                     <Text ta="left" fz="xl" c='var(--mantine-color-blue-6)'>{type} Activities:</Text>
                 </Flex>
-                <a color='var(--mantine-color-blue-5)' href={`/users/${uid}/activities/running`}>view all</a>
+                <a color='var(--mantine-color-blue-5)' href={`/users/${uid}/activities/${viewLink}`}>view all</a>
             </Group>
         );
     };
 
-    const activitiesInfo = [
-        {title: 'Dailly running 2024', distance: '200', calories: '4523', start:'01/01/2024', end: '31/12/2024', description:'This is running record for 2024 running activities'},
-        {title: 'Qualcomm French running 2024', distance: '100', calories: '2523', start:'01/01/2024', end: '31/03/2024', description:'This is running record for 2024 running activities.'},
+    const ActivityInfo = ({activitiesInfo}) => {
+        const activities = activitiesInfo.map((act,i) => (
+            <div key={i}>
+                <div style={{textAlign: 'center', marginBottom: '10px'}}>
+                    <Title order={4} c='var(--mantine-color-blue-4)'>
+                        {act.title}
+                    </Title>
+                    <Divider></Divider>
+                </div>
+                <Table ml={'xl'} withRowBorders={false} mt={'md'} mb={'md'}>						
+                    <Table.Thead>
+                        <Table.Tr justify='center'>
+                            <Table.Th w={'10%'}>Start</Table.Th>
+                            <Table.Th w={'10%'}>End</Table.Th>
+                            <Table.Th w={'10%'}>Distance</Table.Th>
+                            <Table.Th w={'10%'}>Calories</Table.Th>
+                            <Table.Th>Description</Table.Th>
+                        </Table.Tr>
+                    </Table.Thead>
+                    <Table.Tbody>
+                        <Table.Tr>
+                            <Table.Td>{act.start}</Table.Td>
+                            <Table.Td>{act.end}</Table.Td>
+                            <Table.Td>{act.distance} Km</Table.Td>
+                            <Table.Td>{act.calories} Kcals</Table.Td>
+                            <Table.Td><Text lineClamp={1}>{act.description}</Text></Table.Td>
+                        </Table.Tr>
+                    </Table.Tbody>
+                </Table>
+            </div>
+        ));
+        return activities;
+    };
+
+    const allActivityInfo = [
+        {type: 'Running', info: runningActivities},
+        {type: 'Bicycle', info: bicycleActivities},
+        {type: 'Swimming', info: swimActivities},
     ];
 
-    const runnings = activitiesInfo.map((act,i) => (
-    <div key={i}>
-        <div style={{textAlign: 'center', marginBottom: '10px'}}>
-            <Title order={4} c='var(--mantine-color-blue-4)'>
-                {act.title}
-            </Title>
-            <Divider></Divider>
-        </div>
-        <Table ml={'xl'} withRowBorders={false} mt={'md'} mb={'md'}>						
-            <Table.Thead>
-                <Table.Tr justify='center'>
-                    <Table.Th w={'10%'}>Start</Table.Th>
-                    <Table.Th w={'10%'}>End</Table.Th>
-                    <Table.Th w={'10%'}>Distance</Table.Th>
-                    <Table.Th w={'10%'}>Calories</Table.Th>
-                    <Table.Th>Description</Table.Th>
-                </Table.Tr>
-            </Table.Thead>
-            <Table.Tbody>
-                <Table.Tr>
-                    <Table.Td>{act.start}</Table.Td>
-                    <Table.Td>{act.end}</Table.Td>
-                    <Table.Td>{act.distance} Km</Table.Td>
-                    <Table.Td>{act.calories} Kcals</Table.Td>
-                    <Table.Td><Text lineClamp={1}>{act.description}</Text></Table.Td>
-                </Table.Tr>
-            </Table.Tbody>
-        </Table>
-    </div>
+    const renderActivities = allActivityInfo.map((act,i)=> (
+        <Paper key={i} withBorder shadow="md" p={30} radius="md" mt={'md'} className={classes.activityBackground}>
+            <ActTitle type={act.type} />
+            <ActivityInfo activitiesInfo={act.info}/>
+        </Paper>
     ));
 
-    return (
-        <>
-        {/* <Title c={'var(--mantine-color-blue-8)'}>Running Activities</Title> */}
-        <Paper withBorder shadow="md" p={30} radius="md" mt={'md'} className={classes.activityBackground}>
-            <ActTitle type='Running' />
-            {runnings}
-        </Paper>
-        </>
-        
-    )
+    return renderActivities;
 }
 
 function ActivityPage() {
