@@ -113,7 +113,8 @@ class CreateActivityView(generics.CreateAPIView, generics.RetrieveAPIView):
                 created_time = datetime.now(),
                 start = start,
                 end = end,
-                description = description
+                description = description,
+                updated = datetime.now()
             )
             for user in user_objs:
                 activity.users.add(user)
@@ -123,7 +124,7 @@ class CreateActivityView(generics.CreateAPIView, generics.RetrieveAPIView):
         except Exception as e:
             return Response({'Create failed': str(e)}, status=status.HTTP_404_NOT_FOUND)
     
-class ActivityView(ModelViewSet):
+class UserActivityView(ModelViewSet):
     permission_classes = [permissions.AllowAny]
     serializer_class = ActivitySerializer
     queryset = Activity.objects.all()
@@ -132,13 +133,13 @@ class ActivityView(ModelViewSet):
         response = {}
         usernames = [obj.username for obj in CustomUser.objects.all().order_by('username')]
         response['usernames'] = usernames
-        activities = Activity.objects.all()
-        if activities.exists():
-            # for obj in activities:
-            #     obj.delete()
-            data = self.serializer_class(activities,many=True).data
-            response['activity'] = data
-        
+        running_acts = Activity.objects.filter(type='RUN').order_by('-updated', 'start')[:2]
+        swimming_acts = Activity.objects.filter(type='SWIM').order_by('-updated', 'start')[:2]
+        bicycle_acts = Activity.objects.filter(type='BIKE').order_by('-updated', 'start')[:2]
+
+        response['running'] = self.serializer_class(running_acts,many=True).data
+        response['swimming'] = self.serializer_class(swimming_acts,many=True).data
+        response['bicycle'] = self.serializer_class(bicycle_acts,many=True).data
         
         return Response(response, status=status.HTTP_200_OK)
         

@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, UserManager
 from django.utils.translation import gettext_lazy as _
+from datetime import datetime
+from django.utils import timezone
     
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
@@ -47,10 +49,10 @@ class Activity(models.Model):
     start = models.DateTimeField()
     end = models.DateTimeField()
     description = models.CharField(max_length=255)
+    updated = models.DateTimeField()
 
 class Action(models.Model):
-    start_time = models.DateTimeField()
-    end_time = models.DateTimeField()
+    date = models.DateTimeField()
     distance = models.IntegerField(default=0)
     in_activity = models.ForeignKey(Activity, related_name='actions', on_delete=models.CASCADE)
     

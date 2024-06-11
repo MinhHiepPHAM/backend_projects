@@ -265,25 +265,30 @@ function RunningActivity(props) {
 function ActivityPage() {
     const {uid} = useParams();
     const [usernames, setUsernames] = useState([]);
-    const [activities, setActivities] = useState([]);
-    
+    const [runningActs, setRunActivity] = useState([]);
+    const [swimmingActs, setSwimActivity] = useState([]);
+    const [bicycleActs, setBikeActivity] = useState([]);
+
     useEffect(()=>{
         try {
             axios.get(`http://localhost:8000/users/${uid}/activities/`, {headers:headers})
             .then(response => {
                 // console.log(response.data);
                 setUsernames(response.data['usernames']);
-                setActivities(response.data['activity']);
-                // console.log(usernames, activities)
+                setRunActivity(response.data['running']);
+                setSwimActivity(response.data['swimming']);
+                setBikeActivity(response.data['bicycle']);
+                // console.log(response.data);
             }).catch (error => {
                 console.log(error);
             });
         } catch (e) {
             console.error('Activity page failed:');
         };
-    
 
     }, []);
+
+    console.log(runningActs, swimmingActs, bicycleActs);
     
     return (
         <Box h={'100%'}>

@@ -52,14 +52,14 @@ class ActivitySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Activity
-        fields = ['type', 'title', 'users', 'start', 'end', 'description', 'createdby', 'distance','created_time']
+        fields = ['type', 'title', 'users', 'start', 'end', 'description', 'createdby', 'distance','created_time', 'updated']
 
 class ActionSerializer(serializers.ModelSerializer):
     in_activity = ActivitySerializer()
 
     class Meta:
         model = Action
-        fields = ['start_time', 'end_time', 'distance', 'in_activity']
+        fields = ['date', 'distance', 'in_activity']
 
 class AwardSerializer(serializers.ModelSerializer):
     users = UserSerializer(many=True)
