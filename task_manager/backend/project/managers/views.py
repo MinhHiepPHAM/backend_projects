@@ -101,8 +101,8 @@ class CreateActivityView(generics.CreateAPIView, generics.RetrieveAPIView):
             if not start:
                 return Response({'error': 'Need to set the start date of the activity'}, status=status.HTTP_404_NOT_FOUND)
             start = datetime.strptime(start, "%a, %d %b %Y %H:%M:%S %Z")
-            end = data.get('end')
-            end = datetime.strptime(end, "%a, %d %b %Y %H:%M:%S %Z")
+            terminate = data.get('terminate')
+            terminate = datetime.strptime(terminate, "%a, %d %b %Y %H:%M:%S %Z")
             description = data.get('description')
 
             activity = Activity.objects.create(
@@ -112,7 +112,7 @@ class CreateActivityView(generics.CreateAPIView, generics.RetrieveAPIView):
                 distance = 0,
                 created_time = datetime.now(),
                 start = start,
-                end = end,
+                terminate = terminate,
                 description = description,
                 updated = datetime.now()
             )
@@ -141,6 +141,7 @@ class UserActivityView(ModelViewSet):
         response['swimming'] = self.serializer_class(swimming_acts,many=True).data
         response['bicycle'] = self.serializer_class(bicycle_acts,many=True).data
         
+        # print(response)
         return Response(response, status=status.HTTP_200_OK)
         
 

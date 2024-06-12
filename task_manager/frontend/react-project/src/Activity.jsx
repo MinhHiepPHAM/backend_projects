@@ -28,7 +28,7 @@ function CreateNewActivity(props) {
     const [type, setType] = useState('Running');
     const [description, setDescription] = useState('');
     const [start, setStart] = useState(null);
-    const [end, setEnd] = useState(null);
+    const [terminate, setTerminate] = useState(null);
     const [users, setUsers] = useState([]);
     const [opened, { open, close }] = useDisclosure(false);
     const createdby = username
@@ -46,14 +46,14 @@ function CreateNewActivity(props) {
                 title,
                 users,
                 start,
-                end,
+                terminate,
                 description,
                 createdby
 			},{
 				headers: headers
 			});
 
-            // console.log(title, type, description, start, end, users);
+            // console.log(title, type, description, start, terminate, users);
             // setLoaded(true);
             const resetFields = [
                 {id: 'activity_title', value: ''},
@@ -123,13 +123,13 @@ function CreateNewActivity(props) {
                         }}
                         error={startNotSet}
                     />
-                    <DateInput id='act_end'
+                    <DateInput id='act_terminate'
                         clearable
                         valueFormat="DD/MM/YYYY"
-                        label='End' w={'40%'}
+                        label='Terminate' w={'40%'}
                         onChange={(e)=>{
-                            if (e!==null) setEnd(e.toUTCString());
-                            else setEnd(null);
+                            if (e!==null) setTerminate(e.toUTCString());
+                            else setTerminate(null);
                         }}
                     />
 				</Group>
@@ -163,23 +163,8 @@ function CreateNewActivity(props) {
 
 };
 
-function RunningActivity(props) {
-    const {uid} = props
-
-    const runningActivities = [
-        {title: 'Daily running 2024', distance: '200', calories: '4523', start:'01/01/2024', end: '31/12/2024', description:'This is running record for 2024 running activities'},
-        {title: 'Qualcomm French running 2024', distance: '100', calories: '2523', start:'01/01/2024', end: '31/03/2024', description:'This is running record for 2024 running activities.'},
-    ];
-
-    const bicycleActivities = [
-        {title: 'Daily Activity with bicycle 2024', distance: '250', calories: '5523', start:'01/01/2024', end: '31/12/2024', description:'This is record for my daily activity with the bicycle in 2024'},
-        {title: 'Qualcomm French bike group 2024', distance: '300', calories: '6223', start:'01/01/2024', end: '31/03/2024', description:'The bike tracking in Qualcomm French in 2024'},
-    ];
-
-    const swimActivities = [
-        {title: 'Daily Swimming 2024', distance: '100', calories: '5232', start:'01/01/2024', end: '31/12/2024', description:'This is record for my swimming in 2024'},
-        {title: 'Family event in July 2024', distance: '25', calories: '1123', start:'01/07/2024', end: '31/07/2024', description:'This is event created for family vacation in July 2024'},
-    ];
+function ActivitySummary(props) {
+    const {uid, runningActivities, swimActivities, bicycleActivities} = props;
 
     const ActTitle = ({type}) => {
         let ActIcon, viewLink;
@@ -212,6 +197,7 @@ function RunningActivity(props) {
         );
     };
 
+
     const ActivityInfo = ({activitiesInfo}) => {
         const activities = activitiesInfo.map((act,i) => (
             <div key={i}>
@@ -225,7 +211,7 @@ function RunningActivity(props) {
                     <Table.Thead>
                         <Table.Tr justify='center'>
                             <Table.Th w={'10%'}>Start</Table.Th>
-                            <Table.Th w={'10%'}>End</Table.Th>
+                            <Table.Th w={'10%'}>Terminate</Table.Th>
                             <Table.Th w={'10%'}>Distance</Table.Th>
                             <Table.Th w={'10%'}>Calories</Table.Th>
                             <Table.Th>Description</Table.Th>
@@ -233,10 +219,10 @@ function RunningActivity(props) {
                     </Table.Thead>
                     <Table.Tbody>
                         <Table.Tr>
-                            <Table.Td>{act.start}</Table.Td>
-                            <Table.Td>{act.end}</Table.Td>
+                            <Table.Td>{new Date(act.start).toLocaleDateString()}</Table.Td>
+                            <Table.Td>{new Date(act.terminate).toLocaleDateString()}</Table.Td>
                             <Table.Td>{act.distance} Km</Table.Td>
-                            <Table.Td>{act.calories} Kcals</Table.Td>
+                            <Table.Td>{act.distance} Kcals</Table.Td>
                             <Table.Td><Text lineClamp={1}>{act.description}</Text></Table.Td>
                         </Table.Tr>
                     </Table.Tbody>
@@ -268,6 +254,7 @@ function ActivityPage() {
     const [runningActs, setRunActivity] = useState([]);
     const [swimmingActs, setSwimActivity] = useState([]);
     const [bicycleActs, setBikeActivity] = useState([]);
+    const [loaded, setLoaded] = useState(false);
 
     useEffect(()=>{
         try {
@@ -278,6 +265,7 @@ function ActivityPage() {
                 setRunActivity(response.data['running']);
                 setSwimActivity(response.data['swimming']);
                 setBikeActivity(response.data['bicycle']);
+                setLoaded(true)
                 // console.log(response.data);
             }).catch (error => {
                 console.log(error);
@@ -288,14 +276,15 @@ function ActivityPage() {
 
     }, []);
 
-    console.log(runningActs, swimmingActs, bicycleActs);
+    if (!loaded) return (<>Loading...</>)
+    // console.log(runningActs);
     
     return (
         <Box h={'100%'}>
             <HeaderMegaMenu/>
             <Box ml={'200px'} mr={'200px'} >
                 <CreateNewActivity usernames={usernames}/>
-                <RunningActivity uid={uid} />
+                <ActivitySummary uid={uid} runningActivities={runningActs} swimActivities={swimmingActs} bicycleActivities={bicycleActs} />
             </Box>
             
         </Box>

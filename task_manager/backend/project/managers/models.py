@@ -47,7 +47,7 @@ class Activity(models.Model):
     distance = models.IntegerField(default=0)
     created_time = models.DateTimeField()
     start = models.DateTimeField()
-    end = models.DateTimeField()
+    terminate = models.DateTimeField()
     description = models.CharField(max_length=255)
     updated = models.DateTimeField()
 
