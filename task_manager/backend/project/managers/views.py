@@ -76,7 +76,7 @@ class UserProfileView(ModelViewSet):
 
 class CreateActivityView(generics.CreateAPIView, generics.RetrieveAPIView):
     serializer_class = ActivitySerializer
-    permission_classes = [permissions.AllowAny] # will be changed to IsAuthenticated
+    permission_classes = [permissions.IsAuthenticated] # will be changed to IsAuthenticated
 
     def post(self, request, *args, **kwargs):
         try:
@@ -125,7 +125,7 @@ class CreateActivityView(generics.CreateAPIView, generics.RetrieveAPIView):
             return Response({'Create failed': str(e)}, status=status.HTTP_404_NOT_FOUND)
     
 class UserActivitySummaryView(ModelViewSet):
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [permissions.IsAuthenticated]
     serializer_class = ActivitySerializer
     queryset = Activity.objects.all()
 
@@ -133,9 +133,9 @@ class UserActivitySummaryView(ModelViewSet):
         response = {}
         usernames = [obj.username for obj in CustomUser.objects.all().order_by('username')]
         response['usernames'] = usernames
-        running_acts = Activity.objects.filter(type='RUN').order_by('-updated', 'start')[:2]
-        swimming_acts = Activity.objects.filter(type='SWIM').order_by('-updated', 'start')[:2]
-        bicycle_acts = Activity.objects.filter(type='BIKE').order_by('-updated', 'start')[:2]
+        running_acts = CustomUser.objects.get(pk=kwargs['pk']).activities.filter(type='RUN').order_by('-updated', 'start')[:2]
+        swimming_acts = CustomUser.objects.get(pk=kwargs['pk']).activities.filter(type='SWIM').order_by('-updated', 'start')[:2]
+        bicycle_acts = CustomUser.objects.get(pk=kwargs['pk']).activities.filter(type='BIKE').order_by('-updated', 'start')[:2]
 
         response['running'] = self.serializer_class(running_acts,many=True).data
         response['swimming'] = self.serializer_class(swimming_acts,many=True).data
@@ -143,7 +143,7 @@ class UserActivitySummaryView(ModelViewSet):
         
         # print(response)
         return Response(response, status=status.HTTP_200_OK)
-        
+             
 
 
 
