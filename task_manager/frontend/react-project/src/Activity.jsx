@@ -157,7 +157,15 @@ function CreateNewActivity(props) {
             <Modal size={'lg'} opened={opened} onClose={close} title="Create new activity" centered>
                 {newActivity}
             </Modal>
-            <Button onClick={open} mt={'xl'}>New Activity</Button>
+            <Group justify="space-between">
+                <Button onClick={open} mt={'xl'}>New Activity</Button>
+                <Flex direction={'row'} mt={'xl'} gap={'md'} mr={'md'}>
+                    <a style={{color:'var(--mantine-color-blue-7)'}} href={`/users/${uid}/activities/running/`}>Running</a>
+                    <a style={{color:'var(--mantine-color-blue-7)'}} href={`/users/${uid}/activities/swimming/`}>Swimming</a>
+                    <a style={{color:'var(--mantine-color-blue-7)'}} href={`/users/${uid}/activities/bicycle/`}>Bicycle</a>
+                    <a style={{color:'var(--mantine-color-blue-7)'}} href={`/users/${uid}/activities/all/`}>All</a>
+                </Flex>
+            </Group>
         </>
     )
 
@@ -192,7 +200,7 @@ function ActivitySummary(props) {
                     <ActIcon size={22} color="var(--mantine-color-blue-6)" className={classes.activityIcon}/>
                     <Text ta="left" fz="xl" c='var(--mantine-color-blue-6)'>{type} Activities:</Text>
                 </Flex>
-                <a color='var(--mantine-color-blue-5)' href={`/users/${uid}/activities/${viewLink}`}>view all</a>
+                <a style={{color:'var(--mantine-color-blue-5)'}} href={`/users/${uid}/activities/${viewLink}/`}>view all</a>
             </Group>
         );
     };
