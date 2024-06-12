@@ -248,7 +248,7 @@ function ActivitySummary(props) {
     return renderActivities;
 }
 
-function ActivityPage() {
+function ActivitySummaryPage() {
     const {uid} = useParams();
     const [usernames, setUsernames] = useState([]);
     const [runningActs, setRunActivity] = useState([]);
@@ -258,7 +258,7 @@ function ActivityPage() {
 
     useEffect(()=>{
         try {
-            axios.get(`http://localhost:8000/users/${uid}/activities/`, {headers:headers})
+            axios.get(`http://localhost:8000/users/${uid}/activities/summary/`, {headers:headers})
             .then(response => {
                 // console.log(response.data);
                 setUsernames(response.data['usernames']);
@@ -291,4 +291,4 @@ function ActivityPage() {
     )
 };
 
-export default ActivityPage
+export default ActivitySummaryPage

@@ -124,7 +124,7 @@ class CreateActivityView(generics.CreateAPIView, generics.RetrieveAPIView):
         except Exception as e:
             return Response({'Create failed': str(e)}, status=status.HTTP_404_NOT_FOUND)
     
-class UserActivityView(ModelViewSet):
+class UserActivitySummaryView(ModelViewSet):
     permission_classes = [permissions.AllowAny]
     serializer_class = ActivitySerializer
     queryset = Activity.objects.all()
