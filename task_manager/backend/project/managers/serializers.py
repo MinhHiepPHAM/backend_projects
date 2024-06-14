@@ -52,7 +52,7 @@ class ActivitySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Activity
-        fields = ['type', 'title', 'users', 'start', 'terminate', 'description', 'createdby', 'distance','created_time', 'updated']
+        fields = ['type', 'title', 'users', 'start', 'terminate', 'description', 'createdby', 'distance','created_time', 'updated','id']
 
 class ActionSerializer(serializers.ModelSerializer):
     in_activity = ActivitySerializer()

@@ -114,7 +114,7 @@ function TableSort({data, uid}) {
     const rows = sortedData.map((row,i) => (
         <Table.Tr key={i}>
             <Table.Td><ActType type={row.type}/></Table.Td>
-            <Table.Td><Text lineClamp={1}>{row.title}</Text></Table.Td>
+            <Table.Td><a href={`/activities/${row.id}/detail/`}><Text lineClamp={1}>{row.title}</Text></a></Table.Td>
             <Table.Td>{new Date(row.start).toLocaleDateString()}</Table.Td>
             <Table.Td>{new Date(row.terminate).toLocaleDateString()}</Table.Td>
             <Table.Td>{row.distance}</Table.Td>
@@ -142,9 +142,9 @@ function TableSort({data, uid}) {
                     onChange={handleSearchChange}
                 />
                 <Flex direction={'row'} mt={'xl'} gap={'lg'} mr={'xl'}>
-                    <a href={`/users/${uid}/activities/running/`}><FaRunning size={22} color='var(--mantine-color-blue-4)' title='Run'/></a>
-                    <a href={`/users/${uid}/activities/bicycle/`}><MdDirectionsBike size={22} color='var(--mantine-color-blue-4)' title='Bike'/></a>
-                    <a href={`/users/${uid}/activities/swimming/`}><FaSwimmer size={22} color='var(--mantine-color-blue-4)' title='Swim'/></a>
+                    <a href={`/users/${uid}/activities/running/`}><FaRunning size={22} color='var(--mantine-color-violet-5)' title='Run'/></a>
+                    <a href={`/users/${uid}/activities/bicycle/`}><MdDirectionsBike size={22} color='var(--mantine-color-violet-5)' title='Bike'/></a>
+                    <a href={`/users/${uid}/activities/swimming/`}><FaSwimmer size={22} color='var(--mantine-color-violet-5)' title='Swim'/></a>
 
                 </Flex>
             </Group>
