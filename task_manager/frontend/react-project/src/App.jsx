@@ -13,6 +13,7 @@ import UserProfile from './UserProfile';
 import EditProfile from './EditProfile';
 import ActivitySummaryPage from './Activity';
 import AllActivityPage from './AllActivity';
+import ActivityDetailPage from './ActivityDetail';
 
 
 
@@ -41,6 +42,7 @@ export default function App() {
               <Route path='/users/:uid/editprofile' element={<EditProfile/>} />
               <Route path='/users/:uid/activities/summary' element={<ActivitySummaryPage/>} />
               <Route path='/users/:uid/activities/all' element={<AllActivityPage/>} />
+              <Route path='/activities/:aid/detail' element={<ActivityDetailPage/>} />
             </Routes>
           </main>
         </div>
