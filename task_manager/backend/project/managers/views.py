@@ -143,8 +143,15 @@ class UserActivitySummaryView(ModelViewSet):
         
         # print(response)
         return Response(response, status=status.HTTP_200_OK)
-             
-
+    
+class UserActivityAllView(ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = ActivitySerializer
+    queryset = Activity.objects.all()
+    def retrieve(self, request, *args, **kwargs):
+        activities = running_acts = CustomUser.objects.get(pk=kwargs['pk']).activities.order_by('-updated', 'start')
+        data = self.serializer_class(activities, many=True).data
+        return Response(data,status=status.HTTP_200_OK)
 
 
 

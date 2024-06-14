@@ -10,6 +10,7 @@ urlpatterns = [
     path('users/<int:pk>/editprofile/', views.ProfileEditingView.as_view(), name='profile_editing'),
     path('users/<int:pk>/', views.UserProfileView.as_view({'get':'retrieve'}), name='user_profile'),
     path('users/<int:pk>/activities/summary/', views.UserActivitySummaryView.as_view({'get':'retrieve'}), name='user_activities'),
+    path('users/<int:pk>/activities/all/', views.UserActivityAllView.as_view({'get':'retrieve'}), name='user_activities_all'),
     path('users/<int:pk>/activities/create/', views.CreateActivityView.as_view(), name='create_activities'),
     
 ]
