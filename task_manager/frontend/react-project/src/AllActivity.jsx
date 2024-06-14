@@ -11,6 +11,7 @@ import {
     keys,
     Box,
     Flex,
+    Loader,
 } from '@mantine/core';
 import { IconSelector, IconChevronDown, IconChevronUp, IconSearch } from '@tabler/icons-react';
 import { HeaderMegaMenu } from './HeaderMegaMenu';
@@ -90,7 +91,7 @@ function ActType({type}){
 }
 
 
-function TableSort({data}) {
+function TableSort({data, uid}) {
     const [search, setSearch] = useState('');
     const [sortedData, setSortedData] = useState(data);
     const [sortBy, setSortBy] = useState(null);
@@ -132,16 +133,24 @@ function TableSort({data}) {
 
     return (
         <ScrollArea>
-            <TextInput
-                placeholder="Search by any field"
-                mb="md"
-                mt='xl'
-                leftSection={<IconSearch style={{ width: rem(16), height: rem(16) }}/>}
-                value={search}
-                onChange={handleSearchChange}
-            />
-            <Table horizontalSpacing="md" verticalSpacing="xs" miw={700} layout="fixed">
-                <Table.Tbody>
+            <Group justify="space-between" mt="md">
+                <TextInput
+                    placeholder="Search by any field"
+                    mb="md" mt='xl' w='85%'
+                    leftSection={<IconSearch style={{ width: rem(16), height: rem(16) }}/>}
+                    value={search}
+                    onChange={handleSearchChange}
+                />
+                <Flex direction={'row'} mt={'xl'} gap={'lg'} mr={'xl'}>
+                    <a href={`/users/${uid}/activities/running/`}><FaRunning size={22} color='var(--mantine-color-blue-4)' title='Run'/></a>
+                    <a href={`/users/${uid}/activities/bicycle/`}><MdDirectionsBike size={22} color='var(--mantine-color-blue-4)' title='Bike'/></a>
+                    <a href={`/users/${uid}/activities/swimming/`}><FaSwimmer size={22} color='var(--mantine-color-blue-4)' title='Swim'/></a>
+
+                </Flex>
+            </Group>
+            
+            <Table horizontalSpacing="md" verticalSpacing="xs" miw={700} layout="fixed" striped highlightOnHover>
+                <Table.Thead>
                     <Table.Tr>
                     {fields.map((field,i) => (
                         <Th key={i}
@@ -154,7 +163,7 @@ function TableSort({data}) {
                         </Th>
                     ))}
                     </Table.Tr>
-                </Table.Tbody>
+                </Table.Thead>
                 <Table.Tbody>
                     {rows.length > 0 ? (
                     rows
@@ -202,13 +211,13 @@ function AllActivityPage() {
 
     }, []);
 
-    if (!loaded) return (<>Loading...</>)
+    if (!loaded) return <Loader  ml='50%' mt='10%' color="blue" />;
     
     return (
         <Box h={'100%'}>
             <HeaderMegaMenu/>
             <Box ml={'200px'} mr={'200px'} >
-                <TableSort data={data}/>
+                <TableSort data={data} uid={uid}/>
             </Box>
             
         </Box>

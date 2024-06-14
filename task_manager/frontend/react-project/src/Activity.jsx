@@ -1,5 +1,5 @@
 import {
-    Box, Button, Container, Divider, Flex, Group, Modal, MultiSelect,
+    Box, Button, Container, Divider, Flex, Group, Loader, Modal, MultiSelect,
     NativeSelect, Paper, Table, Text, TextInput, Textarea,
     Title
 } from "@mantine/core";
@@ -284,7 +284,7 @@ function ActivitySummaryPage() {
 
     }, []);
 
-    if (!loaded) return (<>Loading...</>)
+    if (!loaded) return (<Loader  ml='50%' mt='10%' color="blue" />);
     // console.log(runningActs);
     
     return (
