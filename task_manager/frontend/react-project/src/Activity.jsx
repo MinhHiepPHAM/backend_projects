@@ -84,8 +84,6 @@ function CreateNewActivity(props) {
 		}
 	};
 
-    // console.log(hasError, error, emptyTitle, startNotSet)
-
     const newActivity = (
         <Container size={800}>
             <Paper withBorder shadow="md" p={30} radius="md">

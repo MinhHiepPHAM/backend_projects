@@ -76,7 +76,7 @@ class UserProfileView(ModelViewSet):
 
 class CreateActivityView(generics.CreateAPIView, generics.RetrieveAPIView):
     serializer_class = ActivitySerializer
-    permission_classes = [permissions.IsAuthenticated] # will be changed to IsAuthenticated
+    permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
         try:
@@ -164,6 +164,40 @@ class ActivityView(ModelViewSet):
         }
 
         return Response(response,status=status.HTTP_200_OK)
+
+class CreateNewActionView(generics.CreateAPIView):
+    serializer_class = ActionSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        data = request.data
+        activity = Activity.objects.get(pk=kwargs['pk'])
+        
+        distance = data.get('distance')
+        if not distance:
+            return Response({'error': 'Distance cannot empty'}, status=status.HTTP_404_NOT_FOUND)
+        
+        date = data.get('date')
+        if not date:
+            return Response({'error': 'Date can not be empty'}, status=status.HTTP_404_NOT_FOUND)
+        
+        date = datetime.strptime(date, "%a, %d %b %Y %H:%M:%S %Z")
+        # print('post: ',distance, date)
+        activity.distance += distance
+        activity.updated = datetime.now()
+        
+        action = Action.objects.create(
+            date = date,
+            distance = distance,
+            in_activity = activity
+        )
+
+        action.save()
+        activity.actions.add(action)
+        activity.save()
+        
+        print(activity.actions)
+        return Response({'distance': distance, 'date': date}, status=status.HTTP_201_CREATED)
 
 
 
