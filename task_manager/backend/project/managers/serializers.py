@@ -8,7 +8,7 @@ class UserSerializer(serializers.ModelSerializer):
         model = CustomUser
         fields = [
             'email', 'first_name', 'last_name', 'username', 'is_active', 'bio', 
-            'telephone', 'street', 'street_number', 'city', 'country', 'avatar', 'job_title'
+            'telephone', 'street', 'street_number', 'city', 'country', 'avatar', 'job_title', 'id'
         ]
 
 class ProfileEditingSerializer(serializers.ModelSerializer):
@@ -25,7 +25,6 @@ class ProfileEditingSerializer(serializers.ModelSerializer):
             setattr(instance,name,value)
 
     def update(self, instance, validated_data):
-        # print(self.context)
         pprint.pprint(validated_data)
         fields = [
             'first_name', 'last_name', 'avatar', 'telephone', 'bio',
@@ -56,10 +55,10 @@ class ActivitySerializer(serializers.ModelSerializer):
 
 class ActionSerializer(serializers.ModelSerializer):
     in_activity = ActivitySerializer()
-
+    user = UserSerializer()
     class Meta:
         model = Action
-        fields = ['date', 'distance', 'in_activity']
+        fields = ['date', 'distance', 'in_activity', 'user']
 
 class AwardSerializer(serializers.ModelSerializer):
     users = UserSerializer(many=True)

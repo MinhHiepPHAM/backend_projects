@@ -185,11 +185,15 @@ class CreateNewActionView(generics.CreateAPIView):
         # print('post: ',distance, date)
         activity.distance += distance
         activity.updated = datetime.now()
+        username = data.get('username')
+        user = CustomUser.objects.get(username=username)
+
         
         action = Action.objects.create(
             date = date,
             distance = distance,
-            in_activity = activity
+            in_activity = activity,
+            user = user
         )
 
         action.save()

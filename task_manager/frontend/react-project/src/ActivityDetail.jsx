@@ -26,6 +26,7 @@ import { MdDirectionsBike } from "react-icons/md";
 
 
 const token = localStorage.getItem('token');
+const username = localStorage.getItem('username');
 
 const headers = {
     'Content-Type': 'application/json',
@@ -47,7 +48,8 @@ function CreateNewAction() {
         try {
             const response = await axios.post(`http://localhost:8000/activities/${aid}/create/`,{
                 date,
-                distance
+                distance,
+                username,
             }, {
                 headers: headers
             });
@@ -111,7 +113,7 @@ function CreateNewAction() {
     return (
         <>
             {newAction}
-            <Button onClick={open} mt={'xl'}>New Record</Button>
+            <Button onClick={open} mt={'xl'} variant="default">New Record</Button>
 
         </>
     )
@@ -136,15 +138,16 @@ function ActivityInfoTable({activity}) {
     const userInActivity = (
         <Avatar.Group>
             {activity.users.slice(0,3).map((user, i)=> (
-                <Avatar key={i} src={user.avatar} title={user.username}/>
+                <a key={i} href={`/users/${user.id}`}><Avatar src={user.avatar} title={user.username}/></a>
             ))}
             {activity.users.length>3 && <Tooltip
                 withArrow
                 label = {activity.users.slice(3,activity.users.length).map((u,j)=>(
                     <div key={j}>{u.username}</div>
                 ))}
+        
             >
-                <Avatar>+{activity.users.length-1}</Avatar>
+                <Avatar>+{activity.users.length-3}</Avatar>
             </Tooltip>
             }
         </Avatar.Group>
@@ -155,7 +158,7 @@ function ActivityInfoTable({activity}) {
     const activityDetail = (
         <>
             <div style={{ textAlign: 'center', marginBottom: '10px'}}>
-                    <Title order={4} c='var(--mantine-color-blue-4)'>
+                    <Title order={4} c='var(--mantine-color-blue-4)' mt={'xl'} mb={'xs'}>
                         {activity.title}
                     </Title>
                 <Divider></Divider>

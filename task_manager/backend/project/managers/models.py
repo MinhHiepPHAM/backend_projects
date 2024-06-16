@@ -55,6 +55,7 @@ class Action(models.Model):
     date = models.DateTimeField()
     distance = models.IntegerField(default=0)
     in_activity = models.ForeignKey(Activity, related_name='actions', on_delete=models.CASCADE)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     
 class Award(models.Model):
     class Medal(models.TextChoices):
