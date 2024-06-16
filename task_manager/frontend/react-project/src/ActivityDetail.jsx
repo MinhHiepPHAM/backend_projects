@@ -1,12 +1,18 @@
 import { 
+    Avatar,
     Box, 
     Button, 
     Container, 
+    Divider, 
+    Flex, 
     Loader,
     Modal,
     NumberInput,
     Paper,
+    Table,
     Text,
+    Title,
+    Tooltip,
 } from "@mantine/core";
 import { HeaderMegaMenu } from "./HeaderMegaMenu";
 import { useEffect, useState } from "react";
@@ -14,6 +20,9 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import { DateInput } from "@mantine/dates";
 import { useDisclosure } from "@mantine/hooks";
+import classes from './css/activity.module.css'
+import { FaRunning, FaSwimmer } from "react-icons/fa";
+import { MdDirectionsBike } from "react-icons/md";
 
 
 const token = localStorage.getItem('token');
@@ -108,14 +117,91 @@ function CreateNewAction() {
     )
 }
 
+function ActivityInfoTable({activity}) {
+    let ActIcon;
+    switch(activity.type) {
+        case 'RUN':
+            ActIcon = FaRunning;
+            break;
+        case 'BIKE':
+            ActIcon = MdDirectionsBike;
+            break;
+        case 'SWIM':
+            ActIcon = FaSwimmer;
+            break;
+        default:
+            console.log('type error:', activity.type);
+    }
+
+    const userInActivity = (
+        <Avatar.Group>
+            {activity.users.slice(0,3).map((user, i)=> (
+                <Avatar key={i} src={user.avatar} title={user.username}/>
+            ))}
+            {activity.users.length>3 && <Tooltip
+                withArrow
+                label = {activity.users.slice(3,activity.users.length).map((u,j)=>(
+                    <div key={j}>{u.username}</div>
+                ))}
+            >
+                <Avatar>+{activity.users.length-1}</Avatar>
+            </Tooltip>
+            }
+        </Avatar.Group>
+
+    );
+    
+
+    const activityDetail = (
+        <>
+            <div style={{ textAlign: 'center', marginBottom: '10px'}}>
+                    <Title order={4} c='var(--mantine-color-blue-4)'>
+                        {activity.title}
+                    </Title>
+                <Divider></Divider>
+            </div>
+            <div style={{display:'flex', justifyContent:'center'}}>
+                <Table withRowBorders={false} mt={'md'} mb={'md'}>						
+                    <Table.Tbody>
+                        <Table.Tr justify='center'>
+                            <Table.Th>Type</Table.Th>
+                            <Table.Th>Users</Table.Th>
+                            <Table.Th>Start</Table.Th>
+                            <Table.Th>Terminate</Table.Th>
+                            <Table.Th>Last update</Table.Th>
+                            <Table.Th>Distance</Table.Th>
+                            <Table.Th>Description</Table.Th>
+                        </Table.Tr>
+                    </Table.Tbody>
+                    <Table.Tbody>
+                        <Table.Tr>
+                            <Table.Td><ActIcon size={20} className={classes.activityIcon}/></Table.Td>
+                            <Table.Td>{userInActivity}</Table.Td>
+                            <Table.Td>{new Date(activity.start).toLocaleDateString()}</Table.Td>
+                            <Table.Td>{new Date(activity.terminate).toLocaleDateString()}</Table.Td>
+                            <Table.Td>{new Date(activity.updated).toLocaleDateString()}</Table.Td>
+                            <Table.Td>{activity.distance} Km</Table.Td>
+                            <Table.Td><Text lineClamp={1} title={activity.description}>{activity.description}</Text></Table.Td>
+                        </Table.Tr>
+                    </Table.Tbody>
+                </Table>
+            </div>
+
+        </>
+    );
+    return activityDetail;
+}
+
 function ActivityDetailPage() {
     const {aid} = useParams();
     const [loaded, setLoaded] = useState(false)
+    const [data, setData] = useState(null)
     useEffect(()=>{
         axios.get(`http://localhost:8000/activities/${aid}/detail/`, {headers:headers})
         .then(response => {
             setLoaded(true)
-            // console.log(response.data)
+            console.log(response.data)
+            setData(response.data.activity);
         }).catch (error => {
             console.log(error);
         });
@@ -128,6 +214,7 @@ function ActivityDetailPage() {
             <HeaderMegaMenu/>
             <Box ml={'200px'} mr={'200px'} >
                 <CreateNewAction/>
+                <ActivityInfoTable activity={data}/>
             </Box>
             
         </Box>

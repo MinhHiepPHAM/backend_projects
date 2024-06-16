@@ -18,7 +18,7 @@ import { HeaderMegaMenu } from './HeaderMegaMenu';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import { FaRunning, FaSwimmer } from 'react-icons/fa';
-import { MdDirectionsBike } from 'react-icons/md';
+import { MdDirectionsBike, MdSummarize } from 'react-icons/md';
 import classes from './css/activity.module.css'
 
 function Th({ children, reversed, sorted, onSort, width }) {
@@ -142,6 +142,7 @@ function TableSort({data, uid}) {
                     onChange={handleSearchChange}
                 />
                 <Flex direction={'row'} mt={'xl'} gap={'lg'} mr={'xl'}>
+                <a href={`/users/${uid}/activities/summary/`}><MdSummarize size={22} color='var(--mantine-color-violet-5)' title='Summary'/></a>
                     <a href={`/users/${uid}/activities/running/`}><FaRunning size={22} color='var(--mantine-color-violet-5)' title='Run'/></a>
                     <a href={`/users/${uid}/activities/bicycle/`}><MdDirectionsBike size={22} color='var(--mantine-color-violet-5)' title='Bike'/></a>
                     <a href={`/users/${uid}/activities/swimming/`}><FaSwimmer size={22} color='var(--mantine-color-violet-5)' title='Swim'/></a>

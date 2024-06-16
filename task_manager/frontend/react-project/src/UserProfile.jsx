@@ -62,7 +62,7 @@ export const NavbarUser = (props) => {
 	const {numAct, numMess, uid} = props;
 	const links = [
 		{ icon: IconUser, label: 'Profile', href:`/users/${uid}/`},
-		{ icon: IconActivity, label: 'Activities', num: numAct, href:`/users/${uid}/activities/`},
+		{ icon: IconActivity, label: 'Activities', num: numAct, href:`/users/${uid}/activities/all`},
 		{ icon: IconMessage, label: 'Message', num: numMess },
 		{ icon: IconSettings, label: 'Settings' },
 	];
@@ -143,7 +143,7 @@ function ActivitiesView(props) {
 					<IconActivity size={22} className={classes.mainLinkIcon}/>
 					<Text ta="left" fz="lg" c='var(--mantine-color-blue-6)'>Recent Activities:</Text>
 				</div>
-				<a color='var(--mantine-color-blue-5)' href={`/users/${uid}/activities/`}>view all</a>
+				<a color='var(--mantine-color-blue-5)' href={`/users/${uid}/activities/all/`}>view all</a>
 			</Group>
 			<Table ml={'xl'} withRowBorders={false} >						
 				<Table.Thead>
