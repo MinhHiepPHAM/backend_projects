@@ -247,7 +247,7 @@ function AwardView(props) {
 
 function UserProfile() {
 	const {uid} = useParams();
-	const username = localStorage.getItem('username')
+	const accountName = localStorage.getItem('username')
 	const {colorScheme} = useMantineColorScheme()
 	// console.log('theme:', colorScheme)
     const token = localStorage.getItem('token')
@@ -262,6 +262,7 @@ function UserProfile() {
     const [city, setCity] = useState('');
     const [country, setCountry] = useState('');
     const [title, setJobTilte] = useState('');
+	const [username, setUsername] = useState('');
 	// const [isActive, setActive] = useState(true);
     // const [success, setSuccess] = useState(false);
 
@@ -288,7 +289,9 @@ function UserProfile() {
                 setJobTilte(response.data['job_title']);
 				// setActive(response.data['is_active']);
 				setEmail(response.data['email']);
+				setUsername(response.data['username']);
                 // setSuccess(true);
+
             }).catch (error => {
                 console.log(error);
             });
@@ -331,12 +334,13 @@ function UserProfile() {
 									telephone={telephone} street={street} streetNumber={streetNumber}
 									city={city} country={country}
 								/>
-								<Button
+
+								{(accountName === username) && <Button
 									href={'/users/' + uid.toString() + '/editprofile'} component="a"
 									variant="default" fw={'normal'} mt={'10px'} ml={'50px'}
 								>
 									Edit profile
-								</Button>
+								</Button>}
 							</Flex>
 						</Flex>
 						<Divider my="xs" labelPosition="center" mt={'30px'}

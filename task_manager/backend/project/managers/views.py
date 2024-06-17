@@ -63,10 +63,16 @@ class LogoutView(APIView):
             return Response({"message": "Logout successful"}, status=status.HTTP_200_OK)
         except KeyError:
             return Response({"error": "Refresh token is required"}, status=status.HTTP_400_BAD_REQUEST)
+class CanEdit(permissions.IsAuthenticated):
+    def has_permission(self, request, view):
+        has_perm = super().has_permission(request, view)
+        user = request.user.username
+        other = CustomUser.objects.get(pk=view.kwargs['pk']).username
+        return has_perm and (user == other)
 
 class ProfileEditingView(generics.UpdateAPIView, generics.RetrieveAPIView):
     serializer_class = ProfileEditingSerializer
-    permission_classes = [permissions.IsAuthenticated,]
+    permission_classes = [CanEdit,]
     queryset = CustomUser.objects.all()
 
 class UserProfileView(ModelViewSet):
