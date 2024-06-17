@@ -202,6 +202,15 @@ class CreateNewActionView(generics.CreateAPIView):
         
         print(activity.actions)
         return Response({'distance': distance, 'date': date}, status=status.HTTP_201_CREATED)
+    
+class AllUserView(ModelViewSet):
+    permission_classes = [permissions.AllowAny,]
+    queryset = CustomUser.objects.all()
+    def retrieve(self, request, *args, **kwargs):
+        all_users = CustomUser.objects.all()
+        users = UserSerializer(all_users, many=True).data
+        return Response(users, status=status.HTTP_200_OK) 
+
 
 
 

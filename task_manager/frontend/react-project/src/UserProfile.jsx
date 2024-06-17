@@ -315,12 +315,12 @@ function UserProfile() {
 								/>
 							</div>
 							<Flex direction={'column'} align="flex-start" w='100%'>
-								{(bio !== '<p></p>') &&
+								{(bio !== '<p></p>' && bio != '') &&
 									<Paper withBorder p='md' radius='md' ml='xl' mt='md' v={'100%'} className={classes.userInfo}>
 										<div className={classes.profileAbout} dangerouslySetInnerHTML={{ __html: bio }} />
 									</Paper>
 								}
-								{(bio === '<p></p>') && 
+								{(bio === '<p></p>' || bio === '') && 
 									<Paper ml='md' mb='md' align='center' w={'100%'}>
 										<Text>Add your bio</Text>
 									</Paper>

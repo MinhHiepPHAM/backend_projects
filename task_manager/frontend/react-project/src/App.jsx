@@ -14,6 +14,7 @@ import EditProfile from './EditProfile';
 import ActivitySummaryPage from './Activity';
 import AllActivityPage from './AllActivity';
 import ActivityDetailPage from './ActivityDetail';
+import AllUsersPage from './AllUsers';
 
 
 
@@ -38,6 +39,7 @@ export default function App() {
               <Route path="/login" element={<Login/>} />
               <Route path="/signup" element={<Register/>} />
               <Route path="/home" element={<Home/>} />
+              <Route path='/users' element={<AllUsersPage/>} />
               <Route path='/users/:uid' element={<UserProfile/>} />
               <Route path='/users/:uid/editprofile' element={<EditProfile/>} />
               <Route path='/users/:uid/activities/summary' element={<ActivitySummaryPage/>} />

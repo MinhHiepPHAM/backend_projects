@@ -225,4 +225,4 @@ function AllActivityPage() {
     )
 };
 
-export default AllActivityPage
+export default AllActivityPage;
