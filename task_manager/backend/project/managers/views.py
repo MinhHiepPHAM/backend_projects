@@ -9,6 +9,7 @@ from rest_framework import status
 from .models import *
 import re
 from datetime import datetime
+from .pagination import UserPagination
 
 
 class RegistrationView(generics.CreateAPIView):
@@ -206,16 +207,21 @@ class CreateNewActionView(generics.CreateAPIView):
         activity.actions.add(action)
         activity.save()
         
-        print(activity.actions)
+        # print(activity.actions)
         return Response({'distance': distance, 'date': date}, status=status.HTTP_201_CREATED)
     
 class AllUserView(ModelViewSet):
     permission_classes = [permissions.AllowAny,]
     queryset = CustomUser.objects.all()
+    pagination_class = UserPagination
+    
     def retrieve(self, request, *args, **kwargs):
-        all_users = CustomUser.objects.all()
-        users = UserSerializer(all_users, many=True).data
-        return Response(users, status=status.HTTP_200_OK) 
+        search_query = self.request.query_params.get('search','')
+        all_users = CustomUser.objects.all().order_by('username').filter(username__icontains=search_query)
+        users_per_page = self.paginate_queryset(all_users)
+        data = UserSerializer(users_per_page, many=True).data
+    
+        return self.get_paginated_response(data)
 
 
 

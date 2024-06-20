@@ -1,4 +1,4 @@
-import { Avatar, Box, Flex, Grid, Loader, Text } from "@mantine/core";
+import { Avatar, Box, Flex, Grid, Loader, Text, Pagination, TextInput } from "@mantine/core";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { HeaderMegaMenu } from "./HeaderMegaMenu";
@@ -37,12 +37,23 @@ function sortData(data, sortBy, search) {
 function AllUsersPage() {
     const [loaded, setLoaded] = useState(false);
     const [users, setUsers] = useState([]);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [searchQuery, setSearchQuery] = useState('');
+    const [count, setCount] = useState(0);
+    const [total, setTotal] = useState(0);
     useEffect(()=>{
         try {
-            axios.get(`http://localhost:8000/users/`, {headers:headers})
+
+            const queryParams = new URLSearchParams();
+            if (currentPage !== 1) queryParams.append('p', currentPage.toString())
+            queryParams.append ('search', searchQuery.toString());
+
+            axios.get(`http://localhost:8000/users/?${queryParams.toString()}`, {headers:headers})
             .then(response => {
                 setLoaded(true)
-                setUsers(response.data)
+                setUsers(response.data['users']);
+                setCount(response.data['count']);
+                setTotal(response.data['num_page']);
             }).catch (error => {
                 console.log(error);
             });
@@ -50,7 +61,7 @@ function AllUsersPage() {
             console.error(e);
         };
 
-    }, []);
+    }, [searchQuery, total, currentPage]);
 
     if (!loaded) return <Loader  ml='50%' mt='10%' color="blue" />;
 
@@ -76,7 +87,25 @@ function AllUsersPage() {
         <Box h={'100%'}>
             <HeaderMegaMenu/>
             <Box ml={'200px'} mr={'200px'} >
+                <div style={{display:'flex', justifyContent:'center'}}>
+                    <TextInput
+                        w={'300px'} mt={'xl'}
+                        placeholder="Username"
+                        onChange={(e)=>{
+                            setSearchQuery(e.target.value);
+                            setCurrentPage(1);
+                        }}
+                    />
+                </div>
                 {usersView}
+                <div style={{display:'flex', justifyContent:'center'}}>
+                    <Pagination
+                        mt={'xl'}
+                        total={total}
+                        boundaries={1}
+                        onChange={setCurrentPage}
+                    />
+                </div>
             </Box>
             
         </Box>
