@@ -20,6 +20,7 @@ import { useParams } from 'react-router-dom';
 import { FaRunning, FaSwimmer } from 'react-icons/fa';
 import { MdDirectionsBike, MdSummarize } from 'react-icons/md';
 import classes from './css/activity.module.css'
+import { CreateNewActivity } from './Activity';
 
 function Th({ children, reversed, sorted, onSort, width }) {
     const Icon = sorted ? (reversed ? IconChevronUp : IconChevronDown) : IconSelector;
@@ -196,12 +197,17 @@ function AllActivityPage() {
     const {uid} = useParams();
     const [loaded, setLoaded] = useState(false);
     const [data, setData] = useState([])
+    const [usernames, setUsernames] = useState([])
+    const [query, setQuery] = useState('')
+    const queryParams = new URLSearchParams();
 
     useEffect(()=>{
         try {
-            axios.get(`http://localhost:8000/users/${uid}/activities/all/`, {headers:headers})
+            queryParams.append ('uq', query.toString());
+            axios.get(`http://localhost:8000/users/${uid}/activities/all/?${queryParams.toString()}`, {headers:headers})
             .then(response => {
-                setData(response.data)
+                setData(response.data.activities)
+                setUsernames(response.data.usernames)
                 setLoaded(true)
             }).catch (error => {
                 console.log(error);
@@ -210,7 +216,7 @@ function AllActivityPage() {
             console.error('Activity page failed:');
         };
 
-    }, []);
+    }, [query]);
 
     if (!loaded) return <Loader  ml='50%' mt='10%' color="blue" />;
     
@@ -218,7 +224,11 @@ function AllActivityPage() {
         <Box h={'100%'}>
             <HeaderMegaMenu/>
             <Box ml={'200px'} mr={'200px'} >
-                <TableSort data={data} uid={uid}/>
+                <CreateNewActivity usernames={usernames} setQuery={setQuery}/>
+                { (data.length > 0) 
+                ? <TableSort data={data} uid={uid}/>
+                : <div style={{display: 'flex', justifyContent: 'center', marginTop:'100px'}}><Text size='xl' c={'var(--mantine-color-blue-6)'}>There is no activity yet</Text></div>
+                }
             </Box>
             
         </Box>

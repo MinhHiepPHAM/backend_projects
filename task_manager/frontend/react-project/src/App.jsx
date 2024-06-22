@@ -11,7 +11,7 @@ import Login from './Login';
 import Register from './Register';
 import UserProfile from './UserProfile';
 import EditProfile from './EditProfile';
-import ActivitySummaryPage from './Activity';
+import {ActivitySummaryPage} from './Activity';
 import AllActivityPage from './AllActivity';
 import ActivityDetailPage from './ActivityDetail';
 import AllUsersPage from './AllUsers';

@@ -21,8 +21,8 @@ const headers = {
     'Authorization': 'Token ' + token
 };
 
-function CreateNewActivity(props) {
-    const {usernames} = props;
+export function CreateNewActivity(props) {
+    const {usernames, setQuery} = props;
     const {uid} = useParams();
     const [title, setTitle] = useState('');
     const [type, setType] = useState('Running');
@@ -142,6 +142,7 @@ function CreateNewActivity(props) {
                     searchable
                     clearable
                     onChange={setUsers}
+                    onSearchChange={setQuery}
                 />
 				<Button fullWidth mt="xl" type='submit' onClick={handleCreateButton}>
 					Create
@@ -157,12 +158,12 @@ function CreateNewActivity(props) {
             </Modal>
             <Group justify="space-between">
                 <Button onClick={open} mt={'xl'}>New Activity</Button>
-                <Flex direction={'row'} mt={'xl'} gap={'md'} mr={'md'}>
+                {/* <Flex direction={'row'} mt={'xl'} gap={'md'} mr={'md'}>
                     <a style={{color:'var(--mantine-color-blue-7)'}} href={`/users/${uid}/activities/running/`}>Running</a>
                     <a style={{color:'var(--mantine-color-blue-7)'}} href={`/users/${uid}/activities/swimming/`}>Swimming</a>
                     <a style={{color:'var(--mantine-color-blue-7)'}} href={`/users/${uid}/activities/bicycle/`}>Bicycle</a>
                     <a style={{color:'var(--mantine-color-blue-7)'}} href={`/users/${uid}/activities/all/`}>All</a>
-                </Flex>
+                </Flex> */}
             </Group>
         </>
     )
@@ -254,17 +255,20 @@ function ActivitySummary(props) {
     return renderActivities;
 }
 
-function ActivitySummaryPage() {
+export function ActivitySummaryPage() {
     const {uid} = useParams();
     const [usernames, setUsernames] = useState([]);
     const [runningActs, setRunActivity] = useState([]);
     const [swimmingActs, setSwimActivity] = useState([]);
     const [bicycleActs, setBikeActivity] = useState([]);
     const [loaded, setLoaded] = useState(false);
+    const [query, setQuery] = useState('')
+    const queryParams = new URLSearchParams();
 
     useEffect(()=>{
         try {
-            axios.get(`http://localhost:8000/users/${uid}/activities/summary/`, {headers:headers})
+            queryParams.append ('uq', query.toString());
+            axios.get(`http://localhost:8000/users/${uid}/activities/summary/?${queryParams.toString()}`, {headers:headers})
             .then(response => {
                 // console.log(response.data);
                 setUsernames(response.data['usernames']);
@@ -280,7 +284,7 @@ function ActivitySummaryPage() {
             console.error('Activity page failed:');
         };
 
-    }, []);
+    }, [query]);
 
     if (!loaded) return (<Loader  ml='50%' mt='10%' color="blue" />);
     // console.log(runningActs);
@@ -289,7 +293,7 @@ function ActivitySummaryPage() {
         <Box h={'100%'}>
             <HeaderMegaMenu/>
             <Box ml={'200px'} mr={'200px'} >
-                <CreateNewActivity usernames={usernames}/>
+                <CreateNewActivity usernames={usernames} setQuery={setQuery} />
                 <ActivitySummary uid={uid} runningActivities={runningActs} swimActivities={swimmingActs} bicycleActivities={bicycleActs} />
             </Box>
             
@@ -297,4 +301,4 @@ function ActivitySummaryPage() {
     )
 };
 
-export default ActivitySummaryPage
+// export default ActivitySummaryPage

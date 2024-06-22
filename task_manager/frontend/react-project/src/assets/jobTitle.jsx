@@ -347,7 +347,8 @@ const jobTitles = [
     "Web developer",
     "Welfare rights adviser",
     "Writer",
-    "Youth worker"
+    "Youth worker",
+    "Comedian",
 ];
 
 export default jobTitles

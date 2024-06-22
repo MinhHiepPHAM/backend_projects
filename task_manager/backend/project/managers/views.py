@@ -10,6 +10,7 @@ from .models import *
 import re
 from datetime import datetime
 from .pagination import UserPagination
+import collections
 
 
 class RegistrationView(generics.CreateAPIView):
@@ -64,7 +65,7 @@ class LogoutView(APIView):
             return Response({"message": "Logout successful"}, status=status.HTTP_200_OK)
         except KeyError:
             return Response({"error": "Refresh token is required"}, status=status.HTTP_400_BAD_REQUEST)
-class CanEdit(permissions.IsAuthenticated):
+class BelongToUser(permissions.IsAuthenticated):
     def has_permission(self, request, view):
         has_perm = super().has_permission(request, view)
         user = request.user.username
@@ -73,7 +74,7 @@ class CanEdit(permissions.IsAuthenticated):
 
 class ProfileEditingView(generics.UpdateAPIView, generics.RetrieveAPIView):
     serializer_class = ProfileEditingSerializer
-    permission_classes = [CanEdit,]
+    permission_classes = [BelongToUser,]
     queryset = CustomUser.objects.all()
 
 class UserProfileView(ModelViewSet):
@@ -138,7 +139,10 @@ class UserActivitySummaryView(ModelViewSet):
 
     def retrieve(self, request, *args, **kwargs):
         response = {}
-        usernames = [obj.username for obj in CustomUser.objects.all().order_by('username')]
+        search_query = self.request.query_params.get('uq','')
+        users = CustomUser.objects.all().order_by('username').filter(username__icontains=search_query)[:10]
+        usernames = [user.username for user in users]
+        # usernames = [obj.username for obj in CustomUser.objects.all().order_by('username')]
         response['usernames'] = usernames
         running_acts = CustomUser.objects.get(pk=kwargs['pk']).activities.filter(type='RUN').order_by('-updated', 'start')[:2]
         swimming_acts = CustomUser.objects.get(pk=kwargs['pk']).activities.filter(type='SWIM').order_by('-updated', 'start')[:2]
@@ -156,12 +160,17 @@ class UserActivityAllView(ModelViewSet):
     serializer_class = ActivitySerializer
     # queryset = Activity.objects.all()
     def retrieve(self, request, *args, **kwargs):
+        response = {}
+        search_query = self.request.query_params.get('uq','')
+        users = CustomUser.objects.all().order_by('username').filter(username__icontains=search_query)[:10]
+        usernames = [user.username for user in users]
         activities = CustomUser.objects.get(pk=kwargs['pk']).activities.order_by('-updated', 'start')
-        data = self.serializer_class(activities, many=True).data
-        return Response(data,status=status.HTTP_200_OK)
+        activities = self.serializer_class(activities, many=True).data
+        response = {'activities':activities, 'usernames': usernames}
+        return Response(response,status=status.HTTP_200_OK)
 
 class ActivityView(ModelViewSet):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [BelongToUser]
     def retrieve(self, request, *args, **kwargs):
         activity = Activity.objects.get(pk=kwargs['pk'])
         actions = activity.actions
@@ -240,8 +249,15 @@ class AddUserToActvity(generics.CreateAPIView):
         activity = Activity.objects.get(pk=kwargs['pk'])
         for user in users:
             activity.users.add(user)
+        activity.updated = datetime.now()
         activity.save()
         return Response({'users': UserSerializer(users, many=True).data}, status=status.HTTP_201_CREATED)
+    
+
+
+        
+
+        
 
 
 
