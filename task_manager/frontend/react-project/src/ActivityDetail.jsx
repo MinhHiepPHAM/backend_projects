@@ -7,6 +7,7 @@ import {
     Flex, 
     Loader,
     Modal,
+    MultiSelect,
     NumberInput,
     Paper,
     Table,
@@ -119,6 +120,48 @@ function CreateNewAction() {
     )
 }
 
+function AddUser(props) {
+    const {aid, users, setQuery} = props;
+    const [newUsers, setNewUsers] = useState([]);
+    const [opened, { open, close }] = useDisclosure(false);
+    const [status, setStatus] = useState(null)
+    
+    const handleAddButton = async(e) => {
+        e.preventDefault();
+        try {
+            const response = await axios.post(`http://localhost:8000/activities/${aid}/adduser/`, {
+				newUsers
+			},{
+				headers: headers
+			});
+            setStatus(response.status);
+        } catch (e) {
+            console.error('Creation failed:', e);
+        }
+
+    }
+
+    return (
+        <>
+            <Modal size={'lg'} opened={opened} onClose={close} title="Add user to the activity" centered>
+                {/* {(error!=='') && <Text c='red' size='md' ta="left" mb='md'>{error}</Text>} */}
+                {(status===201) && <Text c='blue' size='md' ta="left" mb='md'>Successfully add user</Text>}
+                <MultiSelect id="user_participate"
+                        placeholder="Username"
+                        data={users}
+                        searchable
+                        clearable
+                        onChange={setNewUsers}
+                        onSearchChange={setQuery}
+                        
+                />
+                <Button mt={'md'} type="submit" onClick={handleAddButton}>Add</Button>
+            </Modal>
+            <Button onClick={open} mt={'xl'} ml={'md'} variant="default" >Add User</Button>
+        </>
+    )
+}
+
 function ActivityInfoTable({activity}) {
     let ActIcon;
     switch(activity.type) {
@@ -199,24 +242,33 @@ function ActivityDetailPage() {
     const {aid} = useParams();
     const [loaded, setLoaded] = useState(false)
     const [data, setData] = useState(null)
+    const [users, setUsers] = useState([]);
+    const [query, setQuery] = useState('');
+    const queryParams = new URLSearchParams();
+    
     useEffect(()=>{
-        axios.get(`http://localhost:8000/activities/${aid}/detail/`, {headers:headers})
+        queryParams.append ('uq', query.toString());
+        axios.get(`http://localhost:8000/activities/${aid}/detail/?${queryParams.toString()}`, {headers:headers})
         .then(response => {
             setLoaded(true)
-            console.log(response.data)
+            // console.log(response.data)
             setData(response.data.activity);
+            setUsers(response.data.users);
         }).catch (error => {
             console.log(error);
-        });
-    }, []);
+        });        
+    }, [query]);
 
     if (!loaded) return (<Loader  ml='50%' mt='10%' color="blue" />);
+
+    // console.log(users)
 
     return (
         <Box h={'100%'}>
             <HeaderMegaMenu/>
             <Box ml={'200px'} mr={'200px'} >
                 <CreateNewAction/>
+                <AddUser aid={aid} users={users} setQuery={setQuery}/>
                 <ActivityInfoTable activity={data}/>
             </Box>
             

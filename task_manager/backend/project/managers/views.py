@@ -165,9 +165,15 @@ class ActivityView(ModelViewSet):
     def retrieve(self, request, *args, **kwargs):
         activity = Activity.objects.get(pk=kwargs['pk'])
         actions = activity.actions
+
+        search_query = self.request.query_params.get('uq','')
+        users = CustomUser.objects.all().order_by('username').filter(username__icontains=search_query)[:10]
+        usernames = [user.username for user in users]
+
         response = {
             'activity': ActivitySerializer(activity).data,
-            'actions': ActionSerializer(actions, many=True).data
+            'actions': ActionSerializer(actions, many=True).data,
+            'users': usernames
         }
 
         return Response(response,status=status.HTTP_200_OK)
@@ -222,6 +228,25 @@ class AllUserView(ModelViewSet):
         data = UserSerializer(users_per_page, many=True).data
     
         return self.get_paginated_response(data)
+
+class AddUserToActvity(generics.CreateAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def post(self, request, *args, **kwargs):
+        response = request.data
+        usernames = response.get('newUsers')
+        users = [CustomUser.objects.get(username=username) for username in usernames]
+
+        activity = Activity.objects.get(pk=kwargs['pk'])
+        for user in users:
+            activity.users.add(user)
+        activity.save()
+        return Response({'users': UserSerializer(users, many=True).data}, status=status.HTTP_201_CREATED)
+
+
+
+
+
 
 
 
