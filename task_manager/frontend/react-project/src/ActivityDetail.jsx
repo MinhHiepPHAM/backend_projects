@@ -24,6 +24,7 @@ import { useDisclosure } from "@mantine/hooks";
 import classes from './css/activity.module.css'
 import { FaRunning, FaSwimmer } from "react-icons/fa";
 import { MdDirectionsBike } from "react-icons/md";
+import { BarChart } from '@mantine/charts';
 
 
 const token = localStorage.getItem('token');
@@ -238,6 +239,46 @@ function ActivityInfoTable({activity}) {
     return activityDetail;
 }
 
+function UserActionInActivity(props) {
+    const {aid} = props;
+    const [totalDistancePerUser, setTotalDistancePerUser] = useState([]);
+    useEffect(()=> {
+        axios.get(`http://localhost:8000/activities/${aid}/detail/usersaction/`, {headers:headers})
+        .then(response => {
+            setTotalDistancePerUser(response.data['distance_per_user']);
+        }).catch (error => {
+            console.log(error)
+        })
+    }, []);
+
+    useEffect(() => {
+        const originalConsoleError = console.error;
+        console.error = (...args) => {
+          if (typeof args[0] === "string" && /defaultProps/.test(args[0])) {
+            return;
+          }
+          originalConsoleError(...args);
+        };
+    
+        return () => {
+          console.error = originalConsoleError;
+        };
+    }, []);
+    
+
+    return (
+        <div style={{display:'flex', justifyContent:'center'}}>
+            <BarChart
+                h={300} maw={90*totalDistancePerUser.length}
+                data={totalDistancePerUser}
+                dataKey={'username'}
+                series={[{name: 'distance', color: 'blue'}]}
+                tickLine="none"
+            />
+        </div>
+    )
+}
+
 function ActivityDetailPage() {
     const {aid} = useParams();
     const [loaded, setLoaded] = useState(false)
@@ -270,6 +311,7 @@ function ActivityDetailPage() {
                 <CreateNewAction/>
                 <AddUser aid={aid} users={users} setQuery={setQuery}/>
                 <ActivityInfoTable activity={data}/>
+                <UserActionInActivity aid={aid}/>
             </Box>
             
         </Box>

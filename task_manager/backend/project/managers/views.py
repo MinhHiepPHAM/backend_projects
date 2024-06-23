@@ -65,12 +65,22 @@ class LogoutView(APIView):
             return Response({"message": "Logout successful"}, status=status.HTTP_200_OK)
         except KeyError:
             return Response({"error": "Refresh token is required"}, status=status.HTTP_400_BAD_REQUEST)
+
 class BelongToUser(permissions.IsAuthenticated):
     def has_permission(self, request, view):
         has_perm = super().has_permission(request, view)
         user = request.user.username
         other = CustomUser.objects.get(pk=view.kwargs['pk']).username
         return has_perm and (user == other)
+    
+class IsInActivity(permissions.IsAuthenticated):
+    def has_permission(self, request, view):
+        has_perm = super().has_permission(request, view)
+        username = request.user.username
+        users = Activity.objects.get(pk=view.kwargs['pk']).users.all()
+        canSee = any(username == user.username for user in users)
+
+        return has_perm and canSee
 
 class ProfileEditingView(generics.UpdateAPIView, generics.RetrieveAPIView):
     serializer_class = ProfileEditingSerializer
@@ -133,7 +143,7 @@ class CreateActivityView(generics.CreateAPIView, generics.RetrieveAPIView):
             return Response({'Create failed': str(e)}, status=status.HTTP_404_NOT_FOUND)
     
 class UserActivitySummaryView(ModelViewSet):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [BelongToUser]
     serializer_class = ActivitySerializer
     # queryset = Activity.objects.all()
 
@@ -170,7 +180,7 @@ class UserActivityAllView(ModelViewSet):
         return Response(response,status=status.HTTP_200_OK)
 
 class ActivityView(ModelViewSet):
-    permission_classes = [BelongToUser]
+    permission_classes = [permissions.IsAuthenticated]
     def retrieve(self, request, *args, **kwargs):
         activity = Activity.objects.get(pk=kwargs['pk'])
         actions = activity.actions
@@ -249,11 +259,42 @@ class AddUserToActvity(generics.CreateAPIView):
         activity = Activity.objects.get(pk=kwargs['pk'])
         for user in users:
             activity.users.add(user)
+            
         activity.updated = datetime.now()
         activity.save()
         return Response({'users': UserSerializer(users, many=True).data}, status=status.HTTP_201_CREATED)
-    
 
+class AllUserActionInOneActivity(generics.RetrieveAPIView):
+    permission_classes = [IsInActivity]
+    def get(self, request, *args, **kwargs):
+        activity = Activity.objects.get(pk=kwargs['pk'])
+        actions = activity.actions.all()
+        users = activity.users.all()
+        actions_per_users = collections.defaultdict(list)
+        for action in actions:
+            actions_per_users[action.user.username].append(action)
+
+        distance_per_users = collections.defaultdict(int)
+        distance_per_user_per_days = collections.defaultdict(lambda: collections.defaultdict(int))
+        # distance_per_user_per_days = collections.defaultdict(lambda: collections.defaultdict(list))
+
+        for username, acts in actions_per_users.items():
+            distance_per_users[username] += sum(act.distance for act in acts)
+            for act in sorted(acts, key=lambda k: k.date):
+                # print(str(act.date.date()), act.distance)
+                distance_per_user_per_days[username][str(act.date.date())] += act.distance
+
+        for user in users:
+            distance_per_users[user.username] = distance_per_users.get(user.username,0)
+
+        total_distance = [{'username': username, 'distance': distance} for username, distance in distance_per_users.items()]
+        
+        response = {
+            'distance_per_user': total_distance,
+            'distance_per_user_per_day': distance_per_user_per_days
+        }
+
+        return Response(response, status=status.HTTP_200_OK)
 
         
 

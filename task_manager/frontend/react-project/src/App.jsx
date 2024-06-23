@@ -3,6 +3,7 @@
 import '@mantine/tiptap/styles.css';
 import '@mantine/dates/styles.css';
 import '@mantine/core/styles.css';
+import '@mantine/charts/styles.css';
 import { Route, Routes, BrowserRouter } from 'react-router-dom';
 import {DEFAULT_THEME, MantineProvider, createTheme, mergeThemeOverrides } from '@mantine/core';
 import classes from './css/active.module.css'

@@ -13,6 +13,7 @@ urlpatterns = [
     path('users/<int:pk>/activities/all/', views.UserActivityAllView.as_view({'get':'retrieve'}), name='user_activities_all'),
     path('users/<int:pk>/activities/create/', views.CreateActivityView.as_view(), name='create_activities'),
     path('activities/<int:pk>/detail/', views.ActivityView.as_view({'get':'retrieve'}), name='activity_detail'),
+    path('activities/<int:pk>/detail/usersaction/', views.AllUserActionInOneActivity.as_view(), name='user_action_in_activity'),
     path('activities/<int:pk>/create/', views.CreateNewActionView.as_view(), name='create_action'),
     path('activities/<int:pk>/adduser/', views.AddUserToActvity.as_view(), name='add_user'),
     path('users/', views.AllUserView.as_view({'get':'retrieve'}), name='all_users'),
