@@ -16,7 +16,7 @@ import {
     Tooltip,
 } from "@mantine/core";
 import { HeaderMegaMenu } from "./HeaderMegaMenu";
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import { DateInput } from "@mantine/dates";
@@ -242,10 +242,15 @@ function ActivityInfoTable({activity}) {
 function UserActionInActivity(props) {
     const {aid} = props;
     const [totalDistancePerUser, setTotalDistancePerUser] = useState([]);
+    const [distancePerUserPerDay, setDistancePerUserPerDay] = useState(null) 
+    const [loaded, setLoaded] = useState(false)
+
     useEffect(()=> {
         axios.get(`http://localhost:8000/activities/${aid}/detail/usersaction/`, {headers:headers})
         .then(response => {
             setTotalDistancePerUser(response.data['distance_per_user']);
+            setDistancePerUserPerDay(response.data['distance_per_user_per_day']);
+            setLoaded(true);
         }).catch (error => {
             console.log(error)
         })
@@ -265,8 +270,9 @@ function UserActionInActivity(props) {
         };
     }, []);
     
-
+    if (!loaded) return (<Loader  ml='50%' mt='10%' color="blue" />)
     return (
+        <>
         <div style={{display:'flex', justifyContent:'center'}}>
             <BarChart
                 h={300} maw={90*totalDistancePerUser.length}
@@ -274,8 +280,22 @@ function UserActionInActivity(props) {
                 dataKey={'username'}
                 series={[{name: 'distance', color: 'blue'}]}
                 tickLine="none"
+                gridAxis="none"
+                yAxisLabel="Km"
             />
         </div>
+        <div style={{display:'flex', justifyContent:'center'}}>
+            <BarChart
+                h={300} maw={50*distancePerUserPerDay[username].length}
+                data={distancePerUserPerDay[username]}
+                dataKey={'date'}
+                series={[{name: 'distance', color: 'blue'}]}
+                tickLine="none"
+                gridAxis="none"
+                yAxisLabel="Km"
+            />
+        </div>
+        </>
     )
 }
 

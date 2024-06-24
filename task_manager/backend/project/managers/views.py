@@ -8,7 +8,7 @@ from .serializers import UserSerializer, RegisterSerializer, ProfileEditingSeria
 from rest_framework import status
 from .models import *
 import re
-from datetime import datetime
+from datetime import datetime, timedelta
 from .pagination import UserPagination
 import collections
 
@@ -276,22 +276,43 @@ class AllUserActionInOneActivity(generics.RetrieveAPIView):
 
         distance_per_users = collections.defaultdict(int)
         distance_per_user_per_days = collections.defaultdict(lambda: collections.defaultdict(int))
-        # distance_per_user_per_days = collections.defaultdict(lambda: collections.defaultdict(list))
+        
+        terminate = activity.terminate.date()
+        start = activity.start.date()
+        now = datetime.now().date()
+        # print(now.isoformat())
+
+        end_date = now if terminate > now else terminate
 
         for username, acts in actions_per_users.items():
             distance_per_users[username] += sum(act.distance for act in acts)
             for act in sorted(acts, key=lambda k: k.date):
                 # print(str(act.date.date()), act.distance)
-                distance_per_user_per_days[username][str(act.date.date())] += act.distance
+                distance_per_user_per_days[username][act.date.date().isoformat()] += act.distance
+        
+        distance_per_user_series = collections.defaultdict(list)
+        month = start.month
+        nday = (end_date-start).days
+        for username, distance_per_date in distance_per_user_per_days.items():
+            for date in (start + timedelta(i) for i in range(nday+1)):
+                if (date == start) or (date.month != month and date.day == 1):
+                    display_time = f"{date.day}/{date.strftime('%B')}"
+                else:
+                    display_time = date.day
+                if date.isoformat() in distance_per_date:
+                    distance_per_user_series[username].append({'date': display_time, 'distance': distance_per_date[date.isoformat()]})
+                else:
+                    distance_per_user_series[username].append({'date':display_time, 'distance': 0})
+
 
         for user in users:
             distance_per_users[user.username] = distance_per_users.get(user.username,0)
 
-        total_distance = [{'username': username, 'distance': distance} for username, distance in distance_per_users.items()]
+        total_distance_series = [{'username': username, 'distance': distance} for username, distance in distance_per_users.items()]
         
         response = {
-            'distance_per_user': total_distance,
-            'distance_per_user_per_day': distance_per_user_per_days
+            'distance_per_user': total_distance_series,
+            'distance_per_user_per_day': distance_per_user_series
         }
 
         return Response(response, status=status.HTTP_200_OK)

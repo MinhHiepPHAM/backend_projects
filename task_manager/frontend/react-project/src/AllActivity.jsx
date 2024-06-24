@@ -185,14 +185,6 @@ function TableSort({data, uid}) {
 }
 
 
-const username = localStorage.getItem('username');
-const token = localStorage.getItem('token');
-
-const headers = {
-    'Content-Type': 'application/json',
-    'Authorization': 'Token ' + token
-};
-
 function AllActivityPage() {
     const {uid} = useParams();
     const [loaded, setLoaded] = useState(false);
@@ -203,6 +195,11 @@ function AllActivityPage() {
 
     useEffect(()=>{
         try {
+            const token = localStorage.getItem('token');
+            const headers = {
+                'Content-Type': 'application/json',
+                'Authorization': 'Token ' + token
+            };
             queryParams.append ('uq', query.toString());
             axios.get(`http://localhost:8000/users/${uid}/activities/all/?${queryParams.toString()}`, {headers:headers})
             .then(response => {

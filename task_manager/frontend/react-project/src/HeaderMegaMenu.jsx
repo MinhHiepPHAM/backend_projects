@@ -93,7 +93,7 @@ export function HeaderMegaMenu({page=''}) {
   const uid = localStorage.getItem('uid')
   const isAuthenticated = localStorage.getItem('token') !== null
 
-  let actUrl = (username===undefined)? 'login' : `/users/${uid}/activities/all`
+  let actUrl = (username===undefined)? 'login' : `/users/${uid}/activities/all/`
 
   const links = [
     { link: '/home', label: 'Home' },
