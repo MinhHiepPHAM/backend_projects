@@ -5,11 +5,13 @@ import {
     Container, 
     Divider, 
     Flex, 
+    Group, 
     Loader,
     Modal,
     MultiSelect,
     NumberInput,
     Paper,
+    Select,
     Table,
     Text,
     Title,
@@ -243,6 +245,7 @@ function UserActionInActivity(props) {
     const {aid} = props;
     const [totalDistancePerUser, setTotalDistancePerUser] = useState([]);
     const [distancePerUserPerDay, setDistancePerUserPerDay] = useState(null) 
+    const [selectedUser, setSelectedUser] = useState(username)
     const [loaded, setLoaded] = useState(false)
 
     useEffect(()=> {
@@ -270,31 +273,50 @@ function UserActionInActivity(props) {
         };
     }, []);
     
-    if (!loaded) return (<Loader  ml='50%' mt='10%' color="blue" />)
+    if (!loaded) return (<Loader  ml='50%' mt='10%' color="blue" />);
+    console.log(distancePerUserPerDay[selectedUser]);
+    const allUsers = Object.keys(distancePerUserPerDay);
+    console.log(allUsers);
     return (
         <>
-        <div style={{display:'flex', justifyContent:'center'}}>
+        <Group justify="space-between">
             <BarChart
                 h={300} maw={90*totalDistancePerUser.length}
                 data={totalDistancePerUser}
                 dataKey={'username'}
-                series={[{name: 'distance', color: 'blue'}]}
+                series={[{name: 'distance', color: 'indigo.5'}]}
                 tickLine="none"
                 gridAxis="none"
                 yAxisLabel="Km"
             />
-        </div>
-        <div style={{display:'flex', justifyContent:'center'}}>
+            <Select
+                mr={'xl'}
+                maw={150}
+                data={['All', 'Week', 'Month', 'Year']}
+                defaultValue={'All'}
+                // onChange={setSelectedUser}
+            />
+            
+        </Group>
+        <Divider mt={'xl'} mb={'xl'}></Divider>
+        <Group justify="space-between">
             <BarChart
                 h={300} maw={50*distancePerUserPerDay[username].length}
-                data={distancePerUserPerDay[username]}
+                data={distancePerUserPerDay[selectedUser]}
                 dataKey={'date'}
-                series={[{name: 'distance', color: 'blue'}]}
+                series={[{name: 'distance', color: 'violet'}]}
                 tickLine="none"
                 gridAxis="none"
                 yAxisLabel="Km"
             />
-        </div>
+            <Select
+                mr={'xl'}
+                maw={150}
+                data={allUsers}
+                defaultValue={username}
+                onChange={setSelectedUser}
+            />
+        </Group>
         </>
     )
 }
