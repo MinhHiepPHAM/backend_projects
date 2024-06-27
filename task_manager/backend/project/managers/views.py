@@ -275,12 +275,12 @@ class AllUserActionInOneActivity(generics.RetrieveAPIView):
             actions_per_users[action.user.username].append(action)
 
         distance_per_users = collections.defaultdict(int)
+        distance_per_users_per_weeks = collections.defaultdict(lambda: collections.defaultdict(int))
         distance_per_user_per_days = collections.defaultdict(lambda: collections.defaultdict(int))
         
         terminate = activity.terminate.date()
         start = activity.start.date()
         now = datetime.now().date()
-        # print(now.isoformat())
 
         end_date = now if terminate > now else terminate
 
@@ -291,31 +291,50 @@ class AllUserActionInOneActivity(generics.RetrieveAPIView):
                 distance_per_user_per_days[username][act.date.date().isoformat()] += act.distance
         
         distance_per_user_series = collections.defaultdict(list)
+        distance_per_user_per_week_series = collections.defaultdict(lambda: collections.defaultdict(list))
         month = start.month
         nday = (end_date-start).days
+
         for username, distance_per_date in distance_per_user_per_days.items():
             for date in (start + timedelta(i) for i in range(nday+1)):
+                week_number = date.isocalendar()[1]
                 if (date == start) or (date.month != month and date.day == 1):
                     display_time = f"{date.day}/{date.strftime('%B')}"
                 else:
                     display_time = date.day
                 if date.isoformat() in distance_per_date:
-                    distance_per_user_series[username].append({'date': display_time, 'distance': distance_per_date[date.isoformat()]})
+                    distance = {'date': display_time, 'distance': distance_per_date[date.isoformat()]}
                 else:
-                    distance_per_user_series[username].append({'date':display_time, 'distance': 0})
+                    distance = {'date':display_time, 'distance': 0}
+                distance_per_user_series[username].append(distance)
+                distance_per_user_per_week_series[week_number][username].append(distance)
 
-
+        # import pprint; pprint.pprint(distance_per_user_per_week_series)
         for user in users:
             distance_per_users[user.username] = distance_per_users.get(user.username,0)
 
         total_distance_series = [{'username': username, 'distance': distance} for username, distance in distance_per_users.items()]
+
+        # year, week_number, weekday = now.isocalendar()
         
         response = {
             'distance_per_user': total_distance_series,
-            'distance_per_user_per_day': distance_per_user_series
+            'distance_per_user_per_day': distance_per_user_series,
+            'distance_per_user_per_day_week': distance_per_user_per_week_series,
+            'weeks': list(distance_per_user_per_week_series.keys())
         }
 
         return Response(response, status=status.HTTP_200_OK)
+
+    def get_week(self, date):
+        day_idx = (date.weekday() + 1) % 7  # turn sunday into 0, monday into 1, etc.
+        sunday = date - timedelta(days=day_idx)
+        date = sunday
+        one_day = timedelta(days=1)
+        for _ in range(7):
+            yield date
+            date += one_day
+        
 
         
 

@@ -244,20 +244,31 @@ function ActivityInfoTable({activity}) {
 function UserActionInActivity(props) {
     const {aid} = props;
     const [totalDistancePerUser, setTotalDistancePerUser] = useState([]);
-    const [distancePerUserPerDay, setDistancePerUserPerDay] = useState(null) 
+    const [distancePerUserPerDayAll, setDistancePerUserPerDayAll] = useState(null) 
     const [selectedUser, setSelectedUser] = useState(username)
     const [loaded, setLoaded] = useState(false)
+    const [distancePerUserPerDayByWeek, setDistancePerUserPerDayByWeek] = useState(null)
+    const [weekNum, setWeekNum] = useState(null);
+    const [timestamp, setTimestamp ] = useState('All')
+    const [userWeekNum, setUserWeekNum] = useState(null);
+    const [userTimestamp, setUserTimestamp ] = useState('All')
 
     useEffect(()=> {
         axios.get(`http://localhost:8000/activities/${aid}/detail/usersaction/`, {headers:headers})
         .then(response => {
             setTotalDistancePerUser(response.data['distance_per_user']);
-            setDistancePerUserPerDay(response.data['distance_per_user_per_day']);
+            setDistancePerUserPerDayAll(response.data['distance_per_user_per_day']);
+            setDistancePerUserPerDayByWeek(response.data['distance_per_user_per_day_week']);
             setLoaded(true);
+            const [week] = response.data['weeks'].slice(-1);
+            setWeekNum(week);
+            setUserWeekNum(week);
         }).catch (error => {
             console.log(error)
         })
     }, []);
+
+    // console.log(weekNum)
 
     useEffect(() => {
         const originalConsoleError = console.error;
@@ -274,9 +285,13 @@ function UserActionInActivity(props) {
     }, []);
     
     if (!loaded) return (<Loader  ml='50%' mt='10%' color="blue" />);
-    console.log(distancePerUserPerDay[selectedUser]);
-    const allUsers = Object.keys(distancePerUserPerDay);
-    console.log(allUsers);
+    // console.log(distancePerUserPerDayAll[selectedUser]);
+    const allUsers = Object.keys(distancePerUserPerDayAll);
+    const weekNumbers = Object.keys(distancePerUserPerDayByWeek);
+    // console.log(weekNum, userWeekNum);
+    
+    const distancePersUserSeries = (userTimestamp === 'All') ? distancePerUserPerDayAll[selectedUser] : distancePerUserPerDayByWeek[userWeekNum][selectedUser]
+    // console.log(distancePersUserSeries)
     return (
         <>
         <Group justify="space-between">
@@ -289,33 +304,66 @@ function UserActionInActivity(props) {
                 gridAxis="none"
                 yAxisLabel="Km"
             />
-            <Select
-                mr={'xl'}
-                maw={150}
-                data={['All', 'Week', 'Month', 'Year']}
-                defaultValue={'All'}
-                // onChange={setSelectedUser}
-            />
+            <Flex direction={'column'}>
+                <Select
+                    mt={'md'}
+                    mr={'50'}
+                    maw={100}
+                    data={['All', 'Week', 'Month', 'Year']}
+                    defaultValue={'All'}
+                    onChange={setTimestamp}
+                />
+                {
+                    (timestamp === 'Week') 
+                    && <Select
+                        mt={'md'}
+                        maw={100}
+                        data={weekNumbers}
+                        defaultValue={weekNum}
+                        onChange={setWeekNum}
+                    />
+                }
+                
+            </Flex>
             
         </Group>
         <Divider mt={'xl'} mb={'xl'}></Divider>
         <Group justify="space-between">
             <BarChart
-                h={300} maw={50*distancePerUserPerDay[username].length}
-                data={distancePerUserPerDay[selectedUser]}
+                h={300} maw={50*distancePersUserSeries.length}
+                data={distancePersUserSeries}
                 dataKey={'date'}
                 series={[{name: 'distance', color: 'violet'}]}
                 tickLine="none"
                 gridAxis="none"
                 yAxisLabel="Km"
             />
-            <Select
-                mr={'xl'}
-                maw={150}
-                data={allUsers}
-                defaultValue={username}
-                onChange={setSelectedUser}
-            />
+            <Flex direction={'column'}>
+                <Select
+                    // mr={'xl'}
+                    maw={150}
+                    data={allUsers}
+                    defaultValue={username}
+                    onChange={setSelectedUser}
+                />
+
+                <Select
+                    mt={'md'}
+                    maw={100}
+                    data={['All', 'Week', 'Month', 'Year']}
+                    defaultValue={'All'}
+                    onChange={setUserTimestamp}
+                />
+
+                {(userTimestamp === 'Week') 
+                && <Select
+                    mt={'md'}
+                    maw={100}
+                    data={weekNumbers}
+                    defaultValue={userWeekNum}
+                    onChange={setUserWeekNum}
+                />}
+            </Flex>
         </Group>
         </>
     )
