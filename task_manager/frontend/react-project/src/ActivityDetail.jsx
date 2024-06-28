@@ -285,13 +285,11 @@ function UserActionInActivity(props) {
     }, []);
     
     if (!loaded) return (<Loader  ml='50%' mt='10%' color="blue" />);
-    // console.log(distancePerUserPerDayAll[selectedUser]);
     const allUsers = Object.keys(distancePerUserPerDayAll);
     const weekNumbers = Object.keys(distancePerUserPerDayByWeek);
     // console.log(weekNum, userWeekNum);
     
     const distancePersUserSeries = (userTimestamp === 'All') ? distancePerUserPerDayAll[selectedUser] : distancePerUserPerDayByWeek[userWeekNum][selectedUser]
-    // console.log(distancePersUserSeries)
     return (
         <>
         <Group justify="space-between">
@@ -330,7 +328,7 @@ function UserActionInActivity(props) {
         <Divider mt={'xl'} mb={'xl'}></Divider>
         <Group justify="space-between">
             <BarChart
-                h={300} maw={50*distancePersUserSeries.length}
+                h={300} maw={60*distancePersUserSeries.length}
                 data={distancePersUserSeries}
                 dataKey={'date'}
                 series={[{name: 'distance', color: 'violet'}]}
