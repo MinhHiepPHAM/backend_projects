@@ -242,43 +242,42 @@ function ActivityInfoTable({activity}) {
 }
 
 function UserActionInActivity(props) {
-    const {aid} = props;
+    const {aid} = props; 
     const [totalDistancePerUser, setTotalDistancePerUser] = useState([]);
-    const [distancePerUserPerDayAll, setDistancePerUserPerDayAll] = useState(null) 
-    const [selectedUser, setSelectedUser] = useState(username)
-    const [loaded, setLoaded] = useState(false)
-    const [distancePerUserPerDayByWeek, setDistancePerUserPerDayByWeek] = useState(null)
-    const [distancePerUserPerDayByMonth, setDistancePerUserPerDayByMonth] = useState(null)
+    const [distancePerUserPerDayAll, setDistancePerUserPerDayAll] = useState(null) ;
+    const [selectedUser, setSelectedUser] = useState(username);
+    const [loaded, setLoaded] = useState(false);
+    const [distancePerUserPerDayByWeek, setDistancePerUserPerDayByWeek] = useState(null);
+    const [distancePerUserPerDayByMonth, setDistancePerUserPerDayByMonth] = useState(null);
     const [weekNum, setWeekNum] = useState(null);
     const [month, setMonth] = useState(null);
     const [timestamp, setTimestamp ] = useState('All');
     const [userWeekNum, setUserWeekNum] = useState(null);
     const [userTimestamp, setUserTimestamp ] = useState('All');
     const [userMonth, setUserMonth] = useState(null);
-    const [allMonth, setAllMonth] = useState([]);
-    const [allWeek, setAllWeek] = useState([]);
+    const [allMonth, setAllMonth] = useState(null);
+    const [allWeek, setAllWeek] = useState(null);
 
     useEffect(()=> {
         axios.get(`http://localhost:8000/activities/${aid}/detail/usersaction/`, {headers:headers})
         .then(response => {
-            setTotalDistancePerUser(response.data['distance_per_user']);
-            setDistancePerUserPerDayAll(response.data['distance_per_user_per_day']);
-            setDistancePerUserPerDayByWeek(response.data['distance_per_user_per_day_week']);
-            setDistancePerUserPerDayByMonth(response.data['distance_per_user_per_day_month']);
+            setTotalDistancePerUser(response.data.distance_per_user);
+            setDistancePerUserPerDayAll(response.data.distance_per_user_per_day);
+            setDistancePerUserPerDayByWeek(response.data.distance_per_user_per_day_week);
+            setDistancePerUserPerDayByMonth(response.data.distance_per_user_per_day_month);
             setAllWeek(response.data['weeks']);
             setAllMonth(response.data['months']);
-            const initWeek = allWeek.slice(-1)[0]
+            const initWeek = allWeek ? allWeek.slice(-1)[0] : undefined
             setWeekNum(initWeek); 
             setUserWeekNum(initWeek);
-            const initMonth = allMonth.slice(-1)[0]
+            const initMonth = allMonth ? allMonth.slice(-1)[0] : undefined
             setUserMonth(initMonth);
             setMonth(initMonth);
-            // console.log(allWeek, allWeek.slice(-1)[0], allMonth.slice(-1)[0])
             setLoaded(true);
-        }).catch (error => {
+        }).catch (error => { 
             console.log(error)
         })
-    }, []);
+    }, [loaded]);
 
     useEffect(() => {
         const originalConsoleError = console.error;
@@ -297,12 +296,10 @@ function UserActionInActivity(props) {
     if (!loaded) return (<Loader  ml='50%' mt='10%' color="blue" />);
     const allUsers = Object.keys(distancePerUserPerDayAll);
     // console.log(userWeekNum, typeof(userWeekNum), distancePerUserPerDayByWeek[userWeekNum]);
-    
     const distancePersUserSeries = (userTimestamp === 'All')
         ? distancePerUserPerDayAll[selectedUser]
         : (userTimestamp === 'Month') ? distancePerUserPerDayByMonth[userMonth][selectedUser] : distancePerUserPerDayByWeek[userWeekNum][selectedUser]
         
-    // console.log(distancePersUserSeries)
     return (
         <>
         <Group justify="space-between">
