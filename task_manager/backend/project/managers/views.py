@@ -282,7 +282,7 @@ class AllUserActionInOneActivity(generics.RetrieveAPIView):
         start = activity.start.date()
         now = datetime.now().date()
 
-        end_date = now if terminate > now else terminate
+        end_date = now if terminate and terminate > now else terminate
 
         for username, acts in actions_per_users.items():
             distance_per_users[username] += sum(act.distance for act in acts)
@@ -290,8 +290,9 @@ class AllUserActionInOneActivity(generics.RetrieveAPIView):
                 # print(str(act.date.date()), act.distance)
                 distance_per_user_per_days[username][act.date.date().isoformat()] += act.distance
         
-        distance_per_user_series = collections.defaultdict(list)
+        distance_per_user_all_series = collections.defaultdict(list)
         distance_per_user_per_week_series = collections.defaultdict(lambda: collections.defaultdict(list))
+        distance_per_user_per_month_series = collections.defaultdict(lambda: collections.defaultdict(list))
         month = start.month
         nday = (end_date-start).days
 
@@ -299,14 +300,17 @@ class AllUserActionInOneActivity(generics.RetrieveAPIView):
             for date in (start + timedelta(i) for i in range(nday+1)):
                 week_number = date.isocalendar()[1] # year, week_number, weekday = now.isocalendar()
                 weekday = date.strftime('%a')
+                month_name = date.strftime('%b')
                 if (date == start) or (date.month != month and date.day == 1):
-                    display_time = f"{date.day}/{date.strftime('%b')}"
+                    display_time = f"{date.day}/{month_name}"
                 else:
                     display_time = date.day
                 distance = {'date': display_time, 'distance': distance_per_date.get(date.isoformat(),0)}
                 week_distance = {'date': weekday, 'distance': distance_per_date.get(date.isoformat(),0)}
-                distance_per_user_series[username].append(distance)
-                distance_per_user_per_week_series[week_number][username].append(week_distance)
+                month_distance = {'date': date.day, 'distance': distance_per_date.get(date.isoformat(),0)}
+                distance_per_user_all_series[username].append(distance)
+                distance_per_user_per_week_series[str(week_number)][username].append(week_distance)
+                distance_per_user_per_month_series[month_name][username].append(month_distance)
 
         # import pprint; pprint.pprint(distance_per_user_per_week_series)
         for user in users:
@@ -316,9 +320,11 @@ class AllUserActionInOneActivity(generics.RetrieveAPIView):
         
         response = {
             'distance_per_user': total_distance_series,
-            'distance_per_user_per_day': distance_per_user_series,
+            'distance_per_user_per_day': distance_per_user_all_series,
             'distance_per_user_per_day_week': distance_per_user_per_week_series,
-            'weeks': list(distance_per_user_per_week_series.keys())
+            'distance_per_user_per_day_month': distance_per_user_per_month_series,
+            'weeks': list(distance_per_user_per_week_series.keys()),
+            'months': list(distance_per_user_per_month_series.keys())
         }
 
         return Response(response, status=status.HTTP_200_OK)

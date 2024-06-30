@@ -248,10 +248,15 @@ function UserActionInActivity(props) {
     const [selectedUser, setSelectedUser] = useState(username)
     const [loaded, setLoaded] = useState(false)
     const [distancePerUserPerDayByWeek, setDistancePerUserPerDayByWeek] = useState(null)
+    const [distancePerUserPerDayByMonth, setDistancePerUserPerDayByMonth] = useState(null)
     const [weekNum, setWeekNum] = useState(null);
-    const [timestamp, setTimestamp ] = useState('All')
+    const [month, setMonth] = useState(null);
+    const [timestamp, setTimestamp ] = useState('All');
     const [userWeekNum, setUserWeekNum] = useState(null);
-    const [userTimestamp, setUserTimestamp ] = useState('All')
+    const [userTimestamp, setUserTimestamp ] = useState('All');
+    const [userMonth, setUserMonth] = useState(null);
+    const [allMonth, setAllMonth] = useState([]);
+    const [allWeek, setAllWeek] = useState([]);
 
     useEffect(()=> {
         axios.get(`http://localhost:8000/activities/${aid}/detail/usersaction/`, {headers:headers})
@@ -259,16 +264,21 @@ function UserActionInActivity(props) {
             setTotalDistancePerUser(response.data['distance_per_user']);
             setDistancePerUserPerDayAll(response.data['distance_per_user_per_day']);
             setDistancePerUserPerDayByWeek(response.data['distance_per_user_per_day_week']);
+            setDistancePerUserPerDayByMonth(response.data['distance_per_user_per_day_month']);
+            setAllWeek(response.data['weeks']);
+            setAllMonth(response.data['months']);
+            const initWeek = allWeek.slice(-1)[0]
+            setWeekNum(initWeek); 
+            setUserWeekNum(initWeek);
+            const initMonth = allMonth.slice(-1)[0]
+            setUserMonth(initMonth);
+            setMonth(initMonth);
+            // console.log(allWeek, allWeek.slice(-1)[0], allMonth.slice(-1)[0])
             setLoaded(true);
-            const [week] = response.data['weeks'].slice(-1);
-            setWeekNum(week);
-            setUserWeekNum(week);
         }).catch (error => {
             console.log(error)
         })
     }, []);
-
-    // console.log(weekNum)
 
     useEffect(() => {
         const originalConsoleError = console.error;
@@ -286,10 +296,13 @@ function UserActionInActivity(props) {
     
     if (!loaded) return (<Loader  ml='50%' mt='10%' color="blue" />);
     const allUsers = Object.keys(distancePerUserPerDayAll);
-    const weekNumbers = Object.keys(distancePerUserPerDayByWeek);
-    // console.log(weekNum, userWeekNum);
+    // console.log(userWeekNum, typeof(userWeekNum), distancePerUserPerDayByWeek[userWeekNum]);
     
-    const distancePersUserSeries = (userTimestamp === 'All') ? distancePerUserPerDayAll[selectedUser] : distancePerUserPerDayByWeek[userWeekNum][selectedUser]
+    const distancePersUserSeries = (userTimestamp === 'All')
+        ? distancePerUserPerDayAll[selectedUser]
+        : (userTimestamp === 'Month') ? distancePerUserPerDayByMonth[userMonth][selectedUser] : distancePerUserPerDayByWeek[userWeekNum][selectedUser]
+        
+    // console.log(distancePersUserSeries)
     return (
         <>
         <Group justify="space-between">
@@ -307,20 +320,26 @@ function UserActionInActivity(props) {
                     mt={'md'}
                     mr={'50'}
                     maw={100}
-                    data={['All', 'Week', 'Month', 'Year']}
+                    data={['All', 'Week', 'Month']}
                     defaultValue={'All'}
                     onChange={setTimestamp}
                 />
-                {
-                    (timestamp === 'Week') 
-                    && <Select
-                        mt={'md'}
-                        maw={100}
-                        data={weekNumbers}
-                        defaultValue={weekNum}
-                        onChange={setWeekNum}
-                    />
-                }
+                {(timestamp === 'Week') 
+                && <Select
+                    mt={'md'}
+                    maw={100}
+                    data={allWeek}
+                    defaultValue={weekNum}
+                    onChange={setWeekNum}
+                />}
+                {(timestamp === 'Month') 
+                && <Select
+                    mt={'md'}
+                    maw={100}
+                    data={allMonth}
+                    defaultValue={month}
+                    onChange={setMonth}
+                />}
                 
             </Flex>
             
@@ -348,7 +367,7 @@ function UserActionInActivity(props) {
                 <Select
                     mt={'md'}
                     maw={100}
-                    data={['All', 'Week', 'Month', 'Year']}
+                    data={['All', 'Week', 'Month']}
                     defaultValue={'All'}
                     onChange={setUserTimestamp}
                 />
@@ -357,9 +376,17 @@ function UserActionInActivity(props) {
                 && <Select
                     mt={'md'}
                     maw={100}
-                    data={weekNumbers}
+                    data={allWeek}
                     defaultValue={userWeekNum}
                     onChange={setUserWeekNum}
+                />}
+                {(userTimestamp === 'Month') 
+                && <Select
+                    mt={'md'}
+                    maw={100}
+                    data={allMonth}
+                    defaultValue={userMonth}
+                    onChange={setUserMonth}
                 />}
             </Flex>
         </Group>
