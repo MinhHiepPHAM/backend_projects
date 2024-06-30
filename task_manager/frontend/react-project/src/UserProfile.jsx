@@ -117,22 +117,52 @@ const UserInfo = (props) => {
 
 function ActivitiesView(props) {
 	const {uid} = props;
-	const activities = [
-		{id: 1, icon: FaRunning, type: 'Running', title: 'Daily Running from 01/01/2024', distance: '100km', calories: '70000 Kcal', color:'brown'},
-		{id: 2, icon: FaSwimmer, type: 'Swimming', title: 'Swimming 2024', distance: '50km', calories: '70000 Kcal', color: 'blue'},
-		{id: 3, icon: MdDirectionsBike, type: 'Bicycle', title: 'Bicycle 2024', distance: '50km', calories: '70000 Kcal', color: 'orange'}
-	];
+	const [activities, setActivities] = useState([])
+	const [loaded, setLoaded] = useState(false);
+
+	const headers = {
+		'Content-Type': 'application/json',
+		'Authorization': 'Token ' + localStorage.getItem('token')
+	};
+
+	useEffect(()=> {
+		axios.get(`http://localhost:8000/users/${uid}/activities/recent/`, {headers:headers})
+		.then(response => {
+			setActivities(response.data.activities);
+			setLoaded(true)
+		}).catch (error => {
+			console.log(error)
+		})
+	}, []);
+
+	activities.map((act)=> {
+		switch(act.type) {
+			case 'RUN':
+				act.icon = FaRunning;
+				break;
+			case 'BIKE':
+				act.icon = MdDirectionsBike;
+				break;
+			case 'SWIM':
+				act.icon = FaSwimmer;
+				break;
+			default:
+				act.icon = FaRunning;
+		}
+	}) 
 
 	const activityRows = activities.map((act) => (
 		<Table.Tr key={act.id}>
 			<Table.Td>
-				<div className={classes.mainUserInner}>
-					<act.icon size={18} className={classes.mainLinkIcon} color={act.color}/><Text ta="left" fz="md">{act.type}</Text>
-				</div>
+				<act.icon
+					size={18} className={classes.mainLinkIcon} color={'var(--mantine-color-blue-7)'}
+					title={act.type}
+				/>
 			</Table.Td>
 			<Table.Td>{act.title}</Table.Td>
 			<Table.Td>{act.distance}</Table.Td>
-			<Table.Td>{act.calories}</Table.Td>
+			<Table.Td>{new Date(act.updated).toLocaleDateString()}</Table.Td>
+			<Table.Td><Text lineClamp={1} title={act.description}>{act.description}</Text></Table.Td>
 		</Table.Tr>
 	));
 
@@ -145,19 +175,21 @@ function ActivitiesView(props) {
 				</div>
 				<a color='var(--mantine-color-blue-5)' href={`/users/${uid}/activities/all/`}>view all</a>
 			</Group>
-			<Table ml={'xl'} withRowBorders={false} >						
+			{(activities.length > 0) && <Table ml={'xl'} withRowBorders={false} >						
 				<Table.Thead>
 					<Table.Tr justify='center'>
 						<Table.Th>Type</Table.Th>
 						<Table.Th>Title</Table.Th>
 						<Table.Th>Distance</Table.Th>
-						<Table.Th>calories</Table.Th>
+						<Table.Th>Last update</Table.Th>
+						<Table.Th>Description</Table.Th>
 					</Table.Tr>
 				</Table.Thead>
 				<Table.Tbody>
 					{activityRows}
 				</Table.Tbody>
-			</Table>
+			</Table>}
+			{(activities.length === 0) && <Text ta={'center'}>There is no activity</Text>}
 			
 		</Paper>
 		

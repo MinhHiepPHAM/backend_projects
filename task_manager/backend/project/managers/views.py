@@ -170,13 +170,21 @@ class UserActivityAllView(ModelViewSet):
     serializer_class = ActivitySerializer
     # queryset = Activity.objects.all()
     def retrieve(self, request, *args, **kwargs):
-        response = {}
         search_query = self.request.query_params.get('uq','')
         users = CustomUser.objects.all().order_by('username').filter(username__icontains=search_query)[:10]
         usernames = [user.username for user in users]
         activities = CustomUser.objects.get(pk=kwargs['pk']).activities.order_by('-updated', 'start')
         activities = self.serializer_class(activities, many=True).data
         response = {'activities':activities, 'usernames': usernames}
+        return Response(response,status=status.HTTP_200_OK)
+
+class RecentActivitiesView(ModelViewSet):
+    serializer_class = ActivitySerializer
+    permission_classes = [permissions.IsAuthenticated]
+    def retrieve(self, request, *args, **kwargs):
+        activities = CustomUser.objects.get(pk=kwargs['pk']).activities.order_by('-updated', 'start')[:3]
+        activities = self.serializer_class(activities, many=True).data
+        response = {'activities':activities}
         return Response(response,status=status.HTTP_200_OK)
 
 class ActivityView(ModelViewSet):
@@ -312,7 +320,6 @@ class AllUserActionInOneActivity(generics.RetrieveAPIView):
                 distance_per_user_per_week_series[str(week_number)][username].append(week_distance)
                 distance_per_user_per_month_series[month_name][username].append(month_distance)
 
-        # import pprint; pprint.pprint(distance_per_user_per_week_series)
         for user in users:
             distance_per_users[user.username] = distance_per_users.get(user.username,0)
 
