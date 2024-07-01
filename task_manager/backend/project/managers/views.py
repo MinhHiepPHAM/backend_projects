@@ -282,8 +282,9 @@ class AllUserActionInOneActivity(generics.RetrieveAPIView):
         for action in actions:
             actions_per_users[action.user.username].append(action)
 
-        distance_per_users = collections.defaultdict(int)
-        # distance_per_users_per_weeks = collections.defaultdict(lambda: collections.defaultdict(int))
+        distance_per_users_all = collections.defaultdict(int)
+        total_distance_per_users_per_weeks = collections.defaultdict(lambda: collections.defaultdict(int))
+        total_distance_per_users_per_months = collections.defaultdict(lambda: collections.defaultdict(int))
         distance_per_user_per_days = collections.defaultdict(lambda: collections.defaultdict(int))
         
         terminate = activity.terminate.date()
@@ -293,10 +294,24 @@ class AllUserActionInOneActivity(generics.RetrieveAPIView):
         end_date = now if terminate and terminate > now else terminate
 
         for username, acts in actions_per_users.items():
-            distance_per_users[username] += sum(act.distance for act in acts)
+            distance_per_users_all[username] += sum(act.distance for act in acts)
             for act in sorted(acts, key=lambda k: k.date):
                 # print(str(act.date.date()), act.distance)
-                distance_per_user_per_days[username][act.date.date().isoformat()] += act.distance
+                act_date = act.date.date()
+                distance_per_user_per_days[username][act_date.isoformat()] += act.distance
+                week_num = act_date.isocalendar()[1]
+                month_name = act_date.strftime('%b')
+                total_distance_per_users_per_weeks[str(week_num)][username] += act.distance
+                total_distance_per_users_per_months[month_name][username] += act.distance
+        
+        # Set distance to 0 if user did not do the action in the each month or week
+        all_usernames = [user.username for user in users]
+        for username in all_usernames:
+            for month, distance_per_user in total_distance_per_users_per_months.items():
+                if username not in distance_per_user: distance_per_user[username] = 0
+            
+            for week, distance_per_user in total_distance_per_users_per_weeks.items():
+                if username not in distance_per_user: distance_per_user[username] = 0
         
         distance_per_user_all_series = collections.defaultdict(list)
         distance_per_user_per_week_series = collections.defaultdict(lambda: collections.defaultdict(list))
@@ -321,12 +336,21 @@ class AllUserActionInOneActivity(generics.RetrieveAPIView):
                 distance_per_user_per_month_series[month_name][username].append(month_distance)
 
         for user in users:
-            distance_per_users[user.username] = distance_per_users.get(user.username,0)
+            distance_per_users_all[user.username] = distance_per_users_all.get(user.username,0)
 
-        total_distance_series = [{'username': username, 'distance': distance} for username, distance in distance_per_users.items()]
+        total_distance_series_all = [{'username': username, 'distance': distance} for username, distance in distance_per_users_all.items()]
+        total_distance_series_by_weeks = collections.defaultdict(list)
+        total_distance_series_by_months = collections.defaultdict(list)
+        for week, distance_series in total_distance_per_users_per_weeks.items():
+            total_distance_series_by_weeks[week] = [{'username': username, 'distance': distance} for username, distance in distance_series.items()]
+
+        for month, distance_series in total_distance_per_users_per_months.items():
+            total_distance_series_by_months[month] = [{'username': username, 'distance': distance} for username, distance in distance_series.items()]
         
         response = {
-            'distance_per_user': total_distance_series,
+            'total_distance_per_user_all': total_distance_series_all,
+            'total_distance_per_user_by_week': total_distance_series_by_weeks,
+            'total_distance_per_user_by_month': total_distance_series_by_months,
             'distance_per_user_per_day': distance_per_user_all_series,
             'distance_per_user_per_day_week': distance_per_user_per_week_series,
             'distance_per_user_per_day_month': distance_per_user_per_month_series,

@@ -243,7 +243,9 @@ function ActivityInfoTable({activity}) {
 
 function UserActionInActivity(props) {
     const {aid} = props; 
-    const [totalDistancePerUser, setTotalDistancePerUser] = useState([]);
+    const [totalDistancePerUserAll, setTotalDistancePerUser] = useState([]);
+    const [totalDistancePerUserWeek, setTotalDistancePerUserWeek] = useState(null);
+    const [totalDistancePerUserMonth, setTotalDistancePerUserMonth] = useState(null);
     const [distancePerUserPerDayAll, setDistancePerUserPerDayAll] = useState(null) ;
     const [selectedUser, setSelectedUser] = useState(username);
     const [loaded, setLoaded] = useState(false);
@@ -261,7 +263,9 @@ function UserActionInActivity(props) {
     useEffect(()=> {
         axios.get(`http://localhost:8000/activities/${aid}/detail/usersaction/`, {headers:headers})
         .then(response => {
-            setTotalDistancePerUser(response.data.distance_per_user);
+            setTotalDistancePerUser(response.data.total_distance_per_user_all);
+            setTotalDistancePerUserWeek(response.data.total_distance_per_user_by_week);
+            setTotalDistancePerUserMonth(response.data.total_distance_per_user_by_month);
             setDistancePerUserPerDayAll(response.data.distance_per_user_per_day);
             setDistancePerUserPerDayByWeek(response.data.distance_per_user_per_day_week);
             setDistancePerUserPerDayByMonth(response.data.distance_per_user_per_day_month);
@@ -299,13 +303,18 @@ function UserActionInActivity(props) {
     const distancePersUserSeries = (userTimestamp === 'All')
         ? distancePerUserPerDayAll[selectedUser]
         : (userTimestamp === 'Month') ? distancePerUserPerDayByMonth[userMonth][selectedUser] : distancePerUserPerDayByWeek[userWeekNum][selectedUser]
+
+    // console.log(totalDistancePerUserWeek)
+    const totalDistancePersUserSeries = (timestamp === 'All')
+        ? totalDistancePerUserAll
+        : (timestamp === 'Month') ? totalDistancePerUserMonth[month] : totalDistancePerUserWeek[weekNum]
         
     return (
         <>
         <Group justify="space-between">
             <BarChart
-                h={300} maw={90*totalDistancePerUser.length}
-                data={totalDistancePerUser}
+                h={300} maw={90*totalDistancePersUserSeries.length}
+                data={totalDistancePersUserSeries}
                 dataKey={'username'}
                 series={[{name: 'distance', color: 'indigo.5'}]}
                 tickLine="none"
