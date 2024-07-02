@@ -47,7 +47,7 @@ function LoggedIn({username, uid}) {
   const navigate = useNavigate()
   const logoutHandle = (e) =>{
     try {
-			axios.post('http://localhost:8000/logout/', {
+			axios.post('/logout/', {
 				token : localStorage.getItem('token')
 			},{
 				headers: {

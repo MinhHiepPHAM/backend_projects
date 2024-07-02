@@ -40,7 +40,7 @@ function EditProfile() {
     };
 
     useEffect(()=> {
-        axios.get(`http://localhost:8000/users/${uid}/editprofile`, {headers:headers})
+        axios.get(`/users/${uid}/editprofile`, {headers:headers})
             .then(response => {
                 // console.log('response:', response)
                 setSuccess(true)
@@ -189,7 +189,7 @@ function EditProfile() {
     const handleSaveProfileButton = async (e) =>{
         e.preventDefault();
         try {
-			const response = await axios.put(`http://localhost:8000/users/${uid}/editprofile/`, {
+			const response = await axios.put(`/users/${uid}/editprofile/`, {
                 
                     first_name: firstName,
                     last_name:lastName,

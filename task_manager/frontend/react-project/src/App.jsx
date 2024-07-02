@@ -16,6 +16,7 @@ import {ActivitySummaryPage} from './Activity';
 import AllActivityPage from './AllActivity';
 import ActivityDetailPage from './ActivityDetail';
 import AllUsersPage from './AllUsers';
+import axios from 'axios';
 
 
 
@@ -29,6 +30,8 @@ const themeOverride = createTheme({
   primaryShade:6
 })
 const myTheme = mergeThemeOverrides(DEFAULT_THEME, themeOverride);
+
+axios.defaults.baseURL = 'http://localhost:8000';
 
 export default function App() {
   return <MantineProvider theme={myTheme}>

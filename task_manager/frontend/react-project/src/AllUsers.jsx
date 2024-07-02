@@ -48,7 +48,7 @@ function AllUsersPage() {
             if (currentPage !== 1) queryParams.append('p', currentPage.toString())
             queryParams.append ('search', searchQuery.toString());
 
-            axios.get(`http://localhost:8000/users/?${queryParams.toString()}`, {headers:headers})
+            axios.get(`/users/?${queryParams.toString()}`, {headers:headers})
             .then(response => {
                 setLoaded(true)
                 setUsers(response.data['users']);

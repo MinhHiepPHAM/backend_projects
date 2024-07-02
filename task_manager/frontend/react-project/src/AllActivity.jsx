@@ -201,7 +201,7 @@ function AllActivityPage() {
                 'Authorization': 'Token ' + token
             };
             queryParams.append ('uq', query.toString());
-            axios.get(`http://localhost:8000/users/${uid}/activities/all/?${queryParams.toString()}`, {headers:headers})
+            axios.get(`users/${uid}/activities/all/?${queryParams.toString()}`, {headers:headers})
             .then(response => {
                 setData(response.data.activities)
                 setUsernames(response.data.usernames)

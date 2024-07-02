@@ -41,7 +41,7 @@ export function CreateNewActivity(props) {
     const handleCreateButton = async (e) => {	
 		e.preventDefault();
 		try {
-			const response = await axios.post(`http://localhost:8000/users/${uid}/activities/create/`, {
+			const response = await axios.post(`/users/${uid}/activities/create/`, {
 				type,
                 title,
                 users,
@@ -268,7 +268,7 @@ export function ActivitySummaryPage() {
     useEffect(()=>{
         try {
             queryParams.append ('uq', query.toString());
-            axios.get(`http://localhost:8000/users/${uid}/activities/summary/?${queryParams.toString()}`, {headers:headers})
+            axios.get(`/users/${uid}/activities/summary/?${queryParams.toString()}`, {headers:headers})
             .then(response => {
                 // console.log(response.data);
                 setUsernames(response.data['usernames']);

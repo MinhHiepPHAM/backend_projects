@@ -126,7 +126,7 @@ function ActivitiesView(props) {
 	};
 
 	useEffect(()=> {
-		axios.get(`http://localhost:8000/users/${uid}/activities/recent/`, {headers:headers})
+		axios.get(`/users/${uid}/activities/recent/`, {headers:headers})
 		.then(response => {
 			setActivities(response.data.activities);
 			setLoaded(true)
@@ -304,7 +304,7 @@ function UserProfile() {
     };
 
     useEffect(()=> {
-        axios.get(`http://localhost:8000/users/${uid}/`, {headers:headers})
+        axios.get(`/users/${uid}/`, {headers:headers})
             .then(response => {
                 // setData(response.data)
                 setFirstName(response.data['first_name']);

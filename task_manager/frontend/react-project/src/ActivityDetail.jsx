@@ -50,7 +50,7 @@ function CreateNewAction() {
     const handleCreateButton = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post(`http://localhost:8000/activities/${aid}/create/`,{
+            const response = await axios.post(`/activities/${aid}/create/`,{
                 date,
                 distance,
                 username,
@@ -132,7 +132,7 @@ function AddUser(props) {
     const handleAddButton = async(e) => {
         e.preventDefault();
         try {
-            const response = await axios.post(`http://localhost:8000/activities/${aid}/adduser/`, {
+            const response = await axios.post(`/activities/${aid}/adduser/`, {
 				newUsers
 			},{
 				headers: headers
@@ -261,7 +261,7 @@ function UserActionInActivity(props) {
     const [allWeek, setAllWeek] = useState(null);
 
     useEffect(()=> {
-        axios.get(`http://localhost:8000/activities/${aid}/detail/usersaction/`, {headers:headers})
+        axios.get(`/activities/${aid}/detail/usersaction/`, {headers:headers})
         .then(response => {
             setTotalDistancePerUser(response.data.total_distance_per_user_all);
             setTotalDistancePerUserWeek(response.data.total_distance_per_user_by_week);
@@ -410,7 +410,7 @@ function ActivityDetailPage() {
     
     useEffect(()=>{
         queryParams.append ('uq', query.toString());
-        axios.get(`http://localhost:8000/activities/${aid}/detail/?${queryParams.toString()}`, {headers:headers})
+        axios.get(`/activities/${aid}/detail/?${queryParams.toString()}`, {headers:headers})
         .then(response => {
             setLoaded(true)
             // console.log(response.data)
