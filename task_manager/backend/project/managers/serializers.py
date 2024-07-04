@@ -25,7 +25,7 @@ class ProfileEditingSerializer(serializers.ModelSerializer):
             setattr(instance,name,value)
 
     def update(self, instance, validated_data):
-        pprint.pprint(validated_data)
+        # pprint.pprint(validated_data)
         fields = [
             'first_name', 'last_name', 'avatar', 'telephone', 'bio',
             'street', 'street_number', 'city', 'country', 'job_title'

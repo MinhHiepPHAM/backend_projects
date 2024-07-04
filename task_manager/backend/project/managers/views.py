@@ -11,6 +11,9 @@ import re
 from datetime import datetime, timedelta
 from .pagination import UserPagination
 import collections
+import requests
+from django.conf import settings
+import os
 
 
 class RegistrationView(generics.CreateAPIView):
@@ -86,6 +89,25 @@ class ProfileEditingView(generics.UpdateAPIView, generics.RetrieveAPIView):
     serializer_class = ProfileEditingSerializer
     permission_classes = [BelongToUser,]
     queryset = CustomUser.objects.all()
+
+    def update(self, request, *args, **kwargs):
+        try:
+            img_url = request.data['avatar']
+            img_extension = img_url.split('.')[-1]
+            img_data = requests.get(img_url).content
+            print(type(img_data))
+            dir_path = os.path.join(settings.MEDIA_ROOT, request.user.username)
+            os.makedirs(dir_path, exist_ok=True)
+            img_path = os.path.join(dir_path, f'{request.user.username}.{img_extension}')
+            request.data['avatar'] = str(img_path)
+            
+            with open(img_path, 'wb') as handler:
+                handler.write(img_data)
+        except:
+            pass
+
+        return super().update(request, *args, **kwargs)
+
 
 class UserProfileView(ModelViewSet):
     permission_classes = [permissions.IsAuthenticated,]

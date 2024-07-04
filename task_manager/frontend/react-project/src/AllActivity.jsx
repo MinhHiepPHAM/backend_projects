@@ -219,7 +219,7 @@ function AllActivityPage() {
     
     return (
         <Box h={'100%'}>
-            <HeaderMegaMenu/>
+            <HeaderMegaMenu page='Activities'/>
             <Box ml={'200px'} mr={'200px'} >
                 <CreateNewActivity usernames={usernames} setQuery={setQuery}/>
                 { (data.length > 0) 

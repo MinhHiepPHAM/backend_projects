@@ -30,10 +30,11 @@ export function UserInfoHeader(props) {
 			</Avatar>
 		)
 	} else {
+		const avaLink = `http://localhost:8000/avatar/${username}/${username}.jpg`;
 		avatarPhoto = (<Avatar
 			size={150}
 			radius={120}
-			src={avatar}
+			src={avaLink}
 		/>)
 	}
 

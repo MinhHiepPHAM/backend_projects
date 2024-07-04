@@ -155,15 +155,16 @@ function EditProfile() {
 
 	// const { height, width } = useViewportSize();
 
+    const ava_link = `http://localhost:8000/avatar/${username}/${username}.jpg`;
     const avatarInput = (
         <Flex direction={'row'} align={'center'} >
-            {avatar!=='' && <Avatar src={avatar} size={250} radius={120} mx="auto" mt={'lg'}/>}
-            {avatar==='' && <Avatar src={avatar} size={250} radius={120} mx="auto" mt={'lg'}>{username.slice(0,2).toUpperCase()}</Avatar>}
+            {avatar!=='' && <Avatar src={ava_link} size={250} radius={120} mx="auto" mt={'lg'}/>}
+            {avatar==='' && <Avatar size={250} radius={120} mx="auto" mt={'lg'}>{username.slice(0,2).toUpperCase()}</Avatar>}
             <Flex direction={'column'} align={'flex-start'}>
-                <FileInput onChange={(e)=>setAvatar(URL.createObjectURL(e))} accept="image/png,image/jpeg"
+                {/* <FileInput onChange={(e)=>{setAvatar(URL.createObjectURL(e)); console.log(URL.createObjectURL(e))}} accept="image/png,image/jpeg"
                     maw={'120px'} ml={'xl'} placeholder='Upload Avatar' mt={'xs'}
                     variant="default"
-                />
+                /> */}
                 <TextInput onChange={(e)=> setAvatar(e.target.value)}
                     maw={'350px'} ml={'xl'} placeholder='Enter Image URL' mt={'xs'} mr={'xs'}
                 />
