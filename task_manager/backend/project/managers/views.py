@@ -200,6 +200,31 @@ class UserActivityAllView(ModelViewSet):
         response = {'activities':activities, 'usernames': usernames}
         return Response(response,status=status.HTTP_200_OK)
 
+class OneTypeActivityView(ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = ActivitySerializer
+    def get_act_type(self):
+        return NotImplementedError
+    
+    def retrieve(self, request, *args, **kwargs):
+        type = self.get_act_type()
+        activities = CustomUser.objects.get(pk=kwargs['pk']).activities.filter(type=type).order_by('-updated', 'start')
+        activities = self.serializer_class(activities, many=True).data
+        response = {'activities':activities}
+        return Response(response,status=status.HTTP_200_OK)
+    
+class RunActivityView(OneTypeActivityView):
+    def get_act_type(self):
+        return 'RUN'
+    
+class BikeActivityView(OneTypeActivityView):
+    def get_act_type(self):
+        return 'BIKE'
+    
+class SwimActivityView(OneTypeActivityView):
+    def get_act_type(self):
+        return 'SWIM'
+
 class RecentActivitiesView(ModelViewSet):
     serializer_class = ActivitySerializer
     permission_classes = [permissions.IsAuthenticated]

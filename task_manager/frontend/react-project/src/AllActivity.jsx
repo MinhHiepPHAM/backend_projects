@@ -13,7 +13,7 @@ import {
     Flex,
     Loader,
 } from '@mantine/core';
-import { IconSelector, IconChevronDown, IconChevronUp, IconSearch } from '@tabler/icons-react';
+import { IconSelector, IconChevronDown, IconChevronUp, IconSearch, IconActivity } from '@tabler/icons-react';
 import { HeaderMegaMenu } from './HeaderMegaMenu';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
@@ -92,7 +92,8 @@ function ActType({type}){
 }
 
 
-function TableSort({data, uid}) {
+export function TableSort(props) {
+    const {data, uid, all, summary, run, swim, bike} = props;
     const [search, setSearch] = useState('');
     const [sortedData, setSortedData] = useState(data);
     const [sortBy, setSortBy] = useState(null);
@@ -136,17 +137,18 @@ function TableSort({data, uid}) {
         <ScrollArea>
             <Group justify="space-between" mt="md">
                 <TextInput
-                    placeholder="Search by any field"
+                    placeholder="Search by title and description"
                     mb="md" mt='xl' w='85%'
                     leftSection={<IconSearch style={{ width: rem(16), height: rem(16) }}/>}
                     value={search}
                     onChange={handleSearchChange}
                 />
                 <Flex direction={'row'} mt={'xl'} gap={'lg'} mr={'xl'}>
-                <a href={`/users/${uid}/activities/summary/`}><MdSummarize size={22} color='var(--mantine-color-violet-5)' title='Summary'/></a>
-                    <a href={`/users/${uid}/activities/running/`}><FaRunning size={22} color='var(--mantine-color-violet-5)' title='Run'/></a>
-                    <a href={`/users/${uid}/activities/bicycle/`}><MdDirectionsBike size={22} color='var(--mantine-color-violet-5)' title='Bike'/></a>
-                    <a href={`/users/${uid}/activities/swimming/`}><FaSwimmer size={22} color='var(--mantine-color-violet-5)' title='Swim'/></a>
+                    {all && <a href={`/users/${uid}/activities/all/`}><IconActivity size={22} color='var(--mantine-color-violet-5)' title='All activities'/></a>}
+                    {summary && <a href={`/users/${uid}/activities/summary/`}><MdSummarize size={22} color='var(--mantine-color-violet-5)' title='Summary'/></a>}
+                    {run && <a href={`/users/${uid}/activities/running/`}><FaRunning size={22} color='var(--mantine-color-violet-5)' title='Run'/></a>}
+                    {bike && <a href={`/users/${uid}/activities/bicycle/`}><MdDirectionsBike size={22} color='var(--mantine-color-violet-5)' title='Bike'/></a>}
+                    {swim && <a href={`/users/${uid}/activities/swimming/`}><FaSwimmer size={22} color='var(--mantine-color-violet-5)' title='Swim'/></a>}
 
                 </Flex>
             </Group>
@@ -223,7 +225,7 @@ function AllActivityPage() {
             <Box ml={'200px'} mr={'200px'} >
                 <CreateNewActivity usernames={usernames} setQuery={setQuery}/>
                 { (data.length > 0) 
-                ? <TableSort data={data} uid={uid}/>
+                ? <TableSort data={data} uid={uid} all={false} summary={true} run={true} swim={true} bike={true}/>
                 : <div style={{display: 'flex', justifyContent: 'center', marginTop:'100px'}}><Text size='xl' c={'var(--mantine-color-blue-6)'}>There is no activity yet</Text></div>
                 }
             </Box>

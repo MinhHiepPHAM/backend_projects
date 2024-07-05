@@ -17,6 +17,7 @@ import AllActivityPage from './AllActivity';
 import ActivityDetailPage from './ActivityDetail';
 import AllUsersPage from './AllUsers';
 import axios from 'axios';
+import OneTypeActivityPage from './OneTypeActivity';
 
 
 
@@ -48,6 +49,9 @@ export default function App() {
               <Route path='/users/:uid/editprofile' element={<EditProfile/>} />
               <Route path='/users/:uid/activities/summary' element={<ActivitySummaryPage/>} />
               <Route path='/users/:uid/activities/all' element={<AllActivityPage/>} />
+              <Route path='/users/:uid/activities/running' element={<OneTypeActivityPage type='running'/>} />
+              <Route path='/users/:uid/activities/swimming' element={<OneTypeActivityPage type='swimming'/>} />
+              <Route path='/users/:uid/activities/bicycle' element={<OneTypeActivityPage type='bicycle'/>} />
               <Route path='/activities/:aid/detail' element={<ActivityDetailPage/>} />
             </Routes>
           </main>
