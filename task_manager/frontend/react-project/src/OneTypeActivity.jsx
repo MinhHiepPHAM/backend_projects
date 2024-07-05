@@ -42,6 +42,10 @@ function OneTypeActivityPage({type}) {
         <Box h={'100%'}>
             <HeaderMegaMenu/>
             <Box ml={'200px'} mr={'200px'} >
+                {(data.length > 0)  &&
+                <Text ta='center' size='xl' fw={500} mt='xl' mb='-xl' c={'var(--mantine-color-blue-5)'}>
+                    Your {type} activities
+                </Text>}
                 { (data.length > 0) 
                 ? <TableSort data={data} uid={uid} all={true} summary={true} run={false} swim={true} bike={true}/>
                 : <div style={{display: 'flex', justifyContent: 'center', marginTop:'100px'}}><Text size='xl' c={'var(--mantine-color-blue-6)'}>There is no activity yet</Text></div>
