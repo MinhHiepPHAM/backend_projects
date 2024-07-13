@@ -13,6 +13,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     last_name = models.CharField(max_length=30, blank=True)
     
     is_active = models.BooleanField(default=True)
+    is_staff = models.BooleanField(default=False)
     telephone = models.CharField(max_length=20, blank=True)
     street = models.CharField(max_length=250, blank=True)
     street_number = models.CharField(max_length=10, blank=True)

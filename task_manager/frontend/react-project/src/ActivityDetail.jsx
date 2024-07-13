@@ -308,7 +308,7 @@ function UserActionInActivity(props) {
     const totalDistancePersUserSeries = (timestamp === 'All')
         ? totalDistancePerUserAll
         : (timestamp === 'Month') ? totalDistancePerUserMonth[month] : totalDistancePerUserWeek[weekNum]
-        
+    if (!totalDistancePersUserSeries || !distancePersUserSeries) return <></>
     return (
         <>
         <Group justify="space-between">

@@ -394,6 +394,21 @@ class AllUserActionInOneActivity(generics.RetrieveAPIView):
         for month, distance_series in total_distance_per_users_per_months.items():
             total_distance_series_by_months[month] = [{'username': username, 'distance': distance} for username, distance in distance_series.items()]
         
+        
+        all_weeks = list(distance_per_user_per_week_series.keys())
+        all_months = list(distance_per_user_per_month_series.keys())
+
+        # import pprint; pprint.pprint(total_distance_per_users_per_weeks)
+
+        for week in all_weeks:
+            if str(week) in total_distance_series_by_weeks: continue
+            total_distance_series_by_weeks[week] = [{'username': username, 'distance': 0} for username in all_usernames]
+
+        for month in all_months:
+            if str(month) in total_distance_series_by_months: continue
+            total_distance_series_by_months[month] = [{'username': username, 'distance': 0} for username in all_usernames]
+
+        # import pprint; pprint.pprint(total_distance_per_users_per_weeks)
         response = {
             'total_distance_per_user_all': total_distance_series_all,
             'total_distance_per_user_by_week': total_distance_series_by_weeks,
@@ -401,8 +416,8 @@ class AllUserActionInOneActivity(generics.RetrieveAPIView):
             'distance_per_user_per_day': distance_per_user_all_series,
             'distance_per_user_per_day_week': distance_per_user_per_week_series,
             'distance_per_user_per_day_month': distance_per_user_per_month_series,
-            'weeks': list(distance_per_user_per_week_series.keys()),
-            'months': list(distance_per_user_per_month_series.keys())
+            'weeks': all_weeks,
+            'months': all_months
         }
 
         return Response(response, status=status.HTTP_200_OK)
