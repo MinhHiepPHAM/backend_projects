@@ -1,15 +1,15 @@
 FROM python:3.8.10-slim
 
-ENV PYTHONUNBUFFERED=1
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+ENV PIP_ROOT_USER_ACTION=ignore
 
 RUN pip install --upgrade pip
 
 WORKDIR /backend
 
-RUN pip install django django-cors-headers
 RUN apt-get update \
-    && apt-get -y install libpq-dev gcc \
-    && pip install psycopg2
+    && apt-get -y install libpq-dev gcc
 
 COPY requirements.txt requirements.txt
 
