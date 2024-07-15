@@ -5,12 +5,13 @@ import '@mantine/core/styles.css';
 import { Route, Routes, BrowserRouter } from 'react-router-dom';
 import {DEFAULT_THEME, MantineProvider, createTheme, mergeThemeOverrides } from '@mantine/core';
 import axios from 'axios';
+import Login from './Login';
 
 const themeOverride = createTheme({
 	autoContrast : true,
 	luminanceThreshold: 0.66,
 	focusRing: 'auto',
-	activeClassName: classes.active,
+	// activeClassName: classes.active,
 	defaultRadius:'sm',
 	cursorType: 'pointer',
 	primaryShade:6
@@ -26,6 +27,7 @@ export default function App() {
 				<div className="App">
 					<main>
 						<Routes>
+							<Route path="/login" element={<Login/>} />
 						</Routes>
 					</main>
 				</div>
