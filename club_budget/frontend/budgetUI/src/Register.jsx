@@ -86,12 +86,11 @@ function RegisterForm() {
 }
 
 function Register() {
-	const { height, width } = useViewportSize();
 	return (
-			<Box w={width} h={height}>
-					<HeaderMenu/>
-					<RegisterForm />
-			</Box>
+		<Box>
+			<HeaderMenu/>
+			<RegisterForm />
+		</Box>
 	);
 }
 export default Register

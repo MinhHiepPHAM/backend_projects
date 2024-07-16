@@ -7,12 +7,12 @@ import {DEFAULT_THEME, MantineProvider, createTheme, mergeThemeOverrides } from 
 import axios from 'axios';
 import Login from './Login';
 import Register from './Register';
+import Home from './Home';
 
 const themeOverride = createTheme({
 	autoContrast : true,
 	luminanceThreshold: 0.66,
 	focusRing: 'auto',
-	// activeClassName: classes.active,
 	defaultRadius:'sm',
 	cursorType: 'pointer',
 	primaryShade:6
@@ -30,6 +30,7 @@ export default function App() {
 						<Routes>
 							<Route path="/login" element={<Login/>} />
 							<Route path="/signup" element={<Register/>} />
+							<Route path="/home" element={<Home/>} />
 						</Routes>
 					</main>
 				</div>

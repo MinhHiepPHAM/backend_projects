@@ -84,12 +84,12 @@ function LoginForm() {
 }
 
 function Login() {
-	const { height, width } = useViewportSize();
+	// const { height, width } = useViewportSize();
 	return (
-			<Box w={width} h={height}>
-					<HeaderMenu/>
-					<LoginForm />
-			</Box>
+		<Box>
+			<HeaderMenu/>
+			<LoginForm />
+		</Box>
 	);
 }
 export default Login

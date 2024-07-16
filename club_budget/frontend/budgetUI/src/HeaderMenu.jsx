@@ -81,7 +81,7 @@ function HeaderMenu() {
     const isAuthenticated = localStorage.getItem('token') !== null
   
     return (
-        <Group justify="space-between" w='100%' bg='var(--mantine-color-blue-4)'>
+        <Group justify="space-between" bg='var(--mantine-color-blue-4)'>
             <Image src={pageLogo} h={65} w={65} radius={'50%'}/>
             {isAuthenticated ? <LoggedIn username={username} uid={uid}/> : <NotLoggedIn/>}
         </Group>
