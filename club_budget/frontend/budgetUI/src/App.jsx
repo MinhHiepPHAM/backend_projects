@@ -6,6 +6,7 @@ import { Route, Routes, BrowserRouter } from 'react-router-dom';
 import {DEFAULT_THEME, MantineProvider, createTheme, mergeThemeOverrides } from '@mantine/core';
 import axios from 'axios';
 import Login from './Login';
+import Register from './Register';
 
 const themeOverride = createTheme({
 	autoContrast : true,
@@ -28,6 +29,7 @@ export default function App() {
 					<main>
 						<Routes>
 							<Route path="/login" element={<Login/>} />
+							<Route path="/signup" element={<Register/>} />
 						</Routes>
 					</main>
 				</div>
