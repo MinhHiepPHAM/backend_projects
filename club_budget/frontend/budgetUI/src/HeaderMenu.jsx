@@ -11,6 +11,7 @@ import pageLogo from './assets/samuraiX.png'
 import axios from 'axios';
 import { IoLogInOutline } from "react-icons/io5";
 import { MdPersonPin } from "react-icons/md";
+import { MdLogout } from "react-icons/md";
 
 function NotLoggedIn() {
     return (
@@ -57,19 +58,20 @@ function LoggedIn({username}) {
         }
     }
     return (
-    <>
+    <Flex direction={'row'} gap='md' mr='xl'>
         <Group gap="sm">
-            <Avatar color="cyan" h={41} w={41} ml={'10px'} radius="xl">{displayName}</Avatar>
-            <Text fz="lg" fw={500} mr='md' >
+            <Avatar color="white" h={41} w={41} ml={'10px'} bg={'blue.6'} radius="xl">{displayName}</Avatar>
+            <Text fz="lg" fw={500} mr='md' c='white' >
                 {username}
             </Text>
         </Group>
         <Button
             onClick={logoutHandle}
+            rightSection={<MdLogout size={19} />}
         >
             Log Out
         </Button>
-    </>
+    </Flex>
     )
 }
 
