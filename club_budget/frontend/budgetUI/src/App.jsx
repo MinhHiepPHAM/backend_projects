@@ -8,6 +8,7 @@ import axios from 'axios';
 import Login from './Login';
 import Register from './Register';
 import Home from './Home';
+import CreateNewBudget from './CreateNewBudget';
 
 const themeOverride = createTheme({
 	autoContrast : true,
@@ -25,12 +26,13 @@ export default function App() {
   	return <MantineProvider theme={myTheme}>
 		{
 			<BrowserRouter>
-				<div className="App">
+				<div className="App">	
 					<main>
 						<Routes>
 							<Route path="/login" element={<Login/>} />
 							<Route path="/signup" element={<Register/>} />
 							<Route path="/home" element={<Home/>} />
+							<Route path='/users/:uid/budgets/create' element={<CreateNewBudget/>} />
 						</Routes>
 					</main>
 				</div>
