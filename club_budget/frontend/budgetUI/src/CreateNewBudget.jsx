@@ -55,11 +55,11 @@ function CreateNewBudget({uid}) {
         setUserInfos(updatedInfos);
     }
 
-
+    console.log(nUser);
     const userInputs = [...Array(nUser).keys()].map(i => (
         <Grid key={i}>
             <Grid.Col span={4}>
-            <TextInput
+            <TextInput id={`username.${i}`}
                 label={i===0 ?'User Name':undefined}
                 placeholder='User Name'
                 required
@@ -68,7 +68,7 @@ function CreateNewBudget({uid}) {
             />
             </Grid.Col>
             <Grid.Col span={6}>
-            <TextInput
+            <TextInput id={`email.${i}`}
                 label={i===0 ? 'Email':undefined}
                 placeholder='Email'
                 leftSection={<MdAlternateEmail/>}
@@ -77,7 +77,7 @@ function CreateNewBudget({uid}) {
             />
             </Grid.Col>
             <Grid.Col span={2}>
-            <NumberInput
+            <NumberInput id={`contribution.${i}`}
                 label={i===0 ? 'Contribution': undefined}
                 placeholder='Contribution'
                 leftSection={<MdAttachMoney/>}
@@ -85,10 +85,24 @@ function CreateNewBudget({uid}) {
                 onChange={(e)=>updateContribution(i, e)}
             />
             </Grid.Col>
-
         </Grid>
     ));
 
+    function handleNumberUserChange(e) {
+        setNUser(e);
+        console.log(e,nUser)
+        let updatedInfos = []
+        for (let i=0; i< e; i++) {
+            const emailElt = document.getElementById(`email.${i}`);
+            const usernameElt = document.getElementById(`username.${i}`);
+            const contributionElt = document.getElementById(`contribution.${i}`);
+            const email = emailElt ? emailElt.value : ''
+            const username = usernameElt ? usernameElt.value : ''
+            const contribution = contributionElt ? contributionElt.value : ''
+            updatedInfos.push({index: i,email: email, username: username, contribution: contribution});
+        }
+        setUserInfos(updatedInfos);
+    }
 
     const budgetContainer = (
         <Container size='lg' my={20} >
@@ -99,12 +113,13 @@ function CreateNewBudget({uid}) {
                 <TextInput
                     placeholder='Name your budget'
                     mb='md'
+                    required
                 />
                 <NumberInput
                     min={1}
                     maw={200} mb={'xl'}
                     placeholder='number of members'
-                    onChange={setNUser}
+                    onChange={handleNumberUserChange}
                 />
 
                 {userInputs}
@@ -118,7 +133,7 @@ function CreateNewBudget({uid}) {
         </Container>
     )
 
-    // console.log(userInfos)
+    console.log(userInfos)
     return (
         <Box>
             <HeaderMenu/>
