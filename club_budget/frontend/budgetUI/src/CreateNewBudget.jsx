@@ -10,14 +10,22 @@ import {
     Button
 } from '@mantine/core';
 import HeaderMenu from './HeaderMenu';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { MdAlternateEmail } from "react-icons/md";
 import { MdAttachMoney } from "react-icons/md";
+import axios from 'axios';
 
 
 function CreateNewBudget({uid}) {
     const [nUser, setNUser] = useState(0);
+    const [isValidInfos, setValidInfos] = useState([]);
     const [userInfos, setUserInfos] = useState([]);
+
+    function checkEmail(email) {
+        let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        return re.test(email)
+    }
+
 
     function updateUserName(idx, userName) {
         const index = userInfos.findIndex(elt => elt.index === idx);
@@ -27,6 +35,10 @@ function CreateNewBudget({uid}) {
         } else {
             updatedInfos = [...userInfos, {index: idx, username: userName}];
         }
+        const isValid = userName !== '';
+        const updatedError = [...isValidInfos];
+        updatedError[idx] = {...updatedError[idx], username: isValid};
+        setValidInfos(updatedError);
 
         setUserInfos(updatedInfos);
     }
@@ -39,6 +51,11 @@ function CreateNewBudget({uid}) {
         } else {
             updatedInfos = [...userInfos, {index: idx, email: email}];
         }
+
+        const isValid = checkEmail(email);
+        const updatedError = [...isValidInfos];
+        updatedError[idx] = {...updatedError[idx], email: isValid};
+        setValidInfos(updatedError);
 
         setUserInfos(updatedInfos);
     }
@@ -55,7 +72,6 @@ function CreateNewBudget({uid}) {
         setUserInfos(updatedInfos);
     }
 
-    console.log(nUser);
     const userInputs = [...Array(nUser).keys()].map(i => (
         <Grid key={i}>
             <Grid.Col span={4}>
@@ -64,7 +80,9 @@ function CreateNewBudget({uid}) {
                 placeholder='User Name'
                 required
                 mb='md'
+                error={isValidInfos[i]?!isValidInfos[i].username:true}
                 onChange={(e)=>updateUserName(i, e.target.value)}
+                
             />
             </Grid.Col>
             <Grid.Col span={6}>
@@ -73,6 +91,7 @@ function CreateNewBudget({uid}) {
                 placeholder='Email'
                 leftSection={<MdAlternateEmail/>}
                 mb='md'
+                error={isValidInfos[i]?!isValidInfos[i].email:true}
                 onChange={(e)=>updateEmail(i, e.target.value)}
             />
             </Grid.Col>
@@ -88,19 +107,29 @@ function CreateNewBudget({uid}) {
         </Grid>
     ));
 
+    const headers = {
+		'Content-Type': 'application/json',
+		'Authorization': 'Token ' + localStorage.getItem('token')
+	};
+
     function handleNumberUserChange(e) {
         setNUser(e);
-        console.log(e,nUser)
         let updatedInfos = []
+        let userErrors = []
         for (let i=0; i< e; i++) {
             const emailElt = document.getElementById(`email.${i}`);
             const usernameElt = document.getElementById(`username.${i}`);
             const contributionElt = document.getElementById(`contribution.${i}`);
             const email = emailElt ? emailElt.value : ''
             const username = usernameElt ? usernameElt.value : ''
-            const contribution = contributionElt ? contributionElt.value : ''
+            const contribution = contributionElt ? contributionElt.value : 0
+
+            const isValidEmail = emailElt ? checkEmail(email): true
+            const isValidUsername = usernameElt ? username !== '': true
             updatedInfos.push({index: i,email: email, username: username, contribution: contribution});
+            userErrors.push({email: isValidEmail, username: isValidUsername})
         }
+        setValidInfos(userErrors);
         setUserInfos(updatedInfos);
     }
 
@@ -116,7 +145,7 @@ function CreateNewBudget({uid}) {
                     required
                 />
                 <NumberInput
-                    min={1}
+                    min={0}
                     maw={200} mb={'xl'}
                     placeholder='number of members'
                     onChange={handleNumberUserChange}
@@ -133,7 +162,7 @@ function CreateNewBudget({uid}) {
         </Container>
     )
 
-    console.log(userInfos)
+    // console.log(userInfos)
     return (
         <Box>
             <HeaderMenu/>
