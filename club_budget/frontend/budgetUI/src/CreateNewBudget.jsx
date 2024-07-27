@@ -26,6 +26,7 @@ function CreateNewBudget() {
     const [errorMess, setErrorMess] = useState(null);
     const [hasError, setError] = useState(false);
     const [title, setTitle] = useState(null);
+    const [invalidTitle, setIsInvalidTitle] = useState(false);
 
     function checkEmail(email) {
         let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -167,7 +168,6 @@ function CreateNewBudget() {
         if (title === '' || title === null) {
             error = true;
             setTitle('');
-
         }
         
         setError(error);
@@ -184,7 +184,13 @@ function CreateNewBudget() {
                 }, {headers: headers});
 
             } catch (e) {
-                console.error('Login failed:', e);
+                // console.error('Login failed:', e);
+                if (e.response.status === 409) 
+                    {
+                        setIsInvalidTitle(true);
+                        setError(true)
+                        setErrorMess('Title is already used by another budget');
+                    }
             }
         }
     }
@@ -205,7 +211,7 @@ function CreateNewBudget() {
                     placeholder='Name your budget'
                     mb='md'
                     required
-                    error={title === ''}
+                    error={title === '' || invalidTitle}
                     onChange={(e)=>setTitle(e.target.value)}
                 />
                 <NumberInput

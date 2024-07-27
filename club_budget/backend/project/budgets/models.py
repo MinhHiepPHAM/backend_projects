@@ -21,6 +21,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 class Budget(models.Model):
     title = models.CharField(max_length=255)
     start = models.DateField(_("Date"),default=datetime.date.today)
+    owner = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='budgets')
 
 class Participant(models.Model):
     username = models.CharField(max_length=50)

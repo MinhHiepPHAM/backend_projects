@@ -68,12 +68,20 @@ class CreateNewBudget(APIView):
     def post(self, request, *args, **kwargs):
         participantInfos = request.data.get('userInfos')
         title = request.data.get('title')
+        user = request.user
+        print(user.budgets, type(user.budgets), user.budgets.all())
+        isTitleInUsed = user.budgets.exists() and user.budgets.filter(title=title).exists()
+        
+        if isTitleInUsed:
+            return Response(status=status.HTTP_409_CONFLICT)
 
         if not participantInfos: return Response(status=status.HTTP_200_OK)
         budget = models.Budget.objects.create(
             title = title,
-            start = datetime.date.today()
+            start = datetime.date.today(),
+            owner = user,
         )
+        
         budget.save()
 
         participants = []
@@ -82,7 +90,7 @@ class CreateNewBudget(APIView):
                 username = info['username'],
                 email = info['email'],
                 payed = 0,
-                in_budget = budget
+                in_budget = budget,
             )
             new_participant.save()
             participants.append(new_participant)
