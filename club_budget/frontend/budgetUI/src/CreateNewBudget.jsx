@@ -15,17 +15,17 @@ import { useEffect, useState } from 'react';
 import { MdAlternateEmail } from "react-icons/md";
 import { MdAttachMoney } from "react-icons/md";
 import axios from 'axios';
+import { useParams } from 'react-router-dom';
 
 
-function CreateNewBudget({uid}) {
+function CreateNewBudget() {
+    const {uid} = useParams();
     const [nUser, setNUser] = useState(0);
     const [isValidInfos, setValidInfos] = useState([]);
     const [userInfos, setUserInfos] = useState([]);
     const [errorMess, setErrorMess] = useState(null);
     const [hasError, setError] = useState(false);
-    // const [checked, setChecked] = useState(false);
     const [title, setTitle] = useState(null);
-    // console.log(isValidInfos)
 
     function checkEmail(email) {
         let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -66,42 +66,42 @@ function CreateNewBudget({uid}) {
         setUserInfos(updatedInfos);
     }
 
-    function updateContribution(idx, contribution) {
-        const index = userInfos.findIndex(elt => elt.index === idx);
-        let updatedInfos = [...userInfos]
-        if (index !== -1) { 
-            updatedInfos[index] = {...updatedInfos[index], contribution: contribution}
-        } else {
-            updatedInfos = [...userInfos, {index: idx, contribution: contribution}];
-        }
+    // function updateContribution(idx, contribution) {
+    //     const index = userInfos.findIndex(elt => elt.index === idx);
+    //     let updatedInfos = [...userInfos]
+    //     if (index !== -1) { 
+    //         updatedInfos[index] = {...updatedInfos[index], contribution: contribution}
+    //     } else {
+    //         updatedInfos = [...userInfos, {index: idx, contribution: contribution}];
+    //     }
 
-        setUserInfos(updatedInfos);
-    }
+    //     setUserInfos(updatedInfos);
+    // }
 
     const userInputs = [...Array(nUser).keys()].map(i => (
         <Grid key={i}>
-            <Grid.Col span={4}>
-            <TextInput id={`username.${i}`}
-                label={i===0 ?'User Name':undefined}
-                placeholder='User Name'
-                required
-                mb='md'
-                error={isValidInfos[i]?!isValidInfos[i].username:true}
-                onChange={(e)=>updateUserName(i, e.target.value)}
-                
-            />
+            <Grid.Col span={5}>
+                <TextInput id={`username.${i}`}
+                    label={i===0 ?'User Name':undefined}
+                    placeholder='User Name'
+                    required
+                    mb='md'
+                    error={isValidInfos[i]?!isValidInfos[i].username:true}
+                    onChange={(e)=>updateUserName(i, e.target.value)}
+                    
+                />
             </Grid.Col>
-            <Grid.Col span={6}>
-            <TextInput id={`email.${i}`}
-                label={i===0 ? 'Email':undefined}
-                placeholder='Email'
-                leftSection={<MdAlternateEmail/>}
-                mb='md'
-                error={isValidInfos[i]?!isValidInfos[i].email:true}
-                onChange={(e)=>updateEmail(i, e.target.value)}
-            />
+            <Grid.Col span={7}>
+                <TextInput id={`email.${i}`}
+                    label={i===0 ? 'Email':undefined}
+                    placeholder='Email'
+                    leftSection={<MdAlternateEmail/>}
+                    mb='md'
+                    error={isValidInfos[i]?!isValidInfos[i].email:true}
+                    onChange={(e)=>updateEmail(i, e.target.value)}
+                />
             </Grid.Col>
-            <Grid.Col span={2}>
+            {/* <Grid.Col span={2}>
             <NumberInput id={`contribution.${i}`}
                 label={i===0 ? 'Contribution': undefined}
                 placeholder='Contribution'
@@ -109,14 +109,9 @@ function CreateNewBudget({uid}) {
                 mb='md'
                 onChange={(e)=>updateContribution(i, e)}
             />
-            </Grid.Col>
+            </Grid.Col> */}
         </Grid>
     ));
-
-    const headers = {
-		'Content-Type': 'application/json',
-		'Authorization': 'Token ' + localStorage.getItem('token')
-	};
 
     function handleNumberUserChange(e) {
         setNUser(e);
@@ -125,14 +120,14 @@ function CreateNewBudget({uid}) {
         for (let i=0; i< e; i++) {
             const emailElt = document.getElementById(`email.${i}`);
             const usernameElt = document.getElementById(`username.${i}`);
-            const contributionElt = document.getElementById(`contribution.${i}`);
+            // const contributionElt = document.getElementById(`contribution.${i}`);
             const email = emailElt ? emailElt.value : ''
             const username = usernameElt ? usernameElt.value : ''
-            const contribution = contributionElt ? contributionElt.value : 0
+            // const contribution = contributionElt ? contributionElt.value : 0
 
             const isValidEmail = emailElt ? checkEmail(email): true
             const isValidUsername = usernameElt ? username !== '': true
-            updatedInfos.push({index: i,email: email, username: username, contribution: contribution});
+            updatedInfos.push({index: i,email: email, username: username});
             userErrors.push({email: isValidEmail, username: isValidUsername})
         }
         setValidInfos(userErrors);
@@ -159,7 +154,6 @@ function CreateNewBudget({uid}) {
 
     const handleSaveButton = async (e) => {
         e.preventDefault();
-        // console.log(isValidInfos);
         // check all field before save
         let updatedIsValidInfos = [...isValidInfos];
         userInfos.reduce((arr,v, i)=> {
@@ -170,7 +164,6 @@ function CreateNewBudget({uid}) {
 
         setValidInfos(updatedIsValidInfos);
         let error = updatedIsValidInfos.some(item => !(item.email && item.username)) === 0;
-        // const budgetTitle = document.getElementById('budgetTitle');
         if (title === '' || title === null) {
             error = true;
             setTitle('');
@@ -179,17 +172,21 @@ function CreateNewBudget({uid}) {
         
         setError(error);
         if (error) setErrorMess('Some fields are not filled with valid info');
-        // else {
-        //     try {
-        //         const response = await axios.post(`/users/${uid}/budgets/create`, {
-        //             userInfos,
-        //             title
-        //         }, {headers: headers});
+        else {
+            try {
+                const headers = {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Token ' + localStorage.getItem('token')
+                }
+                const response = await axios.post(`/users/${uid}/budgets/create/`, {
+                    userInfos,
+                    title
+                }, {headers: headers});
 
-        //     } catch (e) {
-        //         console.error('Login failed:', e);
-        //     }
-        // }
+            } catch (e) {
+                console.error('Login failed:', e);
+            }
+        }
     }
     // console.log(hasError, errorMess);
     const budgetContainer = (
