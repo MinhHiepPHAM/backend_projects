@@ -12,7 +12,7 @@ class RegisterSerializer(serializers.ModelSerializer):
 class BudgetSerializer(serializers.ModelSerializer):
     class Meta:
         model = Budget
-        fields = ['title', 'start']
+        fields = ['title', 'start', 'last_updated', 'start_base']
 
 class ParticipantSerializer(serializers.ModelSerializer):
     in_budget = BudgetSerializer()

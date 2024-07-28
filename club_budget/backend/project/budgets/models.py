@@ -22,6 +22,8 @@ class Budget(models.Model):
     title = models.CharField(max_length=255)
     start = models.DateField(_("Date"),default=datetime.date.today)
     owner = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='budgets')
+    last_updated = models.DateField(_("Date"))
+    start_base = models.DateField(_("Date")) # updated when reset the balance
 
 class Participant(models.Model):
     username = models.CharField(max_length=50)
@@ -35,7 +37,11 @@ class Category(models.Model):
 
 class Session(models.Model):
     date = models.DateField()
-    payed = models.IntegerField()
-    participants = models.ManyToManyField(Participant, related_name='sessions')
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    in_budget = models.ForeignKey(Budget, on_delete=models.CASCADE, related_name='sessions')
+
+class AmountPerUserPerSession(models.Model):
+    amount = models.IntegerField()
+    username = models.CharField(max_length=50)
+    session = models.ForeignKey(Session, related_name='amounts', on_delete=models.CASCADE)
 

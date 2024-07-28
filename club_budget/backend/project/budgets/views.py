@@ -7,6 +7,7 @@ from rest_framework.views import APIView
 from django.contrib.auth import authenticate
 from rest_framework.authtoken.models import Token
 import datetime
+from rest_framework.viewsets import ModelViewSet
 
 
 class RegistrationView(generics.CreateAPIView):
@@ -69,7 +70,6 @@ class CreateNewBudget(APIView):
         participantInfos = request.data.get('userInfos')
         title = request.data.get('title')
         user = request.user
-        print(user.budgets, type(user.budgets), user.budgets.all())
         isTitleInUsed = user.budgets.exists() and user.budgets.filter(title=title).exists()
         
         if isTitleInUsed:
@@ -96,6 +96,32 @@ class CreateNewBudget(APIView):
             participants.append(new_participant)
         
         return Response(status=status.HTTP_201_CREATED)
+    
+class AllBudgets(ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = serializers.BudgetSerializer
+
+    def get_budget_amount(self, budget):
+        return sum(participant.payed for participant in budget.participants.all())
+    
+    def get_participant_names(self, budget):
+        return [participant.username for participant in budget.participants.all()]
+        
+
+    def retrieve(self, request, *args, **kwargs):
+        budgets = request.user.budgets
+        response = [
+            {
+                # 'title': budget.title,
+                'amount': self.get_budget_amount(budget),
+                'participants': self.get_participant_names(budget),
+                'budget': self.serializer_class(budget).data
+            }
+            for budget in budgets.all()
+        ]
+
+        return Response(response, status=status.HTTP_200_OK)
+
 
 
 
