@@ -120,10 +120,10 @@ function AllBugets() {
 
     const rowsData= sortedData.map((row,i) => (
         <Table.Tr key={i}>
-            <Table.Td><Text>{row.budget.title}</Text></Table.Td>
+            <Table.Td><a href={`/users/${uid}/budgets/detail/${row.budget.title}/`}>{row.budget.title}</a></Table.Td>
             <Table.Td>{new Date(row.budget.start).toLocaleDateString()}</Table.Td>
             <Table.Td>{new Date(row.budget.last_updated).toLocaleDateString()}</Table.Td>
-            <Table.Td><Text>{row.amount}</Text></Table.Td>
+            <Table.Td>{row.amount}</Table.Td>
             <Table.Td>{prticipantsRender(row.participants)}</Table.Td>
         </Table.Tr>
     ));
