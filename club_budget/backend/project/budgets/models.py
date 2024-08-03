@@ -25,6 +25,13 @@ class Budget(models.Model):
     last_updated = models.DateField(_("Date"))
     start_base = models.DateField(_("Date")) # updated when reset the balance
 
+    def get_budget_amount(self):
+        return sum(participant.payed for participant in self.participants.all())
+    
+    def get_participant_names(self):
+        return [participant.username for participant in self.participants.all()]
+        
+
 class Participant(models.Model):
     username = models.CharField(max_length=50)
     email = models.EmailField()
