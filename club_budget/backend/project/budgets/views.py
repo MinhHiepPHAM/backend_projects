@@ -137,7 +137,7 @@ class AddNewMemberView(APIView):
     def post(self, request, *args, **kwargs):
         title = kwargs['title']
         budget = request.user.budgets.get(title=title)
-        new_member = request.data['newMemeber']
+        new_member = request.data['newMember']
         new_email = request.data['newEmail']
 
         budget.participants.add(

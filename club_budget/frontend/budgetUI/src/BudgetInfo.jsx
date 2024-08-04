@@ -23,40 +23,66 @@ import { FaMoneyBillTransfer } from "react-icons/fa6";
 import { useDisclosure } from "@mantine/hooks";
 import { MdAlternateEmail } from "react-icons/md";
 
+function checkEmail(email) {
+    let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(email) || email === '' | email === null;
+}
+
 function AddNewMember(props) {
     const {uid, title, users} = props;
     const [newMember, setNewMember] = useState(null);
     const [newEmail, setNewEmail] = useState(null);
     const [opened, { open, close }] = useDisclosure(false);
-    const [status, setStatus] = useState(null)
+    const [status, setStatus] = useState(null);
+    const [nameError, setNameError] = useState(false);
+    const [emailError, setEmailError] = useState(false);
     
     const handleAddButton = async(e) => {
         e.preventDefault();
-        try {
-            const response = await axios.post(`/users/${uid}/budgets/${title}/add/memeber/`, {
-				newMember,
-                newEmail
-			},{
-				headers: headers
-			});
-            setStatus(response.status);
-        } catch (e) {
-            console.error('Creation failed:', e);
+        const inValidMember = newMember === null;
+        setNameError(nameError||inValidMember);
+        if (!inValidMember && !nameError && !emailError)
+        {
+            try {
+                const headers = {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Token ' + localStorage.getItem('token')
+                }
+                const response = await axios.post(`/users/${uid}/budgets/${title}/add/member/`, {
+                    newMember,
+                    newEmail
+                },{
+                    headers: headers
+                });
+                setStatus(response.status);
+            } catch (e) {
+                console.error('Creation failed:', e);
+            }
         }
 
     }
 
+    useEffect(()=>{
+        const inValidMember = newMember === '' || users.includes(newMember);
+        const invalidEmail = !checkEmail(newEmail);
+        setEmailError(invalidEmail);
+        setNameError(inValidMember);
+        setStatus(null);
+    }, [newMember, newEmail]);
+
     return (
         <>
-            <Modal size={'xl'} opened={opened} onClose={close} title="Add new member to the budget" centered>
-                {/* {(error!=='') && <Text c='red' size='md' ta="left" mb='md'>{error}</Text>} */}
-                {(status===201) && <Text c='blue' size='md' ta="left" mb='md'>Successfully add user: "{newMember}"</Text>}
+            <Modal size={'xl'} opened={opened} onClose={close} title={<Text>Add new member to the budget ({<span style={{color:'red'}}>*</span>}<span style={{fontSize:'15px', color:'gray'}}>: required field</span>)</Text>} centered>
+                {(emailError || nameError) && <Text c='red' size='md' ta="left" mb='md'>Invalid member name or email</Text>}
+                {(status===201) && <Text c='blue' size='md' ta="left" mb='md'>Successfully add new member: "{newMember}"</Text>}
                 <Grid>
                     <Grid.Col span={5}>
                         <TextInput
-                            placeholder='User Name'
+                            placeholder='New member name'
+                            label='Name'
                             required
                             leftSection={<IoPersonOutline size={20}/>}
+                            error={nameError}
                             onChange={(e)=>setNewMember(e.target.value)}
                             
                         />
@@ -64,7 +90,9 @@ function AddNewMember(props) {
                     <Grid.Col span={7}>
                         <TextInput
                             placeholder='Email'
+                            label='Email'
                             leftSection={<MdAlternateEmail/>}
+                            error={emailError}
                             onChange={(e)=>setNewEmail(e.target.value)}
                         />
                     </Grid.Col>
@@ -153,10 +181,11 @@ function BudgetInfo() {
                 </Table>
             </Paper>
             <Flex direction='column'>
-                {/* <AddNewMember
+                <AddNewMember
                     uid={uid}
                     title={title}
-                /> */}
+                    users={memberNames}
+                />
                 <Button
                     mt='md'
                     variant='default'
