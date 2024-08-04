@@ -10,7 +10,7 @@ import Register from './Register';
 import Home from './Home';
 import CreateNewBudget from './CreateNewBudget';
 import AllBugets from './AllBugets';
-import ParticipantInfo from './ParitipantInfo';
+import BudgetInfo from './BudgetInfo';
 
 const themeOverride = createTheme({
 	autoContrast : true,
@@ -36,7 +36,7 @@ export default function App() {
 							<Route path="/home" element={<Home/>} />
 							<Route path='/users/:uid/budgets/create' element={<CreateNewBudget/>} />
 							<Route path='/users/:uid/budgets/all' element={<AllBugets/>} />
-							<Route path='/users/:uid/budgets/detail/:title' element={<ParticipantInfo/>} />
+							<Route path='/users/:uid/budgets/:title/detail' element={<BudgetInfo/>} />
 						</Routes>
 					</main>
 				</div>

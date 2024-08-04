@@ -106,14 +106,52 @@ class AllBudgets(ModelViewSet):
         response = [
             {
                 'amount': budget.get_budget_amount(),
-                'participants': budget.get_participant_names(budget),
+                'participants': budget.get_participant_names(),
                 'budget': self.serializer_class(budget).data
             }
             for budget in budgets.all()
         ]
 
         return Response(response, status=status.HTTP_200_OK)
+    
+class BudgetInfoView(ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = serializers.BudgetSerializer
 
+    def retrieve(self, request, *args, **kwargs):
+        title = kwargs['title']
+        budget = request.user.budgets.get(title=title)
+
+        response = {
+            'amount': budget.get_budget_amount(),
+            'participants': budget.get_participant_names(),
+            'budget': self.serializer_class(budget).data,
+            'sessions': serializers.SessionSerializer(budget.sessions, many=True).data,
+        }
+
+        return Response(response, status=status.HTTP_200_OK)
+
+class AddNewMemberView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        title = kwargs['title']
+        budget = request.user.budgets.get(title=title)
+        new_member = request.data['newMemeber']
+        new_email = request.data['newEmail']
+
+        budget.participants.add(
+            models.Participant.objects.create(
+                username = new_member,
+                email = new_email,
+                payed = 0,
+                in_budget = budget
+            )
+        )
+        budget.last_updated = datetime.date.today()
+        budget.save()
+
+        return Response(status=status.HTTP_201_CREATED)
 
 
 
