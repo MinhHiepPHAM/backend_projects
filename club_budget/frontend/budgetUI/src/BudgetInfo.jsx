@@ -11,6 +11,11 @@ import {
     Modal,
     TextInput,
     Grid,
+    NumberInput,
+    MultiSelect,
+    Select,
+    TagsInput,
+
 } from '@mantine/core'
 import axios from 'axios';
 import { useEffect, useState } from 'react';
@@ -21,7 +26,10 @@ import { IoMdAdd } from "react-icons/io";
 import { IoPersonAddOutline, IoPersonOutline } from "react-icons/io5";
 import { FaMoneyBillTransfer } from "react-icons/fa6";
 import { useDisclosure } from "@mantine/hooks";
-import { MdAlternateEmail } from "react-icons/md";
+import { MdAlternateEmail, MdAttachMoney, MdEditCalendar } from "react-icons/md";
+import { TbCategoryPlus, TbCategory } from "react-icons/tb";
+import { AiOutlineFieldNumber } from "react-icons/ai";
+import { DatePickerInput } from '@mantine/dates';
 
 function checkEmail(email) {
     let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -112,6 +120,96 @@ function AddNewMember(props) {
     )
 }
 
+function NewSession(props) {
+    const {uid, title, users} = props;
+    const [opened, { open, close }] = useDisclosure(false);
+    const [status, setStatus] = useState(null);
+    const [nOutcome, setNOutcome] = useState(0);
+    const [newCategories, setNewCategories] = useState([]);
+    const [createdCategories, setCreatedCategories] = useState([]);
+    const [categories, setCategories] = useState([]);
+    const [outcomes, setOutcomes] = useState([]);
+    // const [memberNameData, setMemberNameData] = useState(
+    //     users.map(name => { return {value: name, label: name, disabled: false} })
+    // );
+
+    const outcomeInputs = [...Array(nOutcome).keys()].map(i => (
+        <Grid key={i}>
+            <Grid.Col span={8}>
+                <Select id={`category${i}`}
+                    placeholder='Pick the category'
+                    mb='md'
+                    leftSection={<TbCategory/>}
+                    data={categories}
+                    searchable
+                />
+            </Grid.Col>
+
+            <Grid.Col span={4}>
+                <NumberInput id={`cost.${i}`}
+                    placeholder='Cost'
+                    leftSection={<MdAttachMoney/>}
+                    mb='md'
+                />
+            </Grid.Col>
+        </Grid>
+    ));
+
+    // console.log(participantInputs)
+
+    return (
+        <>
+            <Modal size={'lg'} opened={opened} onClose={close} title='Add new session to the budget' centered>
+               <DatePickerInput
+                    placeholder='Pick date'
+                    label='Session Date'
+                    required
+                    leftSection={<MdEditCalendar/>}
+               />
+                <MultiSelect
+                    mt='md'
+                    label='Participants'
+                    placeholder='Pick name'
+                    data={users}
+                    leftSection={<IoPersonAddOutline/>}
+                    hidePickedOptions
+                />
+                <TagsInput
+                    mt='md'
+                    label='Enter to submit new category'
+                    description='Update the categories if do not find in select box'
+                    placeholder='New category'
+                    data={createdCategories}
+                    leftSection={<TbCategoryPlus/>}
+                    onChange={(cats)=> {
+                        setNewCategories(cats)
+                        setCategories([...createdCategories, ...cats])
+                    }}
+                />
+                <NumberInput
+                    min={0}
+                    maw={200} mt='md' mb='md'
+                    placeholder='Number of outcomes'
+                    onChange={setNOutcome}
+                    leftSection={<AiOutlineFieldNumber/>}
+                />
+                {outcomeInputs}
+                <Button mt={'md'} type="submit" variant='outline' fw={'normal'}>Add</Button>
+            </Modal>
+            <Button
+                    mt='md'
+                    variant='default'
+                    fw={'normal'}
+                    leftSection={<IoMdAdd size={20}/>}
+                    onClick={open}
+                >
+                    New session
+            </Button>
+        </>
+    );
+
+}
+
 
 function BudgetInfo() {
     const {uid, title} = useParams();
@@ -129,7 +227,7 @@ function BudgetInfo() {
             
             try {
                 const response = await axios.get(`/users/${uid}/budgets/${title}/detail/`, {headers:headers});
-                console.log(response);
+                // console.log(response);
                 setAmount(response.data.amount);
                 setMemberNames(response.data.participants);
                 setSessions(response.data.sessions);
@@ -186,14 +284,11 @@ function BudgetInfo() {
                     title={title}
                     users={memberNames}
                 />
-                <Button
-                    mt='md'
-                    variant='default'
-                    fw={'normal'}
-                    leftSection={<IoMdAdd size={20}/>}
-                >
-                    New session
-                </Button>
+                <NewSession
+                    uid={uid}
+                    title={title}
+                    users={memberNames}
+                />
                 <Button
                     mt='md'
                     variant='default'

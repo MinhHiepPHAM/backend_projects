@@ -2,6 +2,7 @@
 // All packages except `@mantine/hooks` require styles imports
 import '@mantine/dates/styles.css';
 import '@mantine/core/styles.css';
+import '@mantine/dates/styles.css';
 import { Route, Routes, BrowserRouter } from 'react-router-dom';
 import {DEFAULT_THEME, MantineProvider, createTheme, mergeThemeOverrides } from '@mantine/core';
 import axios from 'axios';

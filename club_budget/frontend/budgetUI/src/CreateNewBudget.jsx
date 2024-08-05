@@ -67,18 +67,6 @@ function CreateNewBudget() {
         setUserInfos(updatedInfos);
     }
 
-    // function updateContribution(idx, contribution) {
-    //     const index = userInfos.findIndex(elt => elt.index === idx);
-    //     let updatedInfos = [...userInfos]
-    //     if (index !== -1) { 
-    //         updatedInfos[index] = {...updatedInfos[index], contribution: contribution}
-    //     } else {
-    //         updatedInfos = [...userInfos, {index: idx, contribution: contribution}];
-    //     }
-
-    //     setUserInfos(updatedInfos);
-    // }
-
     const userInputs = [...Array(nUser).keys()].map(i => (
         <Grid key={i}>
             <Grid.Col span={5}>
@@ -102,15 +90,6 @@ function CreateNewBudget() {
                     onChange={(e)=>updateEmail(i, e.target.value)}
                 />
             </Grid.Col>
-            {/* <Grid.Col span={2}>
-            <NumberInput id={`contribution.${i}`}
-                label={i===0 ? 'Contribution': undefined}
-                placeholder='Contribution'
-                leftSection={<MdAttachMoney/>}
-                mb='md'
-                onChange={(e)=>updateContribution(i, e)}
-            />
-            </Grid.Col> */}
         </Grid>
     ));
 
@@ -217,7 +196,7 @@ function CreateNewBudget() {
                 <NumberInput
                     min={0}
                     maw={200} mb={'xl'}
-                    placeholder='number of members'
+                    placeholder='Number of members'
                     onChange={handleNumberUserChange}
                 />
 
