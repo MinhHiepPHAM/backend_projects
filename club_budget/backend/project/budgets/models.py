@@ -42,13 +42,13 @@ class Category(models.Model):
     name = models.CharField(max_length=255)
     in_budget = models.ForeignKey(Budget, on_delete=models.CASCADE, related_name='categories')
 
+class Outcome(models.Model):
+    cost = models.IntegerField(default=0)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='outcomes')
+
 class Session(models.Model):
     date = models.DateField()
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    outcomes = models.ManyToManyField(Outcome, related_name='in_sessions')
     in_budget = models.ForeignKey(Budget, on_delete=models.CASCADE, related_name='sessions')
 
-class AmountPerUserPerSession(models.Model):
-    amount = models.IntegerField()
-    username = models.CharField(max_length=50)
-    session = models.ForeignKey(Session, related_name='amounts', on_delete=models.CASCADE)
 
