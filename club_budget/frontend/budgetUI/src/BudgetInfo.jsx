@@ -129,9 +129,61 @@ function NewSession(props) {
     const [createdCategories, setCreatedCategories] = useState([]);
     const [categories, setCategories] = useState([]);
     const [outcomes, setOutcomes] = useState([]);
-    // const [memberNameData, setMemberNameData] = useState(
-    //     users.map(name => { return {value: name, label: name, disabled: false} })
-    // );
+    const [error, setError] = useState(false);
+    const [date, setDate] = useState(null)
+
+    function updateCostChange(i, value) {
+        let index = outcomes.findIndex(e => e.index === i);
+        let updatedOutcomes = [...outcomes];
+        if (index === -1) {
+            updatedOutcomes.push({index: i, cost: value});
+        } else {
+            updatedOutcomes[index].cost = value;
+        }
+        setOutcomes(updatedOutcomes);
+    }
+
+    function updateCategoryChange(i, cat) {
+        let index = outcomes.findIndex(e => e.index === i);
+        let updatedOutcomes = [...outcomes];
+        if (index === -1) {
+            updatedOutcomes.push({index: i, category: cat});
+        } else {
+            updatedOutcomes[index].category = cat;
+        }
+        setOutcomes(updatedOutcomes);
+    }
+
+    useEffect(() => {
+        let er = outcomes.length !== nOutcome;
+        er = er || outcomes.some((e)=> e.category === null) || date === null || date === '';
+        setError(er);
+    }, [nOutcome, date, outcomes]);
+
+    console.log(outcomes, error, nOutcome, date);
+
+    const handleAddSessionSummit = async (e) => {
+        if (!error) {
+            let updatedOutcomes = [...outcomes];
+            updatedOutcomes.forEach((elt)=> {
+                if (elt.cost === undefined) elt.cost = 0;
+            })
+            setOutcomes(updatedOutcomes);
+            try {
+                const headers = {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Token ' + localStorage.getItem('token')
+                }
+                const response = await axios.post(`/users/${uid}/budgets/${title}/add/session/`, {
+                    outcomes
+                }, {headers: headers});
+
+            } catch (e) {
+                console.log(e);
+                setError(true);
+            }
+        }
+    }
 
     const outcomeInputs = [...Array(nOutcome).keys()].map(i => (
         <Grid key={i}>
@@ -142,6 +194,7 @@ function NewSession(props) {
                     leftSection={<TbCategory/>}
                     data={categories}
                     searchable
+                    onChange={(e) => updateCategoryChange(i,e)}
                 />
             </Grid.Col>
 
@@ -150,6 +203,7 @@ function NewSession(props) {
                     placeholder='Cost'
                     leftSection={<MdAttachMoney/>}
                     mb='md'
+                    onChange={(e) => updateCostChange(i,e)}
                 />
             </Grid.Col>
         </Grid>
@@ -165,6 +219,7 @@ function NewSession(props) {
                     label='Session Date'
                     required
                     leftSection={<MdEditCalendar/>}
+                    onChange={setDate}
                />
                 <MultiSelect
                     mt='md'
@@ -194,7 +249,9 @@ function NewSession(props) {
                     leftSection={<AiOutlineFieldNumber/>}
                 />
                 {outcomeInputs}
-                <Button mt={'md'} type="submit" variant='outline' fw={'normal'}>Add</Button>
+                <Button mt={'md'} type="submit" variant='outline' fw={'normal'} onSubmit={handleAddSessionSummit}>
+                    Add
+                </Button>
             </Modal>
             <Button
                     mt='md'
