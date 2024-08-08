@@ -133,7 +133,7 @@ class BudgetInfoView(ModelViewSet):
             'participants': budget.get_participant_names(),
             'budget': self.serializer_class(budget).data,
             'sessions': serializers.SessionSerializer(budget.sessions, many=True).data,
-            'categories': serializers.CategorySerializer(budget.categories, many=True).data,
+            'categories': [category.name for category in budget.categories.all()],
         }
 
         return Response(response, status=status.HTTP_200_OK)

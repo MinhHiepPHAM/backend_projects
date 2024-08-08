@@ -15,7 +15,6 @@ import {
     MultiSelect,
     Select,
     TagsInput,
-
 } from '@mantine/core'
 import axios from 'axios';
 import { useEffect, useState } from 'react';
@@ -122,12 +121,13 @@ function AddNewMember(props) {
 
 function NewSession(props) {
     const {uid, title, users, createdCategories} = props;
+    // console.log(createdCategories)
     const [opened, { open, close }] = useDisclosure(false);
     const [status, setStatus] = useState(null);
     const [nOutcome, setNOutcome] = useState(0);
     const [newCategories, setNewCategories] = useState([]);
     const [participants, setParticipants] = useState([]);
-    const [categories, setCategories] = useState([]);
+    const [categories, setCategories] = useState(createdCategories);
     const [outcomes, setOutcomes] = useState([]);
     const [error, setError] = useState(false);
     const [date, setDate] = useState(null)
@@ -244,11 +244,12 @@ function NewSession(props) {
                     label='Enter to submit new category'
                     description='Update the categories if do not find in select box'
                     placeholder='New category'
-                    data={createdCategories}
+                    // data={createdCategories}
                     leftSection={<TbCategoryPlus/>}
+                    // value={categories}
                     onChange={(cats)=> {
                         setNewCategories(cats)
-                        setCategories([...createdCategories, ...cats])
+                        setCategories([...new Set([...createdCategories, ...cats])])
                     }}
                 />
                 <NumberInput
