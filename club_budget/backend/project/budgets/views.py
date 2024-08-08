@@ -80,6 +80,8 @@ class CreateNewBudget(APIView):
             title = title,
             start = datetime.date.today(),
             owner = user,
+            last_updated = datetime.date.today(),
+            start_base = datetime.date.today()
         )
         
         budget.save()
@@ -122,11 +124,16 @@ class BudgetInfoView(ModelViewSet):
         title = kwargs['title']
         budget = request.user.budgets.get(title=title)
 
+        # for session in models.Session.objects.all():
+        #     if not session.participants.exists():
+        #         session.delete()
+
         response = {
             'amount': budget.get_budget_amount(),
             'participants': budget.get_participant_names(),
             'budget': self.serializer_class(budget).data,
             'sessions': serializers.SessionSerializer(budget.sessions, many=True).data,
+            'categories': serializers.CategorySerializer(budget.categories, many=True).data,
         }
 
         return Response(response, status=status.HTTP_200_OK)
@@ -152,6 +159,56 @@ class AddNewMemberView(APIView):
         budget.save()
 
         return Response(status=status.HTTP_201_CREATED)
+
+class AddNewSessionView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        title = kwargs['title']
+        budget = request.user.budgets.get(title=title)
+        date = request.data['date']
+        outcomes = request.data['outcomes']
+        newCategories = request.data['newCategories']
+        members = request.data['participants']
+        date = datetime.datetime.strptime(date, "%a, %d %b %Y %H:%M:%S %Z").date()
+
+
+        participants = [
+            budget.participants.get(username=participant)
+            for participant in members
+        ]
+
+        for category in newCategories:
+            models.Category.objects.create(name=category, in_budget=budget)
+
+        new_outcomes = [
+            models.Outcome.objects.create(
+                cost=outcome['cost'],
+                category=models.Category.objects.get(name=outcome['category'])
+            )
+            for outcome in outcomes
+        ]
+
+        session = models.Session.objects.create(
+            date = date,
+            in_budget = budget,
+        )
+        for outcome in new_outcomes:
+            session.outcomes.add(outcome)
+        
+        for participant in participants:
+            session.participants.add(participant)
+        
+        session.save()
+
+        budget.last_updated = datetime.date.today()
+
+        budget.save()
+
+        
+        return Response(status=status.HTTP_201_CREATED) 
+
+
 
 
 

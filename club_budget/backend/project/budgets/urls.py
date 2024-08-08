@@ -10,4 +10,5 @@ urlpatterns = [
     path('users/<int:pk>/budgets/all/', views.AllBudgets.as_view({'get':'retrieve'}), name='all_budgets'),
     path('users/<int:pk>/budgets/<str:title>/detail/', views.BudgetInfoView.as_view({'get':'retrieve'}), name='budget_info'),
     path('users/<int:pk>/budgets/<str:title>/add/member/', views.AddNewMemberView.as_view(), name='add_new_member'),
+    path('users/<int:pk>/budgets/<str:title>/add/session/', views.AddNewSessionView.as_view(), name='add_new_session'),
 ]

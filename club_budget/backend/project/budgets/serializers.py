@@ -22,16 +22,16 @@ class ParticipantSerializer(serializers.ModelSerializer):
         fields = ['username', 'email', 'payed', 'in_budget']
 
 class CategorySerializer(serializers.ModelSerializer):
-    in_budget = BudgetSerializer()
+    # in_budget = BudgetSerializer()
 
     class Meta:
         model = Category
-        fields = ['name', 'in_budget']
+        fields = ['name']
 
 class SessionSerializer(serializers.ModelSerializer):
     participants = ParticipantSerializer(many=True)
-    category = CategorySerializer()
 
     class Meta:
-        fields = ['date', 'payed', 'participants', 'category']
+        model = Session
+        fields = ['date', 'participants']
 

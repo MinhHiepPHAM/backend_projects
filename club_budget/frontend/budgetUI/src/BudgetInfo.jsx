@@ -21,7 +21,7 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import TableSort from './TableSort';
 import HeaderMenu from './HeaderMenu';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { IoMdAdd } from "react-icons/io";
 import { IoPersonAddOutline, IoPersonOutline } from "react-icons/io5";
 import { FaMoneyBillTransfer } from "react-icons/fa6";
@@ -121,16 +121,17 @@ function AddNewMember(props) {
 }
 
 function NewSession(props) {
-    const {uid, title, users} = props;
+    const {uid, title, users, createdCategories} = props;
     const [opened, { open, close }] = useDisclosure(false);
     const [status, setStatus] = useState(null);
     const [nOutcome, setNOutcome] = useState(0);
     const [newCategories, setNewCategories] = useState([]);
-    const [createdCategories, setCreatedCategories] = useState([]);
+    const [participants, setParticipants] = useState([]);
     const [categories, setCategories] = useState([]);
     const [outcomes, setOutcomes] = useState([]);
     const [error, setError] = useState(false);
     const [date, setDate] = useState(null)
+    const navigate = useNavigate()
 
     function updateCostChange(i, value) {
         let index = outcomes.findIndex(e => e.index === i);
@@ -156,11 +157,11 @@ function NewSession(props) {
 
     useEffect(() => {
         let er = outcomes.length !== nOutcome;
-        er = er || outcomes.some((e)=> e.category === null) || date === null || date === '';
+        er = er || outcomes.some((e)=> e.category === null) || date === '';
         setError(er);
     }, [nOutcome, date, outcomes]);
 
-    console.log(outcomes, error, nOutcome, date);
+    // console.log(outcomes, error, nOutcome, date);
 
     const handleAddSessionSummit = async (e) => {
         if (!error) {
@@ -175,8 +176,14 @@ function NewSession(props) {
                     'Authorization': 'Token ' + localStorage.getItem('token')
                 }
                 const response = await axios.post(`/users/${uid}/budgets/${title}/add/session/`, {
-                    outcomes
+                    outcomes,
+                    date,
+                    newCategories,
+                    participants
                 }, {headers: headers});
+
+                setStatus(response.status);
+                // if (response.status === 201) window.location.reload();//navigate(`/users/${uid}/budgets/${title}/detail/`)
 
             } catch (e) {
                 console.log(e);
@@ -214,12 +221,14 @@ function NewSession(props) {
     return (
         <>
             <Modal size={'lg'} opened={opened} onClose={close} title='Add new session to the budget' centered>
+               { error && <Text c='red'>Date or category missing</Text>}
                <DatePickerInput
+                    mt='md'
                     placeholder='Pick date'
                     label='Session Date'
                     required
                     leftSection={<MdEditCalendar/>}
-                    onChange={setDate}
+                    onChange={(e) => setDate(e.toUTCString())}
                />
                 <MultiSelect
                     mt='md'
@@ -228,6 +237,7 @@ function NewSession(props) {
                     data={users}
                     leftSection={<IoPersonAddOutline/>}
                     hidePickedOptions
+                    onChange={setParticipants}
                 />
                 <TagsInput
                     mt='md'
@@ -249,7 +259,7 @@ function NewSession(props) {
                     leftSection={<AiOutlineFieldNumber/>}
                 />
                 {outcomeInputs}
-                <Button mt={'md'} type="submit" variant='outline' fw={'normal'} onSubmit={handleAddSessionSummit}>
+                <Button mt={'md'} type="submit" variant='outline' fw={'normal'} onClick={handleAddSessionSummit}>
                     Add
                 </Button>
             </Modal>
@@ -275,6 +285,7 @@ function BudgetInfo() {
     const [memberNames, setMemberNames] = useState([]);
     const [sessions, setSessions] = useState([])
     const [budget, setBudget] = useState(null)
+    const [categories, setCategories] = useState([])
     useEffect(()=> {
         async function fetchData(){
             const headers = {
@@ -289,6 +300,7 @@ function BudgetInfo() {
                 setMemberNames(response.data.participants);
                 setSessions(response.data.sessions);
                 setBudget(response.data.budget);
+                setCategories(response.data.categories)
                 setLoaded(true);
             } catch (e) {
                 console.log(e)
@@ -345,6 +357,7 @@ function BudgetInfo() {
                     uid={uid}
                     title={title}
                     users={memberNames}
+                    createdCategories={categories}
                 />
                 <Button
                     mt='md'

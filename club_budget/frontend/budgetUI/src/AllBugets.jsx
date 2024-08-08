@@ -4,7 +4,8 @@ import {
     Avatar,
     Table,
     Text,
-    Title
+    Title,
+    Tooltip
 } from '@mantine/core'
 import axios from 'axios';
 import { useEffect, useState } from 'react';
@@ -91,10 +92,11 @@ function AllBugets() {
 
     const fields = [
         {name: 'title', width: '35%'},
-        {name: 'start', width: '15%'},
-        {name: 'updated', width: '15%'},
+        {name: 'start', width: '10%'},
+        {name: 'updated', width: '10%'},
         {name: 'outcome', width: '10%'},
-        {name: 'participants', width: '25%'},
+        {name: 'no participant', width: '15%'},
+        {name: 'participants', width: '20%'},
     ];
 
     const prticipantsRender = (participants) => (
@@ -120,10 +122,11 @@ function AllBugets() {
 
     const rowsData= sortedData.map((row,i) => (
         <Table.Tr key={i}>
-            <Table.Td><a href={`/users/${uid}/budgets/detail/${row.budget.title}/`}>{row.budget.title}</a></Table.Td>
+            <Table.Td><a href={`/users/${uid}/budgets/${row.budget.title}/detail`}>{row.budget.title}</a></Table.Td>
             <Table.Td>{new Date(row.budget.start).toLocaleDateString()}</Table.Td>
             <Table.Td>{new Date(row.budget.last_updated).toLocaleDateString()}</Table.Td>
             <Table.Td>{row.amount}</Table.Td>
+            <Table.Td>{row.participants.length}</Table.Td>
             <Table.Td>{prticipantsRender(row.participants)}</Table.Td>
         </Table.Tr>
     ));

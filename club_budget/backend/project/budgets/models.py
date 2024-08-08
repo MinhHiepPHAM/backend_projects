@@ -26,7 +26,7 @@ class Budget(models.Model):
     start_base = models.DateField(_("Date")) # updated when reset the balance
 
     def get_budget_amount(self):
-        return sum(participant.payed for participant in self.participants.all())
+        return sum(session.get_session_cost() for session in self.sessions.all())
     
     def get_participant_names(self):
         return [participant.username for participant in self.participants.all()]
@@ -50,5 +50,9 @@ class Session(models.Model):
     date = models.DateField()
     outcomes = models.ManyToManyField(Outcome, related_name='in_sessions')
     in_budget = models.ForeignKey(Budget, on_delete=models.CASCADE, related_name='sessions')
+    participants = models.ManyToManyField(Participant, related_name='sessions')
+
+    def get_session_cost(self):
+        return sum(outcome.cost for outcome in self.outcomes.all())
 
 
